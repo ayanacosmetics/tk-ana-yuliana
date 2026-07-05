@@ -8,16 +8,26 @@ let codeReader = null;
 let activeReaderId = null;
 let activeTargetInput = null;
 let torchOn = false;
+let editMode = false;
+let editingKode = "";
+
+const DRAFT_KEY = "tk_ana_yuliana_draft";
 
 const $ = (id) => document.getElementById(id);
 
-$("btnTambah").addEventListener("click", () => tambahSatuan());
+document.addEventListener("DOMContentLoaded", () => {
+  cekDraft();
 
-$("btnScan").addEventListener("click", () => {
-  startScanner("kode");
+  $("btnTambah").addEventListener("click", () => tambahSatuan());
+
+  $("btnScan").addEventListener("click", () => {
+    startScanner("kode");
+  });
+
+  $("barangForm").addEventListener("input", simpanDraft);
 });
 
-function tambahSatuan() {
+function tambahSatuan(data = {}) {
   if (multiCount >= 7) {
     Swal.fire("Maksimal", "Satuan maksimal sampai Satuan 7", "info");
     return;
@@ -33,22 +43,22 @@ function tambahSatuan() {
     <label>Satuan ${multiCount}</label>
     <select name="satuan${multiCount}">
       <option value="">Pilih satuan</option>
-      ${satuanOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
+      ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
 
     <label>Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
-      <input id="kode${multiCount}" name="kode${multiCount}" placeholder="Scan atau ketik manual">
+      <input id="kode${multiCount}" name="kode${multiCount}" value="${data.kode || ""}" placeholder="Scan atau ketik manual">
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
     <label>Harga Grosir Satuan ${multiCount}</label>
-    <input name="harga${multiCount}" type="number" placeholder="Wajib jika satuan diisi">
+    <input name="harga${multiCount}" type="number" value="${data.harga || ""}" placeholder="Wajib jika satuan diisi">
 
     <label>Isi Satuan ${multiCount}</label>
-    <input name="isi${multiCount}" type="number" placeholder="Wajib jika satuan diisi">
+    <input name="isi${multiCount}" type="number" value="${data.isi || ""}" placeholder="Wajib jika satuan diisi">
   `;
 
   $("multiWrap").appendChild(div);
@@ -89,10 +99,10 @@ async function startScanner(targetInputId) {
   try {
     codeReader = new ZXing.BrowserMultiFormatReader();
 
-    const videoInputDevices = await codeReader.listVideoInputDevices();
-    let selectedDeviceId = videoInputDevices[0]?.deviceId;
+    const devices = await codeReader.listVideoInputDevices();
+    let selectedDeviceId = devices[0]?.deviceId;
 
-    const backCamera = videoInputDevices.find(device => {
+    const backCamera = devices.find(device => {
       const label = device.label.toLowerCase();
       return label.includes("back") || label.includes("rear") || label.includes("environment");
     });
@@ -122,6 +132,8 @@ async function startScanner(targetInputId) {
         if (!cekBarcodeDuplikatDiForm()) return;
 
         await cekKodeSetelahScan(kode, targetSaatIni);
+
+        simpanDraft();
       }
     );
 
@@ -262,6 +274,7 @@ async function cekKodeSetelahScan(kode, targetInputId) {
         } else {
           const input = $(targetInputId);
           if (input) input.value = "";
+          simpanDraft();
         }
       });
 
@@ -277,27 +290,37 @@ async function cekKodeSetelahScan(kode, targetInputId) {
 }
 
 function isiFormDariBarang(data) {
-  if (!data) return;
+  editMode = true;
+  editingKode = data.kode || "";
 
-  if ($("nama")) $("nama").value = data.nama || "";
-  if ($("modal")) $("modal").value = data.modal || "";
-  if ($("satuan1")) $("satuan1").value = data.satuan1 || "PCS";
-  if ($("kode")) $("kode").value = data.kode || "";
-  if ($("hargaEcer")) $("hargaEcer").value = data.hargaEcer || "";
-  if ($("hargaGrosir1")) $("hargaGrosir1").value = data.hargaGrosir1 || "";
+  $("nama").value = data.nama || "";
+  $("modal").value = data.modal || "";
+  $("satuan1").value = data.satuan1 || "PCS";
+  $("kode").value = data.kode || "";
+  $("hargaEcer").value = data.hargaEcer || "";
+  $("hargaGrosir1").value = data.hargaGrosir1 || "";
 
-  Swal.fire("Mode edit", "Data barang dimasukkan ke form. Silakan ubah jika perlu.", "info");
+  $("multiWrap").innerHTML = "";
+  multiCount = 1;
+
+  if (data.multis && Array.isArray(data.multis)) {
+    data.multis.forEach(m => {
+      if (m.satuan || m.kode || m.harga || m.isi) {
+        tambahSatuan(m);
+      }
+    });
+  }
+
+  simpanDraft();
+
+  Swal.fire("Mode edit", "Semua data barang sudah dimunculkan. Silakan lanjut edit.", "info");
 }
 
-$("barangForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  if (!cekBarcodeDuplikatDiForm()) return;
-
-  const form = new FormData(e.target);
+function ambilDataForm() {
+  const form = new FormData($("barangForm"));
 
   const payload = {
-    action: "addBarang",
+    mode: editMode ? "edit" : "add",
     nama: form.get("nama"),
     modal: form.get("modal"),
     satuan1: form.get("satuan1"),
@@ -308,17 +331,83 @@ $("barangForm").addEventListener("submit", async (e) => {
   };
 
   for (let i = 2; i <= 7; i++) {
-    const satuan = form.get(`satuan${i}`) || "";
-    const kode = form.get(`kode${i}`) || "";
-    const harga = form.get(`harga${i}`) || "";
-    const isi = form.get(`isi${i}`) || "";
+    payload.multis.push({
+      satuan: form.get(`satuan${i}`) || "",
+      kode: form.get(`kode${i}`) || "",
+      harga: form.get(`harga${i}`) || "",
+      isi: form.get(`isi${i}`) || ""
+    });
+  }
 
-    if (satuan && (!harga || !isi)) {
-      Swal.fire("Belum lengkap", `Harga dan isi Satuan ${i} wajib diisi.`, "error");
+  return payload;
+}
+
+function simpanDraft() {
+  const data = ambilDataForm();
+  data.editMode = editMode;
+  data.editingKode = editingKode;
+  data.multiCount = multiCount;
+
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+}
+
+function cekDraft() {
+  const draft = localStorage.getItem(DRAFT_KEY);
+  if (!draft) return;
+
+  Swal.fire({
+    title: "Lanjutkan editan?",
+    text: "Ada data yang belum selesai disimpan.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Lanjutkan",
+    cancelButtonText: "Hapus"
+  }).then(result => {
+    if (result.isConfirmed) {
+      muatDraft(JSON.parse(draft));
+    } else {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  });
+}
+
+function muatDraft(data) {
+  editMode = data.editMode || false;
+  editingKode = data.editingKode || "";
+
+  $("nama").value = data.nama || "";
+  $("modal").value = data.modal || "";
+  $("satuan1").value = data.satuan1 || "PCS";
+  $("kode").value = data.kode || "";
+  $("hargaEcer").value = data.hargaEcer || "";
+  $("hargaGrosir1").value = data.hargaGrosir1 || "";
+
+  $("multiWrap").innerHTML = "";
+  multiCount = 1;
+
+  if (data.multis && Array.isArray(data.multis)) {
+    data.multis.forEach(m => {
+      if (m.satuan || m.kode || m.harga || m.isi) {
+        tambahSatuan(m);
+      }
+    });
+  }
+}
+
+$("barangForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!cekBarcodeDuplikatDiForm()) return;
+
+  const payload = ambilDataForm();
+
+  for (let i = 0; i < payload.multis.length; i++) {
+    const m = payload.multis[i];
+
+    if (m.satuan && (!m.harga || !m.isi)) {
+      Swal.fire("Belum lengkap", `Harga dan isi Satuan ${i + 2} wajib diisi.`, "error");
       return;
     }
-
-    payload.multis.push({ satuan, kode, harga, isi });
   }
 
   if (API_URL.includes("PASTE_URL")) {
@@ -338,10 +427,19 @@ $("barangForm").addEventListener("submit", async (e) => {
     Swal.close();
 
     if (data.success) {
-      Swal.fire("Tersimpan", "Barang masuk ke Data Barang.", "success");
-      e.target.reset();
+      Swal.fire(
+        data.mode === "updated" ? "Berhasil diupdate" : "Tersimpan",
+        data.mode === "updated" ? "Data barang berhasil diperbarui." : "Barang masuk ke Data Barang.",
+        "success"
+      );
+
+      $("barangForm").reset();
       $("multiWrap").innerHTML = "";
       multiCount = 1;
+      editMode = false;
+      editingKode = "";
+      localStorage.removeItem(DRAFT_KEY);
+
     } else {
       Swal.fire("Gagal", data.message || "Tidak bisa menyimpan.", "error");
     }
