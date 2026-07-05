@@ -1,2 +1,1 @@
-// GANTI dengan URL Web App Google Apps Script Anda
-const API_URL = "PASTE_URL_APPS_SCRIPT_DI_SINI";
+const API_URL = "https://script.google.com/macros/s/AKfycbyhsnQQla5MLATgCSGT-aTlq9hCzfgEqfpoY4JZQwboU6UWRm5goNH0I8wuiN8D1eeb/exec";
