@@ -320,6 +320,7 @@ function ambilDataForm() {
   const form = new FormData($("barangForm"));
 
   const payload = {
+    action: "addBarang",
     mode: editMode ? "edit" : "add",
     nama: form.get("nama"),
     modal: form.get("modal"),
