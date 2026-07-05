@@ -110,7 +110,6 @@ async function startScanner(targetInputId) {
       <button type="button" onclick="setZoom(2)">2x</button>
       <button type="button" onclick="setZoom(3)">3x</button>
       <button type="button" onclick="toggleTorch()">🔦</button>
-<button type="button" onclick="switchCamera()">🔄</button>
       <button type="button" onclick="switchCamera()">🔄</button>
     </div>
 
@@ -122,12 +121,6 @@ async function startScanner(targetInputId) {
 
     const devices = await codeReader.listVideoInputDevices();
     availableCameras = devices;
-
-    if (selectedCameraIndex >= availableCameras.length) {
-      selectedCameraIndex = 0;
-   }
-
-let selectedDeviceId = availableCameras[selectedCameraIndex]?.deviceId;
 
     if (!availableCameras.length) {
       Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera yang bisa digunakan.", "error");
@@ -229,24 +222,6 @@ async function toggleTorch() {
   await track.applyConstraints({
     advanced: [{ torch: torchOn }]
   });
-}
-
-async function switchCamera() {
-  if (!availableCameras.length) {
-    Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera lain yang bisa dipilih.", "info");
-    return;
-  }
-
-  selectedCameraIndex++;
-
-  if (selectedCameraIndex >= availableCameras.length) {
-    selectedCameraIndex = 0;
-  }
-
-  const target = activeTargetInput || "kode";
-
-  await stopScanner();
-  await startScanner(target);
 }
 
 async function switchCamera() {
