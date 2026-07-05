@@ -8,6 +8,8 @@ let codeReader = null;
 let activeReaderId = null;
 let activeTargetInput = null;
 let torchOn = false;
+let selectedCameraIndex = 0;
+let availableCameras = [];
 
 let editMode = false;
 let editingRow = "";
@@ -108,6 +110,7 @@ async function startScanner(targetInputId) {
       <button type="button" onclick="setZoom(2)">2x</button>
       <button type="button" onclick="setZoom(3)">3x</button>
       <button type="button" onclick="toggleTorch()">🔦</button>
+      <button type="button" onclick="switchCamera()">🔄</button>
     </div>
 
     <button type="button" class="btn secondary" onclick="stopScanner()">Tutup Kamera</button>
@@ -117,14 +120,18 @@ async function startScanner(targetInputId) {
     codeReader = new ZXing.BrowserMultiFormatReader();
 
     const devices = await codeReader.listVideoInputDevices();
-    let selectedDeviceId = devices[0]?.deviceId;
+    availableCameras = devices;
 
-    const backCamera = devices.find(device => {
-      const label = device.label.toLowerCase();
-      return label.includes("back") || label.includes("rear") || label.includes("environment");
-    });
+    if (!availableCameras.length) {
+      Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera yang bisa digunakan.", "error");
+      return;
+    }
 
-    if (backCamera) selectedDeviceId = backCamera.deviceId;
+    if (selectedCameraIndex >= availableCameras.length) {
+      selectedCameraIndex = 0;
+    }
+
+    const selectedDeviceId = availableCameras[selectedCameraIndex]?.deviceId;
 
     codeReader.decodeFromVideoDevice(
       selectedDeviceId,
@@ -215,6 +222,24 @@ async function toggleTorch() {
   await track.applyConstraints({
     advanced: [{ torch: torchOn }]
   });
+}
+
+async function switchCamera() {
+  if (!availableCameras.length) {
+    Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera lain yang bisa dipilih.", "info");
+    return;
+  }
+
+  selectedCameraIndex++;
+
+  if (selectedCameraIndex >= availableCameras.length) {
+    selectedCameraIndex = 0;
+  }
+
+  const target = activeTargetInput || "kode";
+
+  await stopScanner();
+  await startScanner(target);
 }
 
 function beep() {
