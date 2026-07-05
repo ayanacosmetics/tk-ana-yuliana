@@ -290,11 +290,16 @@ async function handleBarcodeAfterScan(kode, targetInputId) {
 
   const cached = barcodeCache.get(String(kode).trim());
 
-  if (!cached) {
-    toast("Barcode baru", "Silakan lanjut input.", "success");
+  if (cached) {
+    await tampilkanBarangDariGSheet(kode, targetInputId);
     return;
   }
 
+  // Fallback: kalau cache belum kebaca, tetap cek langsung ke GSheet
+  await tampilkanBarangDariGSheet(kode, targetInputId);
+}
+
+async function tampilkanBarangDariGSheet(kode, targetInputId) {
   try {
     const res = await fetch(`${API_URL}?action=getBarang&kode=${encodeURIComponent(kode)}`);
     const data = await res.json();
@@ -328,7 +333,7 @@ async function handleBarcodeAfterScan(kode, targetInputId) {
     toast("Barcode baru", "Silakan lanjut input.", "success");
 
   } catch (e) {
-    Swal.fire("Gagal ambil data", "Coba lagi atau lanjut input manual.", "error");
+    Swal.fire("Gagal cek barcode", "Silakan lanjut input manual.", "warning");
   }
 }
 
