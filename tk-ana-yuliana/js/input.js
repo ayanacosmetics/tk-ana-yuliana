@@ -11,7 +11,13 @@ let torchOn = false;
 
 const $ = (id) => document.getElementById(id);
 
-$("btnTambah").addEventListener("click", () => {
+$("btnTambah").addEventListener("click", () => tambahSatuan());
+
+$("btnScan").addEventListener("click", () => {
+  startScanner("kode");
+});
+
+function tambahSatuan() {
   if (multiCount >= 7) {
     Swal.fire("Maksimal", "Satuan maksimal sampai Satuan 7", "info");
     return;
@@ -46,11 +52,7 @@ $("btnTambah").addEventListener("click", () => {
   `;
 
   $("multiWrap").appendChild(div);
-});
-
-$("btnScan").addEventListener("click", () => {
-  startScanner("kode");
-});
+}
 
 async function startScanner(targetInputId) {
   await stopScanner();
@@ -92,11 +94,7 @@ async function startScanner(targetInputId) {
 
     const backCamera = videoInputDevices.find(device => {
       const label = device.label.toLowerCase();
-      return (
-        label.includes("back") ||
-        label.includes("rear") ||
-        label.includes("environment")
-      );
+      return label.includes("back") || label.includes("rear") || label.includes("environment");
     });
 
     if (backCamera) selectedDeviceId = backCamera.deviceId;
@@ -117,13 +115,13 @@ async function startScanner(targetInputId) {
         if (navigator.vibrate) navigator.vibrate(120);
         beep();
 
+        const targetSaatIni = activeTargetInput;
+
         await stopScanner();
 
-        if (activeTargetInput === "kode") {
-          cekKode(kode);
-        }
+        if (!cekBarcodeDuplikatDiForm()) return;
 
-        cekBarcodeDuplikatDiForm();
+        await cekKodeSetelahScan(kode, targetSaatIni);
       }
     );
 
@@ -229,17 +227,66 @@ function cekBarcodeDuplikatDiForm() {
   return true;
 }
 
-async function cekKode(kode) {
-  if (!kode || API_URL.includes("PASTE_URL")) return;
+async function cekKodeSetelahScan(kode, targetInputId) {
+  if (!kode) return;
+
+  if (API_URL.includes("PASTE_URL")) {
+    Swal.fire("Barcode terbaca", "Silakan lanjut input.", "success");
+    return;
+  }
 
   try {
+    Swal.showLoading();
+
     const res = await fetch(`${API_URL}?action=checkBarcode&kode=${encodeURIComponent(kode)}`);
     const data = await res.json();
 
+    Swal.close();
+
     if (data.exists) {
-      Swal.fire("Kode sudah ada", data.nama || "Barang sudah terdaftar", "warning");
+      Swal.fire({
+        icon: "warning",
+        title: "Barang sudah terdaftar",
+        html: `
+          <b>${data.nama || "Nama barang tidak tersedia"}</b><br>
+          <small>Kode: ${kode}</small><br><br>
+          Mau edit barang ini?
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Edit Barang",
+        cancelButtonText: "Batal",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          isiFormDariBarang(data);
+        } else {
+          const input = $(targetInputId);
+          if (input) input.value = "";
+        }
+      });
+
+      return;
     }
-  } catch (e) {}
+
+    Swal.fire("Barcode baru", "Silakan lanjut input.", "success");
+
+  } catch (e) {
+    Swal.close();
+    Swal.fire("Barcode terbaca", "Silakan lanjut input.", "success");
+  }
+}
+
+function isiFormDariBarang(data) {
+  if (!data) return;
+
+  if ($("nama")) $("nama").value = data.nama || "";
+  if ($("modal")) $("modal").value = data.modal || "";
+  if ($("satuan1")) $("satuan1").value = data.satuan1 || "PCS";
+  if ($("kode")) $("kode").value = data.kode || "";
+  if ($("hargaEcer")) $("hargaEcer").value = data.hargaEcer || "";
+  if ($("hargaGrosir1")) $("hargaGrosir1").value = data.hargaGrosir1 || "";
+
+  Swal.fire("Mode edit", "Data barang dimasukkan ke form. Silakan ubah jika perlu.", "info");
 }
 
 $("barangForm").addEventListener("submit", async (e) => {
