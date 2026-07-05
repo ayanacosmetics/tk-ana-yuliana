@@ -44,3 +44,18 @@
   background:white;
   box-shadow:0 0 12px white;
 }
+.zoom-row{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.zoom-row button{
+  flex:1;
+  border:0;
+  border-radius:12px;
+  padding:12px;
+  font-weight:bold;
+  background:#111;
+  color:white;
+}

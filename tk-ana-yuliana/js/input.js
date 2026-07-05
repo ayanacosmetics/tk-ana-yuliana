@@ -55,7 +55,12 @@ async function startScanner(targetInputId) {
       <video id="scannerVideo"></video>
       <div class="scan-line"></div>
     </div>
-    <button type="button" class="btn secondary" onclick="stopScanner()">Tutup Kamera</button>
+    <div class="zoom-row">
+  <button type="button" onclick="setZoom(1)">1x</button>
+  <button type="button" onclick="setZoom(2)">2x</button>
+  <button type="button" onclick="setZoom(3)">3x</button>
+</div>
+<button type="button" class="btn secondary" onclick="stopScanner()">Tutup Kamera</button>
   `;
 
   try {
@@ -228,3 +233,23 @@ $("barangForm").addEventListener("submit", async (e) => {
     Swal.fire("Error", "Gagal konek ke server.", "error");
   }
 });
+async function setZoom(level) {
+  const video = document.getElementById("scannerVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.zoom) {
+    Swal.fire("Zoom tidak support", "Kamera HP ini tidak mendukung zoom dari browser.", "info");
+    return;
+  }
+
+  const zoom = Math.min(level, capabilities.zoom.max);
+
+  await track.applyConstraints({
+    advanced: [{ zoom }]
+  });
+}
