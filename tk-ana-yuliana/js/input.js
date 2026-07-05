@@ -260,26 +260,27 @@ function isiFormDariBarang(data) {
 }
 
 function ambilDataForm() {
-  const form = new FormData($("barangForm"));
   const payload = {
     action: editMode ? "updateBarang" : "addBarang",
     row: editingRow,
-    nama: form.get("nama"),
-    modal: form.get("modal"),
-    satuan1: form.get("satuan1"),
-    kode: form.get("kode"),
-    hargaEcer: form.get("hargaEcer"),
-    hargaGrosir1: form.get("hargaGrosir1"),
+    nama: $("nama").value.trim(),
+    modal: $("modal").value.trim(),
+    satuan1: $("satuan1").value.trim(),
+    kode: $("kode").value.trim(),
+    hargaEcer: $("hargaEcer").value.trim(),
+    hargaGrosir1: $("hargaGrosir1").value.trim(),
     multis: []
   };
+
   for (let i = 2; i <= 7; i++) {
     payload.multis.push({
-      satuan: form.get(`satuan${i}`) || "",
-      kode: form.get(`kode${i}`) || "",
-      harga: form.get(`harga${i}`) || "",
-      isi: form.get(`isi${i}`) || ""
+      satuan: document.querySelector(`[name="satuan${i}"]`)?.value.trim() || "",
+      kode: document.querySelector(`[name="kode${i}"]`)?.value.trim() || "",
+      harga: document.querySelector(`[name="harga${i}"]`)?.value.trim() || "",
+      isi: document.querySelector(`[name="isi${i}"]`)?.value.trim() || ""
     });
   }
+
   return payload;
 }
 
