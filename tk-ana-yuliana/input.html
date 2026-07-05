@@ -1,3 +1,59 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Input Barang</title><link rel="stylesheet" href="css/style.css"><script src="https://unpkg.com/@zxing/library@latest"></script><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head>
-<body><main class="container"><header class="topbar"><a href="index.html">←</a><h2>Input Barang</h2></header><form id="barangForm" class="form"><button type="button" id="btnScan" class="btn secondary">📷 Scan Barcode</button><div id="reader" class="reader hidden"></div><label>Kode Barang / Barcode Satuan 1</label><input id="kode" name="kode" required placeholder="Scan atau ketik kode"><label>Nama Barang</label><input id="nama" name="nama" required placeholder="Merk + nama + ukuran"><label>Modal (Satuan Tertinggi)</label><input id="modal" name="modal" type="number" required placeholder="Contoh: 120000"><label>Satuan 1</label><select id="satuan1" name="satuan1" required><option value="PCS">PCS</option><option value="Bungkus">Bungkus</option><option value="Botol">Botol</option><option value="Sachet">Sachet</option><option value="Pack">Pack</option></select><label>Harga Ecer Satuan 1</label><input id="hargaEcer" name="hargaEcer" type="number" required placeholder="Contoh: 5000"><label>Harga Grosir Satuan 1</label><input id="hargaGrosir1" name="hargaGrosir1" type="number" placeholder="Opsional"><div id="multiWrap"></div><button type="button" id="btnTambah" class="btn secondary">+ Tambah Satuan</button><button type="submit" class="btn primary">Simpan</button></form></main><script src="js/config.js"></script><script src="js/input.js"></script></body></html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Input Barang - TK. Ana Yuliana</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a href="index.html">←</a>
+      <h2>Input Barang</h2>
+    </header>
+
+    <form id="barangForm" class="form">
+      <label>Kode Barang / Barcode Satuan 1</label>
+      <div class="scan-row">
+        <input id="kode" name="kode" required placeholder="Scan atau ketik kode">
+        <button type="button" id="btnScan" class="btn-scan-mini">📷</button>
+      </div>
+
+      <div id="reader-kode" class="reader hidden"></div>
+
+      <label>Nama Barang</label>
+      <input id="nama" name="nama" required placeholder="Merk + nama + ukuran">
+
+      <label>Modal (Satuan Tertinggi)</label>
+      <input id="modal" name="modal" type="number" required placeholder="Contoh: 120000">
+
+      <label>Satuan 1</label>
+      <select id="satuan1" name="satuan1" required>
+        <option value="PCS">PCS</option>
+        <option value="Bungkus">Bungkus</option>
+        <option value="Botol">Botol</option>
+        <option value="Sachet">Sachet</option>
+        <option value="Pack">Pack</option>
+      </select>
+
+      <label>Harga Ecer Satuan 1</label>
+      <input id="hargaEcer" name="hargaEcer" type="number" required placeholder="Contoh: 5000">
+
+      <label>Harga Grosir Satuan 1</label>
+      <input id="hargaGrosir1" name="hargaGrosir1" type="number" placeholder="Opsional">
+
+      <div id="multiWrap"></div>
+
+      <button type="button" id="btnTambah" class="btn secondary">+ Tambah Satuan</button>
+      <button type="submit" class="btn primary">Simpan</button>
+    </form>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/input.js"></script>
+</body>
+</html>

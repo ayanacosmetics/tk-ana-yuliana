@@ -59,3 +59,82 @@
   background:#111;
   color:white;
 }
+.zoom-row{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.zoom-row button{
+  flex:1;
+  border:0;
+  border-radius:12px;
+  padding:12px;
+  font-weight:bold;
+  background:#111;
+  color:white;
+}
+
+.scanner-box{
+  position:relative;
+  width:100%;
+  height:280px;
+  background:#000;
+  border-radius:16px;
+  overflow:hidden;
+  margin-top:12px;
+}
+
+.scanner-box video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.scan-frame{
+  position:absolute;
+  left:7%;
+  right:7%;
+  top:35%;
+  height:90px;
+  border:2px solid #fff;
+  border-radius:14px;
+  box-shadow:0 0 18px #fff8;
+}
+
+.scan-line{
+  position:absolute;
+  left:9%;
+  right:9%;
+  top:38%;
+  height:3px;
+  background:#00ff88;
+  box-shadow:0 0 12px #00ff88;
+  animation:scanMove 1.4s infinite alternate;
+}
+
+@keyframes scanMove{
+  from{top:38%}
+  to{top:62%}
+}
+
+.scan-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.scan-row input{
+  flex:1;
+}
+
+.btn-scan-mini{
+  width:52px;
+  height:48px;
+  border:0;
+  border-radius:12px;
+  background:#111;
+  color:white;
+  font-size:20px;
+  margin-top:6px;
+}

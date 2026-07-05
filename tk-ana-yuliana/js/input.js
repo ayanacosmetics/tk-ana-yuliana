@@ -1,8 +1,13 @@
-const satuanOptions = ["PCS","Bungkus","Pack","Renteng","Slop","Dus","Box","Bal","Lusin","Botol","Kaleng","Sachet","Kg","Gram","Liter","mL"];
+const satuanOptions = [
+  "PCS","Bungkus","Pack","Renteng","Slop","Dus","Box","Bal",
+  "Lusin","Botol","Kaleng","Sachet","Kg","Gram","Liter","mL"
+];
 
 let multiCount = 1;
 let codeReader = null;
-let currentTargetInput = null;
+let activeReaderId = null;
+let activeTargetInput = null;
+let torchOn = false;
 
 const $ = (id) => document.getElementById(id);
 
@@ -31,6 +36,8 @@ $("btnTambah").addEventListener("click", () => {
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
+    <div id="reader-kode${multiCount}" class="reader hidden"></div>
+
     <label>Harga Grosir Satuan ${multiCount}</label>
     <input name="harga${multiCount}" type="number" placeholder="Wajib jika satuan diisi">
 
@@ -46,66 +53,83 @@ $("btnScan").addEventListener("click", () => {
 });
 
 async function startScanner(targetInputId) {
-  currentTargetInput = targetInputId;
+  await stopScanner();
 
-  const reader = $("reader");
+  activeTargetInput = targetInputId;
+  activeReaderId = `reader-${targetInputId}`;
+  torchOn = false;
+
+  const reader = $(activeReaderId);
+
+  if (!reader) {
+    Swal.fire("Reader tidak ditemukan", `Area kamera untuk ${targetInputId} belum ada.`, "error");
+    return;
+  }
+
   reader.classList.remove("hidden");
   reader.innerHTML = `
     <div class="scanner-box">
-      <video id="scannerVideo"></video>
+      <video id="scannerVideo" playsinline></video>
+      <div class="scan-frame"></div>
       <div class="scan-line"></div>
     </div>
+
     <div class="zoom-row">
-  <button type="button" onclick="setZoom(1)">1x</button>
-  <button type="button" onclick="setZoom(2)">2x</button>
-  <button type="button" onclick="setZoom(3)">3x</button>
-</div>
-<button type="button" class="btn secondary" onclick="stopScanner()">Tutup Kamera</button>
+      <button type="button" onclick="setZoom(1)">1x</button>
+      <button type="button" onclick="setZoom(2)">2x</button>
+      <button type="button" onclick="setZoom(3)">3x</button>
+      <button type="button" onclick="toggleTorch()">🔦</button>
+    </div>
+
+    <button type="button" class="btn secondary" onclick="stopScanner()">Tutup Kamera</button>
   `;
 
   try {
     codeReader = new ZXing.BrowserMultiFormatReader();
 
     const videoInputDevices = await codeReader.listVideoInputDevices();
-
     let selectedDeviceId = videoInputDevices[0]?.deviceId;
 
-    const backCamera = videoInputDevices.find(device =>
-      device.label.toLowerCase().includes("back") ||
-      device.label.toLowerCase().includes("rear") ||
-      device.label.toLowerCase().includes("environment")
-    );
+    const backCamera = videoInputDevices.find(device => {
+      const label = device.label.toLowerCase();
+      return (
+        label.includes("back") ||
+        label.includes("rear") ||
+        label.includes("environment")
+      );
+    });
 
-    if (backCamera) {
-      selectedDeviceId = backCamera.deviceId;
-    }
+    if (backCamera) selectedDeviceId = backCamera.deviceId;
 
     codeReader.decodeFromVideoDevice(
       selectedDeviceId,
       "scannerVideo",
-      async (result, err) => {
-        if (result) {
-          const kode = result.text.trim();
+      async (result) => {
+        if (!result) return;
 
-          $(currentTargetInput).value = kode;
+        const kode = result.text.trim();
+        const input = $(activeTargetInput);
 
-          if (navigator.vibrate) navigator.vibrate(120);
-          beep();
+        if (!input) return;
 
-          await stopScanner();
+        input.value = kode;
 
-          if (currentTargetInput === "kode") {
-            cekKode(kode);
-          }
+        if (navigator.vibrate) navigator.vibrate(120);
+        beep();
 
-          cekBarcodeDuplikatDiForm();
+        await stopScanner();
+
+        if (activeTargetInput === "kode") {
+          cekKode(kode);
         }
+
+        cekBarcodeDuplikatDiForm();
       }
     );
 
   } catch (error) {
     Swal.fire("Kamera gagal", "Izinkan akses kamera di browser HP.", "error");
-    stopScanner();
+    await stopScanner();
   }
 }
 
@@ -115,9 +139,56 @@ async function stopScanner() {
     codeReader = null;
   }
 
-  const reader = $("reader");
-  reader.classList.add("hidden");
-  reader.innerHTML = "";
+  if (activeReaderId && $(activeReaderId)) {
+    $(activeReaderId).classList.add("hidden");
+    $(activeReaderId).innerHTML = "";
+  }
+
+  activeReaderId = null;
+  activeTargetInput = null;
+  torchOn = false;
+}
+
+async function setZoom(level) {
+  const video = document.getElementById("scannerVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.zoom) {
+    Swal.fire("Zoom tidak support", "Kamera HP ini tidak mendukung zoom dari browser.", "info");
+    return;
+  }
+
+  const zoom = Math.min(level, capabilities.zoom.max);
+
+  await track.applyConstraints({
+    advanced: [{ zoom }]
+  });
+}
+
+async function toggleTorch() {
+  const video = document.getElementById("scannerVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.torch) {
+    Swal.fire("Flash tidak support", "Browser atau HP ini tidak mendukung flash kamera.", "info");
+    return;
+  }
+
+  torchOn = !torchOn;
+
+  await track.applyConstraints({
+    advanced: [{ torch: torchOn }]
+  });
 }
 
 function beep() {
@@ -131,15 +202,15 @@ function beep() {
 
     oscillator.frequency.value = 900;
     oscillator.type = "sine";
-
     gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+
     oscillator.start();
     oscillator.stop(audioCtx.currentTime + 0.12);
   } catch (e) {}
 }
 
 function cekBarcodeDuplikatDiForm() {
-  const inputs = document.querySelectorAll('input[name^="kode"], #kode');
+  const inputs = document.querySelectorAll('input[id^="kode"]');
   const values = [];
 
   for (const input of inputs) {
@@ -233,23 +304,3 @@ $("barangForm").addEventListener("submit", async (e) => {
     Swal.fire("Error", "Gagal konek ke server.", "error");
   }
 });
-async function setZoom(level) {
-  const video = document.getElementById("scannerVideo");
-  if (!video || !video.srcObject) return;
-
-  const track = video.srcObject.getVideoTracks()[0];
-  if (!track) return;
-
-  const capabilities = track.getCapabilities();
-
-  if (!capabilities.zoom) {
-    Swal.fire("Zoom tidak support", "Kamera HP ini tidak mendukung zoom dari browser.", "info");
-    return;
-  }
-
-  const zoom = Math.min(level, capabilities.zoom.max);
-
-  await track.applyConstraints({
-    advanced: [{ zoom }]
-  });
-}
