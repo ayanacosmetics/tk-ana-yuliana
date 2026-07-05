@@ -330,6 +330,18 @@ $("barangForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!cekBarcodeDuplikatDiForm()) return;
   const payload = ambilDataForm();
+  Swal.fire({
+  title: "Cek data terkirim",
+  html: `
+    Kode: ${payload.kode}<br>
+    Nama: ${payload.nama}<br>
+    Modal: ${payload.modal}<br>
+    Satuan 1: ${payload.satuan1}<br>
+    Harga Ecer: ${payload.hargaEcer}<br>
+    Harga Grosir: ${payload.hargaGrosir1}
+  `
+});
+return;
   for (let i = 0; i < payload.multis.length; i++) {
     const m = payload.multis[i];
     if (m.satuan && (!m.harga || !m.isi)) {
