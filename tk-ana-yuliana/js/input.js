@@ -9,14 +9,42 @@ let activeReaderId = null;
 let activeTargetInput = null;
 let torchOn = false;
 
+let editMode = false;
+let editingRow = "";
+let barcodeCache = new Map();
+
+const DRAFT_KEY = "tk_ana_yuliana_draft_v111";
 const $ = (id) => document.getElementById(id);
 
-document.addEventListener("DOMContentLoaded", () => {
-  $("btnTambah").addEventListener("click", tambahSatuan);
+document.addEventListener("DOMContentLoaded", async () => {
+  $("btnTambah").addEventListener("click", () => tambahSatuan());
   $("btnScan").addEventListener("click", () => startScanner("kode"));
+  $("barangForm").addEventListener("input", simpanDraft);
+
+  await loadBarcodeCache();
+  cekDraft();
 });
 
-function tambahSatuan() {
+async function loadBarcodeCache() {
+  if (API_URL.includes("PASTE_URL")) return;
+
+  try {
+    const res = await fetch(`${API_URL}?action=getBarcodeList`);
+    const data = await res.json();
+
+    if (data.success && Array.isArray(data.items)) {
+      barcodeCache.clear();
+      data.items.forEach(item => {
+        if (item.kode) barcodeCache.set(String(item.kode).trim(), item);
+      });
+      console.log(`Barcode cache: ${barcodeCache.size}`);
+    }
+  } catch (e) {
+    console.warn("Gagal load barcode cache", e);
+  }
+}
+
+function tambahSatuan(data = {}) {
   if (multiCount >= 7) {
     Swal.fire("Maksimal", "Satuan maksimal sampai Satuan 7", "info");
     return;
@@ -32,22 +60,22 @@ function tambahSatuan() {
     <label>Satuan ${multiCount}</label>
     <select name="satuan${multiCount}">
       <option value="">Pilih satuan</option>
-      ${satuanOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
+      ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
 
     <label>Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
-      <input id="kode${multiCount}" name="kode${multiCount}" placeholder="Scan atau ketik manual">
+      <input id="kode${multiCount}" name="kode${multiCount}" value="${data.kode || ""}" placeholder="Scan atau ketik manual">
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
     <label>Harga Grosir Satuan ${multiCount}</label>
-    <input name="harga${multiCount}" type="number" placeholder="Wajib jika satuan diisi">
+    <input name="harga${multiCount}" type="number" value="${data.harga || ""}" placeholder="Wajib jika satuan diisi">
 
     <label>Isi Satuan ${multiCount}</label>
-    <input name="isi${multiCount}" type="number" placeholder="Wajib jika satuan diisi">
+    <input name="isi${multiCount}" type="number" value="${data.isi || ""}" placeholder="Wajib jika satuan diisi">
   `;
 
   $("multiWrap").appendChild(div);
@@ -63,7 +91,7 @@ async function startScanner(targetInputId) {
   const reader = $(activeReaderId);
 
   if (!reader) {
-    Swal.fire("Error", "Area kamera tidak ditemukan.", "error");
+    Swal.fire("Reader tidak ditemukan", `Area kamera untuk ${targetInputId} belum ada.`, "error");
     return;
   }
 
@@ -107,20 +135,21 @@ async function startScanner(targetInputId) {
         const kode = result.text.trim();
         const input = $(activeTargetInput);
 
-        if (input) input.value = kode;
+        if (!input) return;
+
+        input.value = kode;
 
         if (navigator.vibrate) navigator.vibrate(120);
         beep();
 
+        const targetSaatIni = activeTargetInput;
+
         await stopScanner();
 
-        Swal.fire({
-          icon: "success",
-          title: "Barcode terbaca",
-          text: kode,
-          timer: 1000,
-          showConfirmButton: false
-        });
+        if (!cekBarcodeDuplikatDiForm()) return;
+
+        await handleBarcodeAfterScan(kode, targetSaatIni);
+        simpanDraft();
       }
     );
 
@@ -206,15 +235,126 @@ function beep() {
   } catch (e) {}
 }
 
+function cekBarcodeDuplikatDiForm() {
+  const inputs = document.querySelectorAll('input[id^="kode"]');
+  const values = [];
+
+  for (const input of inputs) {
+    const val = input.value.trim();
+    if (!val) continue;
+
+    if (values.includes(val)) {
+      Swal.fire("Barcode dobel", "Barcode ini sudah dipakai di satuan lain.", "warning");
+      input.value = "";
+      return false;
+    }
+
+    values.push(val);
+  }
+
+  return true;
+}
+
+async function handleBarcodeAfterScan(kode, targetInputId) {
+  if (!kode) return;
+
+  if (targetInputId !== "kode") {
+    toast("Barcode terbaca", "Silakan lanjut input.", "success");
+    return;
+  }
+
+  const cached = barcodeCache.get(String(kode).trim());
+
+  if (!cached) {
+    toast("Barcode baru", "Silakan lanjut input.", "success");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}?action=getBarang&kode=${encodeURIComponent(kode)}`);
+    const data = await res.json();
+
+    if (data.exists) {
+      Swal.fire({
+        icon: "warning",
+        title: "Barang sudah terdaftar",
+        html: `
+          <b>${data.nama || "Nama barang tidak tersedia"}</b><br>
+          <small>Kode: ${kode}</small><br><br>
+          Mau edit barang ini?
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Edit Barang",
+        cancelButtonText: "Batal",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          isiFormDariBarang(data);
+        } else {
+          const input = $(targetInputId);
+          if (input) input.value = "";
+          simpanDraft();
+        }
+      });
+
+      return;
+    }
+
+    toast("Barcode baru", "Silakan lanjut input.", "success");
+
+  } catch (e) {
+    Swal.fire("Gagal ambil data", "Coba lagi atau lanjut input manual.", "error");
+  }
+}
+
+function toast(title, text, icon = "success") {
+  Swal.fire({
+    icon,
+    title,
+    text,
+    timer: 1200,
+    showConfirmButton: false
+  });
+}
+
+function isiFormDariBarang(data) {
+  editMode = true;
+  editingRow = data.row || "";
+
+  $("nama").value = data.nama || "";
+  $("modal").value = data.modal || "";
+  $("satuan1").value = data.satuan1 || "PCS";
+  $("kode").value = data.kode || "";
+  $("hargaEcer").value = data.hargaEcer || "";
+  $("hargaGrosir1").value = data.hargaGrosir1 || "";
+
+  $("multiWrap").innerHTML = "";
+  multiCount = 1;
+
+  if (data.multis && Array.isArray(data.multis)) {
+    data.multis.forEach(m => {
+      if (m.satuan || m.kode || m.harga || m.isi) {
+        tambahSatuan(m);
+      }
+    });
+  }
+
+  simpanDraft();
+  Swal.fire("Mode edit", "Semua data barang sudah dimunculkan. Silakan lanjut edit.", "info");
+}
+
 function ambilDataForm() {
   const payload = {
-    action: "addBarang",
+    action: editMode ? "updateBarang" : "addBarang",
+    row: editingRow,
+
     nama: $("nama").value.trim(),
     modal: $("modal").value.trim(),
     satuan1: $("satuan1").value.trim(),
     kode: $("kode").value.trim(),
     hargaEcer: $("hargaEcer").value.trim(),
     hargaGrosir1: $("hargaGrosir1").value.trim(),
+
     multis: []
   };
 
@@ -230,8 +370,62 @@ function ambilDataForm() {
   return payload;
 }
 
+function simpanDraft() {
+  const data = ambilDataForm();
+  data.editMode = editMode;
+  data.editingRow = editingRow;
+  data.multiCount = multiCount;
+
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+}
+
+function cekDraft() {
+  const draft = localStorage.getItem(DRAFT_KEY);
+  if (!draft) return;
+
+  Swal.fire({
+    title: "Lanjutkan editan?",
+    text: "Ada data yang belum selesai disimpan.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Lanjutkan",
+    cancelButtonText: "Hapus"
+  }).then(result => {
+    if (result.isConfirmed) {
+      muatDraft(JSON.parse(draft));
+    } else {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  });
+}
+
+function muatDraft(data) {
+  editMode = data.editMode || false;
+  editingRow = data.editingRow || "";
+
+  $("nama").value = data.nama || "";
+  $("modal").value = data.modal || "";
+  $("satuan1").value = data.satuan1 || "PCS";
+  $("kode").value = data.kode || "";
+  $("hargaEcer").value = data.hargaEcer || "";
+  $("hargaGrosir1").value = data.hargaGrosir1 || "";
+
+  $("multiWrap").innerHTML = "";
+  multiCount = 1;
+
+  if (data.multis && Array.isArray(data.multis)) {
+    data.multis.forEach(m => {
+      if (m.satuan || m.kode || m.harga || m.isi) {
+        tambahSatuan(m);
+      }
+    });
+  }
+}
+
 $("barangForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  if (!cekBarcodeDuplikatDiForm()) return;
 
   const payload = ambilDataForm();
 
@@ -249,37 +443,54 @@ $("barangForm").addEventListener("submit", async (e) => {
     }
   }
 
+  if (API_URL.includes("PASTE_URL")) {
+    Swal.fire("Belum tersambung", "Isi dulu API_URL di js/config.js", "warning");
+    return;
+  }
+
   try {
     Swal.fire({
-      title: "Menyimpan...",
+      title: editMode ? "Mengupdate barang..." : "Menyimpan barang...",
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading()
     });
 
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
       body: JSON.stringify(payload)
     });
 
     const data = await res.json();
-
     Swal.close();
 
     if (data.success) {
-      Swal.fire("Berhasil", "Barang berhasil disimpan.", "success");
+      Swal.fire(
+        data.mode === "updated" ? "Berhasil diupdate" : "Tersimpan",
+        data.mode === "updated" ? "Data barang berhasil diperbarui." : "Barang masuk ke Data Barang.",
+        "success"
+      );
+
+      if (payload.kode) {
+        barcodeCache.set(String(payload.kode).trim(), {
+          kode: payload.kode,
+          row: data.row || editingRow || "",
+          nama: payload.nama
+        });
+      }
 
       $("barangForm").reset();
       $("multiWrap").innerHTML = "";
       multiCount = 1;
+      editMode = false;
+      editingRow = "";
+      localStorage.removeItem(DRAFT_KEY);
+
     } else {
       Swal.fire("Gagal", data.message || "Tidak bisa menyimpan.", "error");
     }
 
   } catch (err) {
     Swal.close();
-    Swal.fire("Error", err.message, "error");
+    Swal.fire("Error", "Gagal konek ke server.", "error");
   }
 });
