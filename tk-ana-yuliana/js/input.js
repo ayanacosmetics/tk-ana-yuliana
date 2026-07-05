@@ -459,8 +459,19 @@ $("barangForm").addEventListener("submit", async (e) => {
 
   const payload = ambilDataForm();
 
-  if (!payload.kode || !payload.nama || !payload.modal || !payload.satuan1 || !payload.hargaEcer) {
-    Swal.fire("Belum lengkap", "Kode, nama, modal, satuan 1, dan harga ecer wajib diisi.", "error");
+  if (
+    !payload.kode ||
+    !payload.nama ||
+    !payload.modal ||
+    !payload.satuan1 ||
+    !payload.hargaEcer ||
+    !payload.hargaGrosir1
+  ) {
+    Swal.fire(
+      "Belum lengkap",
+      "Kode, nama, modal, satuan 1, harga ecer, dan harga grosir satuan 1 wajib diisi.",
+      "error"
+    );
     return;
   }
 
