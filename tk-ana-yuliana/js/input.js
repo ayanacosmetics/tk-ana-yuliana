@@ -449,6 +449,7 @@ function ambilDataForm() {
     kode: $("kode").value.trim(),
     hargaEcer: $("hargaEcer").value.trim(),
     hargaGrosir1: $("hargaGrosir1").value.trim(),
+    petugas: getCurrentUser()?.name || "",
 
     multis: []
   };
