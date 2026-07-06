@@ -449,7 +449,7 @@ function ambilDataForm() {
     kode: $("kode").value.trim(),
     hargaEcer: $("hargaEcer").value.trim(),
     hargaGrosir1: $("hargaGrosir1").value.trim(),
-    petugas: getCurrentUser()?.name || "",
+    petugas: JSON.parse(localStorage.getItem("tay_user") || "{}").name || "",
 
     multis: []
   };
