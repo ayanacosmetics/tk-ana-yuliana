@@ -1,9 +1,10 @@
 const USERS = [
-  { username: "budhi", name: "Budhi", pin: "1234" },
-  { username: "karyawan1", name: "Karyawan 1", pin: "1111" },
-  { username: "karyawan2", name: "Karyawan 2", pin: "2222" },
-  { username: "karyawan3", name: "Karyawan 3", pin: "3333" },
-  { username: "karyawan4", name: "Karyawan 4", pin: "4444" }
+  { username: "budhi", name: "Budhi", pin: "0404" }
+  { username: "ana", name: "Ana", pin: "0000" },
+  { username: "fika", name: "Fika", pin: "1111" },
+  { username: "fira", name: "Fira", pin: "2222" },
+  { username: "cia", name: "Cia", pin: "3333" },
+  { username: "alia", name: "Alia", pin: "4444" }
 ];
 
 function login() {
