@@ -138,3 +138,20 @@
   font-size:20px;
   margin-top:6px;
 }
+
+.modal-box {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #fff4d6;
+  border: 1px solid #f0d28a;
+}
+
+.modal-box label {
+  font-weight: 800;
+  color: #6b4b00;
+}
+
+.modal-box input {
+  background: #fff;
+}
