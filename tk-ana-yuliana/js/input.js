@@ -660,7 +660,10 @@ $("barangForm").addEventListener("submit", async (e) => {
       body: JSON.stringify(payload)
     });
 
-    const data = await res.json();
+    const text = await res.text();
+    console.log(text);
+
+    const data = JSON.parse(text);
     Swal.close();
 
     if (data.success) {
