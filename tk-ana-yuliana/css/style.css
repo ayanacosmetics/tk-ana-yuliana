@@ -155,3 +155,11 @@
 .modal-box input {
   background: #fff;
 }
+
+.form button[type="submit"] {
+  position: sticky;
+  bottom: 12px;
+  z-index: 20;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+  border: 3px solid white;
+}
