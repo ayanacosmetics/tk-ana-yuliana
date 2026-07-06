@@ -60,10 +60,10 @@ function tambahSatuan(data = {}) {
   const div = document.createElement("div");
   div.className = "multi";
   div.innerHTML = `
-    <h3>Satuan ${multiCount}</h3>
+    <h3 id="judulSatuan${multiCount}">Masukkan satuan setelah ${getSatuanSebelumnya(multiCount)}</h3>
 
     <label>Satuan ${multiCount}</label>
-    <select name="satuan${multiCount}" onchange="updateLabelSatuan(${multiCount})">
+    <select name="satuan${multiCount}" onchange="updateLabelSatuan(${multiCount}); updateJudulSemuaSatuan();">
       <option value="">Pilih satuan</option>
       ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
@@ -100,6 +100,23 @@ function tambahSatuan(data = {}) {
 
   $("multiWrap").appendChild(div);
   updateLabelSatuan(multiCount);
+}
+
+function getSatuanSebelumnya(no) {
+  if (no === 2) {
+    return $("satuan1")?.value || "satuan terkecil";
+  }
+
+  return document.querySelector(`[name="satuan${no - 1}"]`)?.value || `Satuan ${no - 1}`;
+}
+
+function updateJudulSemuaSatuan() {
+  for (let i = 2; i <= 7; i++) {
+    const judul = document.getElementById(`judulSatuan${i}`);
+    if (judul) {
+      judul.textContent = `Masukkan satuan setelah ${getSatuanSebelumnya(i)}`;
+    }
+  }
 }
 
 function updateLabelSatuan(no) {
@@ -146,6 +163,7 @@ function updateLabelSatuan1() {
 
   if (inputEcer) inputEcer.placeholder = `Harga ecer per ${satuan}`;
   if (inputGrosir) inputGrosir.placeholder = `Harga grosir per ${satuan}`;
+  updateJudulSemuaSatuan();
 }
 
 async function startScanner(targetInputId) {
@@ -535,7 +553,7 @@ $("barangForm").addEventListener("submit", async (e) => {
   ) {
     Swal.fire(
       "Belum lengkap",
-      "Kode, nama, modal, satuan 1, harga ecer, dan harga grosir satuan 1 wajib diisi.",
+      "Kode, nama, modal, satuan terkecil, harga ecer, dan harga grosir wajib diisi.",
       "error"
     );
     return;
