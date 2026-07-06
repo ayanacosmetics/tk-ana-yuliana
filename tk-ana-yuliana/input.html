@@ -17,7 +17,7 @@
     </header>
 
     <form id="barangForm" class="form">
-      <label>Kode Barang / Barcode Satuan 1</label>
+      <label>Kode Barang / Barcode Satuan Terkecil</label>
       <div class="scan-row">
         <input id="kode" name="kode" required placeholder="Scan atau ketik kode">
         <button type="button" id="btnScan" class="btn-scan-mini">📷</button>
@@ -31,7 +31,7 @@
       <label>Modal (Satuan Tertinggi)</label>
       <input id="modal" name="modal" type="number" required placeholder="Contoh: 120000">
 
-      <label>Satuan 1</label>
+      <label>Satuan Terkecil</label>
       <select id="satuan1" name="satuan1" required>
         <option value="PCS">PCS</option>
         <option value="Bungkus">Bungkus</option>
@@ -53,6 +53,10 @@
     </form>
   </main>
 
+  <script src="js/auth.js"></script>
+  <script>
+    requireLogin();
+  </script>
   <script src="js/config.js"></script>
   <script src="js/input.js"></script>
 </body>
