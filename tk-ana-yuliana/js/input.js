@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("btnScan").addEventListener("click", () => startScanner("kode"));
   $("barangForm").addEventListener("input", simpanDraft);
 
+  $("satuan1").addEventListener("change", updateLabelSatuan1);
+updateLabelSatuan1();
+
   await loadBarcodeCache();
   cekDraft();
 });
@@ -128,6 +131,21 @@ function updateLabelSatuan(no) {
   if (inputKode) inputKode.placeholder = `Scan/ketik barcode ${satuan}`;
   if (inputHarga) inputHarga.placeholder = `Harga grosir per ${satuan}`;
   if (inputIsi) inputIsi.placeholder = `Jumlah pcs dalam ${satuan}`;
+}
+
+function updateLabelSatuan1() {
+  const satuan = $("satuan1")?.value || "PCS";
+
+  const labelEcer = $("labelHargaEcer1");
+  const labelGrosir = $("labelHargaGrosir1");
+  const inputEcer = $("hargaEcer");
+  const inputGrosir = $("hargaGrosir1");
+
+  if (labelEcer) labelEcer.textContent = `Harga Ecer per ${satuan}`;
+  if (labelGrosir) labelGrosir.textContent = `Harga Grosir per ${satuan}`;
+
+  if (inputEcer) inputEcer.placeholder = `Harga ecer per ${satuan}`;
+  if (inputGrosir) inputGrosir.placeholder = `Harga grosir per ${satuan}`;
 }
 
 async function startScanner(targetInputId) {
