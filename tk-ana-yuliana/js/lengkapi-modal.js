@@ -19,15 +19,15 @@ async function loadModalKosong() {
     <b>${item.nama}</b>
     <div class="small">Kode: ${item.kode}</div>
     <div class="small">Satuan 1: ${item.satuan1 || "-"}</div>
-    <div class="small">Harga Ecer: ${item.hargaEcer || "-"}</div>
-    <div class="small">Harga Grosir 1: ${item.hargaGrosir1 || "-"}</div>
+    <div class="small">Harga Ecer per ${item.satuan1 || "Satuan 1"}: ${item.hargaEcer || "-"}</div>
+    <div class="small">Harga Grosir per ${item.satuan1 || "Satuan 1"}: ${item.hargaGrosir1 || "-"}</div>
 
     ${item.satuan2 ? `
       <hr>
       <div class="small">Satuan 2: ${item.satuan2}</div>
       <div class="small">Kode 2: ${item.kode2 || "-"}</div>
-      <div class="small">Harga Grosir 2: ${item.harga2 || "-"}</div>
-      <div class="small">Isi 2: ${item.isi2 || "-"}</div>
+      <div class="small">Harga Grosir per ${item.satuan2}: ${item.harga2 || "-"}</div>
+      <div class="small">Isi ${item.satuan2}: ${item.isi2 || "-"}</div>
     ` : ""}
 
     ${item.satuan3 ? `
