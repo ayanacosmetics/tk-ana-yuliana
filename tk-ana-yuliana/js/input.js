@@ -60,7 +60,7 @@ function tambahSatuan(data = {}) {
     <h3>Satuan ${multiCount}</h3>
 
     <label>Satuan ${multiCount}</label>
-    <select name="satuan${multiCount}">
+    <select name="satuan${multiCount}" onchange="updateIsiLabel(${multiCount})">
       <option value="">Pilih satuan</option>
       ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
@@ -76,11 +76,34 @@ function tambahSatuan(data = {}) {
     <label>Harga Grosir Satuan ${multiCount}</label>
     <input name="harga${multiCount}" type="number" value="${data.harga || ""}" placeholder="Wajib jika satuan diisi">
 
-    <label>Isi Satuan ${multiCount}</label>
-    <input name="isi${multiCount}" type="number" value="${data.isi || ""}" placeholder="Wajib jika satuan diisi">
+    <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
+    <input 
+      name="isi${multiCount}" 
+      type="number" 
+      value="${data.isi || ""}" 
+      placeholder="Pilih satuan dulu"
+    >
   `;
 
   $("multiWrap").appendChild(div);
+  updateIsiLabel(multiCount);
+}
+
+function updateIsiLabel(no) {
+  const satuan = document.querySelector(`[name="satuan${no}"]`)?.value || "";
+  const label = document.getElementById(`labelIsi${no}`);
+  const input = document.querySelector(`[name="isi${no}"]`);
+
+  if (!label || !input) return;
+
+  if (!satuan) {
+    label.textContent = `Isi Satuan ${no}`;
+    input.placeholder = "Pilih satuan dulu";
+    return;
+  }
+
+  label.textContent = `Isi ${satuan}`;
+  input.placeholder = `Jumlah pcs dalam ${satuan}`;
 }
 
 async function startScanner(targetInputId) {
