@@ -25,7 +25,7 @@ async function loadModalKosong() {
     ${item.satuan2 ? `
       <hr>
       <div class="small">Satuan 2: ${item.satuan2}</div>
-      <div class="small">Kode 2: ${item.kode2 || "-"}</div>
+      <div class="small">Kode Barang ${item.satuan2}: ${item.kode2 || "-"}</div>
       <div class="small">Harga Grosir per ${item.satuan2}: ${item.harga2 || "-"}</div>
       <div class="small">Isi ${item.satuan2}: ${item.isi2 || "-"}</div>
     ` : ""}
@@ -33,9 +33,9 @@ async function loadModalKosong() {
     ${item.satuan3 ? `
       <hr>
       <div class="small">Satuan 3: ${item.satuan3}</div>
-      <div class="small">Kode 3: ${item.kode3 || "-"}</div>
-      <div class="small">Harga Grosir 3: ${item.harga3 || "-"}</div>
-      <div class="small">Isi 3: ${item.isi3 || "-"}</div>
+      <div class="small">Kode Barang ${item.satuan3}: ${item.kode3 || "-"}</div>
+      <div class="small">Harga Grosir per ${item.satuan3}: ${item.harga3 || "-"}</div>
+      <div class="small">Isi ${item.satuan3}: ${item.isi3 || "-"}</div>
     ` : ""}
 
     <input type="number" id="modal-${item.row}" placeholder="Isi modal asli">
