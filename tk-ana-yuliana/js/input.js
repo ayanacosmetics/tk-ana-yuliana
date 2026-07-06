@@ -133,9 +133,9 @@ function updateLabelSatuan(no) {
   const inputIsi = document.querySelector(`[name="isi${no}"]`);
 
   if (!satuan) {
-    if (labelKode) labelKode.textContent = `Kode Barang Satuan ${no} (opsional)`;
-    if (labelHarga) labelHarga.textContent = `Harga Grosir Satuan ${no}`;
-    if (labelIsi) labelIsi.textContent = `Isi Satuan ${no}`;
+    if (labelKode) labelKode.textContent = "Kode Barang";
+    if (labelHarga) labelHarga.textContent = "Harga Grosir";
+    if (labelIsi) labelIsi.textContent = "Isi";
 
     if (inputKode) inputKode.placeholder = "Pilih satuan dulu";
     if (inputHarga) inputHarga.placeholder = "Pilih satuan dulu";
