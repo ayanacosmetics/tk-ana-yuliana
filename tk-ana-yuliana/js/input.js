@@ -60,21 +60,31 @@ function tambahSatuan(data = {}) {
     <h3>Satuan ${multiCount}</h3>
 
     <label>Satuan ${multiCount}</label>
-    <select name="satuan${multiCount}" onchange="updateIsiLabel(${multiCount})">
+    <select name="satuan${multiCount}" onchange="updateLabelSatuan(${multiCount})">
       <option value="">Pilih satuan</option>
       ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
 
-    <label>Kode Barang Satuan ${multiCount} (opsional)</label>
+    <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
-      <input id="kode${multiCount}" name="kode${multiCount}" value="${data.kode || ""}" placeholder="Scan atau ketik manual">
+      <input 
+        id="kode${multiCount}" 
+        name="kode${multiCount}" 
+        value="${data.kode || ""}" 
+        placeholder="Pilih satuan dulu"
+      >
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
-    <label>Harga Grosir Satuan ${multiCount}</label>
-    <input name="harga${multiCount}" type="number" value="${data.harga || ""}" placeholder="Wajib jika satuan diisi">
+    <label id="labelHarga${multiCount}">Harga Grosir Satuan ${multiCount}</label>
+    <input 
+      name="harga${multiCount}" 
+      type="number" 
+      value="${data.harga || ""}" 
+      placeholder="Pilih satuan dulu"
+    >
 
     <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
     <input 
@@ -86,24 +96,38 @@ function tambahSatuan(data = {}) {
   `;
 
   $("multiWrap").appendChild(div);
-  updateIsiLabel(multiCount);
+  updateLabelSatuan(multiCount);
 }
 
-function updateIsiLabel(no) {
+function updateLabelSatuan(no) {
   const satuan = document.querySelector(`[name="satuan${no}"]`)?.value || "";
-  const label = document.getElementById(`labelIsi${no}`);
-  const input = document.querySelector(`[name="isi${no}"]`);
 
-  if (!label || !input) return;
+  const labelKode = document.getElementById(`labelKode${no}`);
+  const labelHarga = document.getElementById(`labelHarga${no}`);
+  const labelIsi = document.getElementById(`labelIsi${no}`);
+
+  const inputKode = document.querySelector(`[name="kode${no}"]`);
+  const inputHarga = document.querySelector(`[name="harga${no}"]`);
+  const inputIsi = document.querySelector(`[name="isi${no}"]`);
 
   if (!satuan) {
-    label.textContent = `Isi Satuan ${no}`;
-    input.placeholder = "Pilih satuan dulu";
+    if (labelKode) labelKode.textContent = `Kode Barang Satuan ${no} (opsional)`;
+    if (labelHarga) labelHarga.textContent = `Harga Grosir Satuan ${no}`;
+    if (labelIsi) labelIsi.textContent = `Isi Satuan ${no}`;
+
+    if (inputKode) inputKode.placeholder = "Pilih satuan dulu";
+    if (inputHarga) inputHarga.placeholder = "Pilih satuan dulu";
+    if (inputIsi) inputIsi.placeholder = "Pilih satuan dulu";
     return;
   }
 
-  label.textContent = `Isi ${satuan}`;
-  input.placeholder = `Jumlah pcs dalam ${satuan}`;
+  if (labelKode) labelKode.textContent = `Kode Barang ${satuan} (opsional)`;
+  if (labelHarga) labelHarga.textContent = `Harga Grosir ${satuan}`;
+  if (labelIsi) labelIsi.textContent = `Isi ${satuan}`;
+
+  if (inputKode) inputKode.placeholder = `Scan/ketik barcode ${satuan}`;
+  if (inputHarga) inputHarga.placeholder = `Harga grosir per ${satuan}`;
+  if (inputIsi) inputIsi.placeholder = `Jumlah pcs dalam ${satuan}`;
 }
 
 async function startScanner(targetInputId) {
