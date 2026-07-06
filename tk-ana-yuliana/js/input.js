@@ -73,7 +73,7 @@ function tambahSatuan(data = {}) {
       ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
 
-    <label id="labelKode${multiCount}"Kode Barang Satuan ${multiCount} (opsional)</label>
+    <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
       <input
           id="kode${multiCount}"
@@ -83,13 +83,13 @@ function tambahSatuan(data = {}) {
           pattern="[0-9]*"
           autocomplete="off"
           placeholder="Pilih satuan dulu">
-      >
+      
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
-    <label id="labelHarga${multiCount}"Harga Grosir Satuan ${multiCount}</label>
+    <label id="labelHarga${multiCount}">Harga Grosir Satuan ${multiCount}</label>
     <input
         name="harga${multiCount}"
         type="number"
@@ -98,9 +98,9 @@ function tambahSatuan(data = {}) {
         pattern="[0-9]*"
         autocomplete="off"
         placeholder="Pilih satuan dulu">
-    >
+    
 
-    <label id="labelIsi${multiCount}"Isi Satuan ${multiCount}</label>
+    <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
     <input
         name="isi${multiCount}"
         type="number"
@@ -109,7 +109,7 @@ function tambahSatuan(data = {}) {
         pattern="[0-9]*"
         autocomplete="off"
         placeholder="Pilih satuan dulu">
-    >
+    
   `;
 
   $("multiWrap").appendChild(div);
