@@ -15,22 +15,36 @@ async function loadModalKosong() {
   }
 
   list.innerHTML = data.items.map(item => `
-    <div class="item">
-      <b>${item.nama}</b>
-      <div class="small">Kode: ${item.kode}</div>
-      <div class="small">Harga Ecer: ${item.hargaEcer || "-"}</div>
+  <div class="item">
+    <b>${item.nama}</b>
+    <div class="small">Kode: ${item.kode}</div>
+    <div class="small">Satuan 1: ${item.satuan1 || "-"}</div>
+    <div class="small">Harga Ecer: ${item.hargaEcer || "-"}</div>
+    <div class="small">Harga Grosir 1: ${item.hargaGrosir1 || "-"}</div>
 
-      <input 
-        type="number" 
-        id="modal-${item.row}" 
-        placeholder="Isi modal asli"
-      >
+    ${item.satuan2 ? `
+      <hr>
+      <div class="small">Satuan 2: ${item.satuan2}</div>
+      <div class="small">Kode 2: ${item.kode2 || "-"}</div>
+      <div class="small">Harga Grosir 2: ${item.harga2 || "-"}</div>
+      <div class="small">Isi 2: ${item.isi2 || "-"}</div>
+    ` : ""}
 
-      <button class="btn primary" onclick="simpanModal(${item.row})">
-        Simpan Modal
-      </button>
-    </div>
-  `).join("");
+    ${item.satuan3 ? `
+      <hr>
+      <div class="small">Satuan 3: ${item.satuan3}</div>
+      <div class="small">Kode 3: ${item.kode3 || "-"}</div>
+      <div class="small">Harga Grosir 3: ${item.harga3 || "-"}</div>
+      <div class="small">Isi 3: ${item.isi3 || "-"}</div>
+    ` : ""}
+
+    <input type="number" id="modal-${item.row}" placeholder="Isi modal asli">
+
+    <button class="btn primary" onclick="simpanModal(${item.row})">
+      Simpan Modal
+    </button>
+  </div>
+`).join("");
 }
 
 async function simpanModal(row) {
