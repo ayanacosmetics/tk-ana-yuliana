@@ -679,3 +679,27 @@ $("barangForm").addEventListener("submit", async (e) => {
     Swal.fire("Error", "Gagal konek ke server.", "error");
   }
 });
+
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Enter") return;
+
+  const el = document.activeElement;
+
+  if (!el || !["INPUT", "SELECT"].includes(el.tagName)) return;
+
+  e.preventDefault();
+
+  const fields = Array.from(
+    document.querySelectorAll("input, select, button")
+  ).filter(field =>
+    !field.disabled &&
+    field.offsetParent !== null &&
+    field.type !== "button"
+  );
+
+  const index = fields.indexOf(el);
+
+  if (index >= 0 && index < fields.length - 1) {
+    fields[index + 1].focus();
+  }
+});
