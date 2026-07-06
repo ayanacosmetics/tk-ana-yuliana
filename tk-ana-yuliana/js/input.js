@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("btnTambah").addEventListener("click", () => tambahSatuan());
   $("btnScan").addEventListener("click", () => startScanner("kode"));
   $("barangForm").addEventListener("input", simpanDraft);
+  $("nama").addEventListener("input", function () {
+    this.value = this.value.toUpperCase();
+  });
 
   $("satuan1").addEventListener("change", updateLabelSatuan1);
   updateLabelSatuan1();
@@ -72,11 +75,14 @@ function tambahSatuan(data = {}) {
 
     <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
-      <input 
-        id="kode${multiCount}" 
-        name="kode${multiCount}" 
-        value="${data.kode || ""}" 
-        placeholder="Pilih satuan dulu"
+      <input
+          id="kode${multiCount}"
+          name="kode${multiCount}"
+          value="${data.kode || ""}"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Pilih satuan dulu">
       >
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
@@ -84,19 +90,25 @@ function tambahSatuan(data = {}) {
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
     <label id="labelHarga${multiCount}">Harga Grosir Satuan ${multiCount}</label>
-    <input 
-      name="harga${multiCount}" 
-      type="number" 
-      value="${data.harga || ""}" 
-      placeholder="Pilih satuan dulu"
+    <input
+        name="harga${multiCount}"
+        type="number"
+        value="${data.harga || ""}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
+        placeholder="Pilih satuan dulu">
     >
 
     <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
-    <input 
-      name="isi${multiCount}" 
-      type="number" 
-      value="${data.isi || ""}" 
-      placeholder="Pilih satuan dulu"
+    <input
+        name="isi${multiCount}"
+        type="number"
+        value="${data.isi || ""}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
+        placeholder="Pilih satuan dulu">
     >
   `;
 

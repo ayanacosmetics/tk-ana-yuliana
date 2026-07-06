@@ -19,14 +19,28 @@
     <form id="barangForm" class="form">
       <label>Kode Barang / Barcode Satuan Terkecil</label>
       <div class="scan-row">
-        <input id="kode" name="kode" required placeholder="Scan atau ketik kode">
+        <input
+           id="kode"
+           name="kode"
+           required
+           inputmode="numeric"
+           pattern="[0-9]*"
+           autocomplete="off"
+           placeholder="Scan atau ketik kode">
         <button type="button" id="btnScan" class="btn-scan-mini">📷</button>
       </div>
 
       <div id="reader-kode" class="reader hidden"></div>
 
       <label>Nama Barang</label>
-      <input id="nama" name="nama" required placeholder="Merk + nama + ukuran">
+      <input
+          id="nama"
+          name="nama"
+          required
+          autocapitalize="characters"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="MERK + NAMA + UKURAN">
 
 
       <label>Satuan Terkecil</label>
@@ -38,22 +52,41 @@
         <option value="Pack">Pack</option>
       </select>
 
-     <label id="labelHargaEcer1">Harga Ecer per PCS</label>
-<input id="hargaEcer" name="hargaEcer" type="number" required placeholder="Harga ecer per PCS">
+      <label id="labelHargaEcer1">Harga Ecer PCS</label>
+      <input
+          id="hargaEcer"
+          name="hargaEcer"
+          type="number"
+          required
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Masukkan harga ecer PCS">
 
-<label id="labelHargaGrosir1">Harga Grosir per PCS</label>
-<input id="hargaGrosir1" name="hargaGrosir1" type="number" required placeholder="Harga grosir per PCS">
+      <label id="labelHargaGrosir1">Harga Grosir PCS</label>
+      <input
+          id="hargaGrosir1"
+          name="hargaGrosir1"
+          type="number"
+          required
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Masukkan harga grosir PCS">
 
       <div id="multiWrap"></div>
 
       <button type="button" id="btnTambah" class="btn secondary">+ Tambah Satuan setelah PCS</button>
     <div class="modal-box">
-      <label id="labelModal">Modal per PCS</label>
-      <input
+    <label id="labelModal">Modal per PCS</label>
+    <input
         id="modal"
         name="modal"
         type="number"
         required
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
         placeholder="Masukkan modal per PCS">
     </div>
       <button type="submit" class="btn primary">Simpan</button>
