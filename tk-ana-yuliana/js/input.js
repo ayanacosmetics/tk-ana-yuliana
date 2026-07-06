@@ -83,7 +83,7 @@ function tambahSatuan(data = {}) {
           pattern="[0-9]*"
           autocomplete="off"
           placeholder="Pilih satuan dulu">
-      >
+      
       <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
     </div>
 
@@ -98,7 +98,7 @@ function tambahSatuan(data = {}) {
         pattern="[0-9]*"
         autocomplete="off"
         placeholder="Pilih satuan dulu">
-    >
+    
 
     <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
     <input
@@ -109,7 +109,7 @@ function tambahSatuan(data = {}) {
         pattern="[0-9]*"
         autocomplete="off"
         placeholder="Pilih satuan dulu">
-    >
+    
   `;
 
   $("multiWrap").appendChild(div);
