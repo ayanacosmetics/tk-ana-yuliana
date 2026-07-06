@@ -24,7 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("barangForm").addEventListener("input", simpanDraft);
 
   $("satuan1").addEventListener("change", updateLabelSatuan1);
-updateLabelSatuan1();
+  updateLabelSatuan1();
+  updateModalLabel();
+  updateTambahSatuanButton();
 
   await loadBarcodeCache();
   cekDraft();
@@ -148,6 +150,30 @@ function updateLabelSatuan(no) {
   if (inputKode) inputKode.placeholder = `Scan/ketik barcode ${satuan}`;
   if (inputHarga) inputHarga.placeholder = `Harga grosir per ${satuan}`;
   if (inputIsi) inputIsi.placeholder = `Jumlah pcs dalam ${satuan}`;
+  updateTambahSatuanButton();
+  updateModalLabel();
+}
+
+function updateModalLabel(){
+
+    let terakhir = $("satuan1").value || "PCS";
+
+    for(let i=2;i<=multiCount;i++){
+
+        const s=document.querySelector(`[name="satuan${i}"]`);
+
+        if(s && s.value){
+            terakhir=s.value;
+        }
+
+    }
+
+    $("labelModal").textContent =
+        `Modal per ${terakhir}`;
+
+    $("modal").placeholder =
+        `Masukkan modal per ${terakhir}`;
+
 }
 
 function updateLabelSatuan1() {
@@ -164,6 +190,27 @@ function updateLabelSatuan1() {
   if (inputEcer) inputEcer.placeholder = `Harga ecer per ${satuan}`;
   if (inputGrosir) inputGrosir.placeholder = `Harga grosir per ${satuan}`;
   updateJudulSemuaSatuan();
+  updateTambahSatuanButton();
+  updateModalLabel();
+}
+
+function updateTambahSatuanButton() {
+
+    let terakhir = $("satuan1").value || "PCS";
+
+    for (let i = 2; i <= multiCount; i++) {
+
+        const s = document.querySelector(`[name="satuan${i}"]`);
+
+        if (s && s.value) {
+            terakhir = s.value;
+        }
+
+    }
+
+    $("btnTambah").textContent =
+        `+ Tambah Satuan setelah ${terakhir}`;
+
 }
 
 async function startScanner(targetInputId) {
