@@ -520,7 +520,7 @@ function ambilDataForm() {
     action: editMode ? "updateBarang" : "addBarang",
     row: editingRow,
 
-    nama: $("nama").value.trim(),
+    nama: $("nama").value.trim().toUpperCase(),
     modal: $("modal").value.trim(),
     satuan1: $("satuan1").value.trim(),
     kode: $("kode").value.trim(),
