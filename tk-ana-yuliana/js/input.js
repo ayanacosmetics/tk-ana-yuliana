@@ -739,14 +739,6 @@ $("barangForm").addEventListener("submit", async (e) => {
       return;
     }
 
-  if (m.satuan && (!m.harga || !m.isi)) {
-  Swal.fire(
-    "Belum lengkap",
-    `Harga dan isi Satuan ${i + 2} wajib diisi.`,
-    "error"
-  );
-  return;
-}
   }
 
   if (API_URL.includes("PASTE_URL")) {
