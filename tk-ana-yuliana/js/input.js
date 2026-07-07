@@ -3,6 +3,8 @@ const satuanOptions = [
   "Lusin","Botol","Kaleng","Sachet","Kg","Gram","Liter","mL"
 ];
 
+const MAX_SATUAN = 4;
+
 let multiCount = 1;
 let codeReader = null;
 let activeReaderId = null;
@@ -55,8 +57,8 @@ async function loadBarcodeCache() {
 }
 
 function tambahSatuan(data = {}) {
-  if (multiCount >= 7) {
-    Swal.fire("Maksimal", "Satuan maksimal sampai Satuan 7", "info");
+  if (multiCount >= MAX_SATUAN) {
+    Swal.fire("Maksimal", "Satuan maksimal sampai Satuan 4", "info");
     return;
   }
 
@@ -89,15 +91,45 @@ function tambahSatuan(data = {}) {
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
-    <label id="labelHarga${multiCount}">Harga Grosir Satuan ${multiCount}</label>
+    <label id="labelHarga1_${multiCount}">Harga Grosir 1</label>
     <input
-        name="harga${multiCount}"
+        name="harga1_${multiCount}"
         type="number"
-        value="${data.harga || ""}"
+        value="${data.harga1 || data.harga || ""}"
         inputmode="numeric"
         pattern="[0-9]*"
         autocomplete="off"
         placeholder="Pilih satuan dulu">
+
+    <div id="wrapHarga2_${multiCount}" style="${data.harga2 ? "" : "display:none"}">
+      <label id="labelHarga2_${multiCount}">Harga Grosir 2</label>
+      <input
+          name="harga2_${multiCount}"
+          type="number"
+          value="${data.harga2 || ""}"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Opsional">
+      <button type="button" class="btn secondary" onclick="tutupHargaGrosir(${multiCount}, 2)">Tutup Harga Grosir 2</button>
+    </div>
+
+    <div id="wrapHarga3_${multiCount}" style="${data.harga3 ? "" : "display:none"}">
+      <label id="labelHarga3_${multiCount}">Harga Grosir 3</label>
+      <input
+          name="harga3_${multiCount}"
+          type="number"
+          value="${data.harga3 || ""}"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Opsional">
+      <button type="button" class="btn secondary" onclick="tutupHargaGrosir(${multiCount}, 3)">Tutup Harga Grosir 3</button>
+    </div>
+
+    <button type="button" class="btn secondary" onclick="tambahHargaGrosir(${multiCount})">
+      + Tambah Harga Grosir
+    </button>
     
 
     <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
@@ -116,6 +148,33 @@ function tambahSatuan(data = {}) {
   updateLabelSatuan(multiCount);
 }
 
+function tambahHargaGrosir(no) {
+  const wrap2 = document.getElementById(`wrapHarga2_${no}`);
+  const wrap3 = document.getElementById(`wrapHarga3_${no}`);
+
+  if (wrap2 && wrap2.style.display === "none") {
+    wrap2.style.display = "";
+    return;
+  }
+
+  if (wrap3 && wrap3.style.display === "none") {
+    wrap3.style.display = "";
+    return;
+  }
+
+  Swal.fire("Maksimal", "Harga grosir maksimal sampai 3.", "info");
+}
+
+function tutupHargaGrosir(no, level) {
+  const wrap = document.getElementById(`wrapHarga${level}_${no}`);
+  const input = document.querySelector(`[name="harga${level}_${no}"]`);
+
+  if (input) input.value = "";
+  if (wrap) wrap.style.display = "none";
+
+  simpanDraft();
+}
+
 function getSatuanSebelumnya(no) {
   if (no === 2) {
     return $("satuan1")?.value || "satuan terkecil";
@@ -125,7 +184,7 @@ function getSatuanSebelumnya(no) {
 }
 
 function updateJudulSemuaSatuan() {
-  for (let i = 2; i <= 7; i++) {
+  for (let i = 2; i <= MAX_SATUAN; i++) {
     const judul = document.getElementById(`judulSatuan${i}`);
     if (judul) {
       judul.textContent = `Masukkan satuan setelah ${getSatuanSebelumnya(i)}`;
@@ -137,7 +196,9 @@ function updateLabelSatuan(no) {
   const satuan = document.querySelector(`[name="satuan${no}"]`)?.value || "";
 
   const labelKode = document.getElementById(`labelKode${no}`);
-  const labelHarga = document.getElementById(`labelHarga${no}`);
+  const labelHarga1 = document.getElementById(`labelHarga1_${no}`);
+  const labelHarga2 = document.getElementById(`labelHarga2_${no}`);
+  const labelHarga3 = document.getElementById(`labelHarga3_${no}`);
   const labelIsi = document.getElementById(`labelIsi${no}`);
 
   const inputKode = document.querySelector(`[name="kode${no}"]`);
@@ -146,7 +207,9 @@ function updateLabelSatuan(no) {
 
   if (!satuan) {
     if (labelKode) labelKode.textContent = "Kode Barang";
-    if (labelHarga) labelHarga.textContent = "Harga Grosir";
+    if (labelHarga1) labelHarga1.textContent = "Harga Grosir 1";
+    if (labelHarga2) labelHarga2.textContent = "Harga Grosir 2";
+    if (labelHarga3) labelHarga3.textContent = "Harga Grosir 3";
     if (labelIsi) labelIsi.textContent = "Isi";
 
     if (inputKode) inputKode.placeholder = "Pilih satuan dulu";
@@ -156,7 +219,9 @@ function updateLabelSatuan(no) {
   }
 
   if (labelKode) labelKode.textContent = `Kode Barang ${satuan} (opsional)`;
-  if (labelHarga) labelHarga.textContent = `Harga Grosir ${satuan}`;
+  if (labelHarga1) labelHarga1.textContent = `Harga Grosir 1 per ${satuan}`;
+  if (labelHarga2) labelHarga2.textContent = `Harga Grosir 2 per ${satuan}`;
+  if (labelHarga3) labelHarga3.textContent = `Harga Grosir 3 per ${satuan}`;
   if (labelIsi) labelIsi.textContent = `Isi ${satuan}`;
 
   if (inputKode) inputKode.placeholder = `Scan/ketik barcode ${satuan}`;
@@ -531,12 +596,14 @@ function ambilDataForm() {
     multis: []
   };
 
-  for (let i = 2; i <= 7; i++) {
+  for (let i = 2; i <= MAX_SATUAN; i++) {
     payload.multis.push({
       satuan: document.querySelector(`[name="satuan${i}"]`)?.value.trim() || "",
+      isi: document.querySelector(`[name="isi${i}"]`)?.value.trim() || "",
       kode: document.querySelector(`[name="kode${i}"]`)?.value.trim() || "",
-      harga: document.querySelector(`[name="harga${i}"]`)?.value.trim() || "",
-      isi: document.querySelector(`[name="isi${i}"]`)?.value.trim() || ""
+      harga1: document.querySelector(`[name="harga1_${i}"]`)?.value.trim() || "",
+      harga2: document.querySelector(`[name="harga2_${i}"]`)?.value.trim() || "",
+      harga3: document.querySelector(`[name="harga3_${i}"]`)?.value.trim() || ""
     });
   }
 
