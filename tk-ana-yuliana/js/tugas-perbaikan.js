@@ -33,15 +33,21 @@ async function loadTugas() {
 
       <b>Perlu diperbaiki:</b>
 
-      ${item.fields.map(f => `
-        <div style="margin-top:10px">
-          <label>${f.label}</label>
+      ${f.label.toLowerCase().includes("kode barang") ? `
+        <div class="scan-row">
           <input
             id="fix-${item.row}-${f.col}"
-            inputmode="${f.type === "number" ? "numeric" : "text"}"
+            inputmode="numeric"
             placeholder="${f.placeholder}">
+          <button type="button" class="btn-scan-mini" onclick="scanPerbaikan('fix-${item.row}-${f.col}')">📷</button>
         </div>
-      `).join("")}
+        <div id="reader-fix-${item.row}-${f.col}" class="reader hidden"></div>
+      ` : `
+        <input
+          id="fix-${item.row}-${f.col}"
+          inputmode="${f.type === "number" ? "numeric" : "text"}"
+          placeholder="${f.placeholder}">
+      `}
 
       <button class="btn primary" onclick='simpanPerbaikan(${JSON.stringify(item)})'>
         Simpan Perbaikan
@@ -90,5 +96,64 @@ async function simpanPerbaikan(item) {
     loadTugas();
   } else {
     Swal.fire("Gagal", data.message || "Tidak bisa menyimpan perbaikan.", "error");
+  }
+}
+
+let repairScanner = null;
+
+async function scanPerbaikan(inputId) {
+  const readerId = `reader-${inputId}`;
+  const reader = document.getElementById(readerId);
+
+  if (!reader) return;
+
+  if (repairScanner) {
+    repairScanner.reset();
+    repairScanner = null;
+  }
+
+  reader.classList.remove("hidden");
+  reader.innerHTML = `
+    <div class="scanner-box">
+      <video id="repairVideo" playsinline></video>
+      <div class="scan-frame"></div>
+      <div class="scan-line"></div>
+    </div>
+    <button type="button" class="btn secondary" onclick="stopScanPerbaikan('${readerId}')">Tutup Kamera</button>
+  `;
+
+  repairScanner = new ZXing.BrowserMultiFormatReader();
+
+  const devices = await repairScanner.listVideoInputDevices();
+  const deviceId = devices[0]?.deviceId;
+
+  repairScanner.decodeFromVideoDevice(deviceId, "repairVideo", (result) => {
+    if (!result) return;
+
+    document.getElementById(inputId).value = result.text.trim();
+
+    if (navigator.vibrate) navigator.vibrate(120);
+
+    stopScanPerbaikan(readerId);
+
+    Swal.fire({
+      icon: "success",
+      title: "Barcode terbaca",
+      timer: 900,
+      showConfirmButton: false
+    });
+  });
+}
+
+function stopScanPerbaikan(readerId) {
+  if (repairScanner) {
+    repairScanner.reset();
+    repairScanner = null;
+  }
+
+  const reader = document.getElementById(readerId);
+  if (reader) {
+    reader.classList.add("hidden");
+    reader.innerHTML = "";
   }
 }
