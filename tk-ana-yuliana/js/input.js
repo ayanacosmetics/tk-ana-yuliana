@@ -603,7 +603,7 @@ function isiFormDariBarang(data) {
 
   if (data.multis && Array.isArray(data.multis)) {
     data.multis.forEach(m => {
-      if (m.satuan || m.kode || m.harga || m.isi) {
+      if (m.satuan || m.kode || m.harga1 || m.harga2 || m.harga3 || m.isi) {
         tambahSatuan(m);
       }
     });
@@ -688,7 +688,7 @@ function muatDraft(data) {
 
   if (data.multis && Array.isArray(data.multis)) {
     data.multis.forEach(m => {
-      if (m.satuan || m.kode || m.harga || m.isi) {
+      if (m.satuan || m.kode || m.harga1 || m.harga2 || m.harga3 || m.isi) {
         tambahSatuan(m);
       }
     });
