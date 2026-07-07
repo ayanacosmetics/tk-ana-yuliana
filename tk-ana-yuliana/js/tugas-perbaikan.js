@@ -176,6 +176,7 @@ async function scanPerbaikan(inputId) {
         if (navigator.vibrate) navigator.vibrate(120);
 
         stopScanPerbaikan();
+        document.getElementById(inputId).blur();
 
         Swal.fire({
           icon: "success",
@@ -197,13 +198,18 @@ async function stopScanPerbaikan() {
     repairScanner = null;
   }
 
-  if (repairActiveReaderId) {
-    const reader = document.getElementById(repairActiveReaderId);
-    if (reader) {
-      reader.classList.add("hidden");
-      reader.innerHTML = "";
+  const videos = document.querySelectorAll("video");
+  videos.forEach(video => {
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(track => track.stop());
+      video.srcObject = null;
     }
-  }
+  });
+
+  document.querySelectorAll(".reader").forEach(reader => {
+    reader.classList.add("hidden");
+    reader.innerHTML = "";
+  });
 
   repairActiveReaderId = null;
   repairTorchOn = false;
