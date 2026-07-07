@@ -22,7 +22,7 @@
 
       <a class="card" href="tugas-perbaikan.html">
         🛠️
-        <span>Tugas Perbaikan</span>
+        <span id="tugasPerbaikanMenu">Tugas Perbaikan</span>
       </a>
 
       <a class="card" href="lengkapi-modal.html">
@@ -35,6 +35,7 @@
         <span>Siap Rilis</span>
       </a>
     </div>
+   
     <div class="item">
   <b id="userInfo"></b>
   <button class="btn secondary" onclick="logout()">Logout</button>
@@ -47,5 +48,23 @@
   document.getElementById("userInfo").innerText = "Login sebagai: " + user.name;
 </script>
   </main>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  requireLogin();
+
+  async function loadJumlahPerbaikan() {
+    const user = getCurrentUser();
+    const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
+    const data = await res.json();
+
+    if (data.count > 0) {
+      document.getElementById("tugasPerbaikanMenu").innerText =
+        `Tugas Perbaikan (${data.count})`;
+    }
+  }
+
+  loadJumlahPerbaikan();
+</script>
 </body>
 </html>

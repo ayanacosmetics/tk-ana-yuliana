@@ -6,13 +6,22 @@ btnLoad.addEventListener("click", loadTugas);
 async function loadTugas() {
   list.innerHTML = `<div class="item">Memuat tugas...</div>`;
 
-  const res = await fetch(`${API_URL}?action=tugasPerbaikan`);
+  const user = JSON.parse(localStorage.getItem("tay_user") || "{}");
+
+  const res = await fetch(
+    `${API_URL}?action=tugasPerbaikan&petugas=${encodeURIComponent(user.name || "")}`
+  );
   const data = await res.json();
 
   if (!data.items || data.items.length === 0) {
-    list.innerHTML = `<div class="item">Tidak ada tugas perbaikan.</div>`;
+     list.innerHTML = `
+        <div class="item success-card">
+            <h3>🎉 Selamat!</h3>
+            <p>Anda telah menginput semua barang dengan benar.</p>
+        </div>
+     `;
     return;
-  }
+ }
 
   list.innerHTML = data.items.map(item => `
     <div class="item">
