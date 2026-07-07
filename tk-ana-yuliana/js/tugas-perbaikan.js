@@ -113,6 +113,10 @@ async function simpanPerbaikan(item) {
 }
 
 let repairScanner = null;
+let repairActiveReaderId = null;
+let repairAvailableCameras = [];
+let repairSelectedCameraIndex = 0;
+let repairTorchOn = false;
 
 async function scanPerbaikan(inputId) {
   const readerId = `reader-${inputId}`;
@@ -120,10 +124,10 @@ async function scanPerbaikan(inputId) {
 
   if (!reader) return;
 
-  if (repairScanner) {
-    repairScanner.reset();
-    repairScanner = null;
-  }
+  await stopScanPerbaikan();
+
+  repairActiveReaderId = readerId;
+  repairTorchOn = false;
 
   reader.classList.remove("hidden");
   reader.innerHTML = `
@@ -132,30 +136,129 @@ async function scanPerbaikan(inputId) {
       <div class="scan-frame"></div>
       <div class="scan-line"></div>
     </div>
-    <button type="button" class="btn secondary" onclick="stopScanPerbaikan('${readerId}')">Tutup Kamera</button>
+
+    <div class="zoom-row">
+      <button type="button" onclick="setRepairZoom(1)">1x</button>
+      <button type="button" onclick="setRepairZoom(2)">2x</button>
+      <button type="button" onclick="setRepairZoom(3)">3x</button>
+      <button type="button" onclick="toggleRepairTorch()">🔦</button>
+      <button type="button" onclick="switchRepairCamera('${inputId}')">🔄</button>
+    </div>
+
+    <button type="button" class="btn secondary" onclick="stopScanPerbaikan()">Tutup Kamera</button>
   `;
 
-  repairScanner = new ZXing.BrowserMultiFormatReader();
+  try {
+    repairScanner = new ZXing.BrowserMultiFormatReader();
 
-  const devices = await repairScanner.listVideoInputDevices();
-  const deviceId = devices[0]?.deviceId;
+    const devices = await repairScanner.listVideoInputDevices();
+    repairAvailableCameras = devices;
 
-  repairScanner.decodeFromVideoDevice(deviceId, "repairVideo", (result) => {
-    if (!result) return;
+    if (!repairAvailableCameras.length) {
+      Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera yang bisa digunakan.", "error");
+      return;
+    }
 
-    document.getElementById(inputId).value = result.text.trim();
+    if (repairSelectedCameraIndex >= repairAvailableCameras.length) {
+      repairSelectedCameraIndex = 0;
+    }
 
-    if (navigator.vibrate) navigator.vibrate(120);
+    const selectedDeviceId = repairAvailableCameras[repairSelectedCameraIndex]?.deviceId;
 
-    stopScanPerbaikan(readerId);
+    repairScanner.decodeFromVideoDevice(
+      selectedDeviceId,
+      "repairVideo",
+      (result) => {
+        if (!result) return;
 
-    Swal.fire({
-      icon: "success",
-      title: "Barcode terbaca",
-      timer: 900,
-      showConfirmButton: false
-    });
-  });
+        document.getElementById(inputId).value = result.text.trim();
+
+        if (navigator.vibrate) navigator.vibrate(120);
+
+        stopScanPerbaikan();
+
+        Swal.fire({
+          icon: "success",
+          title: "Barcode terbaca",
+          timer: 900,
+          showConfirmButton: false
+        });
+      }
+    );
+  } catch (err) {
+    Swal.fire("Kamera gagal", "Izinkan akses kamera di browser HP.", "error");
+    await stopScanPerbaikan();
+  }
+}
+
+async function stopScanPerbaikan() {
+  if (repairScanner) {
+    repairScanner.reset();
+    repairScanner = null;
+  }
+
+  if (repairActiveReaderId) {
+    const reader = document.getElementById(repairActiveReaderId);
+    if (reader) {
+      reader.classList.add("hidden");
+      reader.innerHTML = "";
+    }
+  }
+
+  repairActiveReaderId = null;
+  repairTorchOn = false;
+}
+
+async function setRepairZoom(level) {
+  const video = document.getElementById("repairVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.zoom) {
+    Swal.fire("Zoom tidak support", "Kamera HP ini tidak mendukung zoom dari browser.", "info");
+    return;
+  }
+
+  const zoom = Math.min(level, capabilities.zoom.max);
+  await track.applyConstraints({ advanced: [{ zoom }] });
+}
+
+async function toggleRepairTorch() {
+  const video = document.getElementById("repairVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.torch) {
+    Swal.fire("Flash tidak support", "Browser atau HP ini tidak mendukung flash kamera.", "info");
+    return;
+  }
+
+  repairTorchOn = !repairTorchOn;
+  await track.applyConstraints({ advanced: [{ torch: repairTorchOn }] });
+}
+
+async function switchRepairCamera(inputId) {
+  if (!repairAvailableCameras.length) {
+    Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera lain yang bisa dipilih.", "info");
+    return;
+  }
+
+  repairSelectedCameraIndex++;
+
+  if (repairSelectedCameraIndex >= repairAvailableCameras.length) {
+    repairSelectedCameraIndex = 0;
+  }
+
+  await stopScanPerbaikan();
+  await scanPerbaikan(inputId);
 }
 
 function stopScanPerbaikan(readerId) {
