@@ -202,7 +202,9 @@ function updateLabelSatuan(no) {
   const labelIsi = document.getElementById(`labelIsi${no}`);
 
   const inputKode = document.querySelector(`[name="kode${no}"]`);
-  const inputHarga = document.querySelector(`[name="harga${no}"]`);
+  const inputHarga1 = document.querySelector(`[name="harga1_${no}"]`);
+  const inputHarga2 = document.querySelector(`[name="harga2_${no}"]`);
+  const inputHarga3 = document.querySelector(`[name="harga3_${no}"]`);
   const inputIsi = document.querySelector(`[name="isi${no}"]`);
 
   if (!satuan) {
@@ -213,7 +215,9 @@ function updateLabelSatuan(no) {
     if (labelIsi) labelIsi.textContent = "Isi";
 
     if (inputKode) inputKode.placeholder = "Pilih satuan dulu";
-    if (inputHarga) inputHarga.placeholder = "Pilih satuan dulu";
+    if (inputHarga1) inputHarga1.placeholder = "Pilih satuan dulu";
+    if (inputHarga2) inputHarga2.placeholder = "Opsional";
+    if (inputHarga3) inputHarga3.placeholder = "Opsional";
     if (inputIsi) inputIsi.placeholder = "Pilih satuan dulu";
     return;
   }
@@ -225,7 +229,9 @@ function updateLabelSatuan(no) {
   if (labelIsi) labelIsi.textContent = `Isi ${satuan}`;
 
   if (inputKode) inputKode.placeholder = `Scan/ketik barcode ${satuan}`;
-  if (inputHarga) inputHarga.placeholder = `Harga grosir per ${satuan}`;
+  if (inputHarga1) inputHarga1.placeholder = `Harga Grosir 1 per ${satuan}`;
+  if (inputHarga2) inputHarga2.placeholder = `Harga Grosir 2 per ${satuan}`;
+  if (inputHarga3) inputHarga3.placeholder = `Harga Grosir 3 per ${satuan}`;
   if (inputIsi) inputIsi.placeholder = `Jumlah pcs dalam ${satuan}`;
   updateTambahSatuanButton();
   updateModalLabel();
