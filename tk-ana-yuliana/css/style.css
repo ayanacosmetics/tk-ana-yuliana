@@ -232,3 +232,114 @@
   flex: 1;
   border-radius: 12px;
 }
+
+/* ===== INPUT BARANG UI V2 ===== */
+
+.multi {
+  border: 1.5px solid #d7e6ff;
+  border-left: 5px solid #0d6efd;
+  background: #f5f9ff;
+  border-radius: 16px;
+  padding: 14px;
+  margin-top: 14px;
+}
+
+.multi:nth-of-type(2) {
+  border-left-color: #ff8a00;
+  background: #fff8ed;
+}
+
+.multi:nth-of-type(3) {
+  border-left-color: #d63384;
+  background: #fff3fa;
+}
+
+.multi h3 {
+  margin-top: 0;
+  font-size: 17px;
+  color: #0d47a1;
+}
+
+.grosir-box {
+  padding: 10px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.grosir-1 {
+  background: #eefbf0;
+  border: 1px solid #bfe8c5;
+}
+
+.grosir-2 {
+  background: #fff8e5;
+  border: 1px solid #f3d78a;
+}
+
+.grosir-3 {
+  background: #f6efff;
+  border: 1px solid #d8c2ff;
+}
+
+.grosir-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btn-grosir-mini {
+  flex: 1;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.btn-cancel-mini {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #ffb4b4;
+  background: #fff0f0;
+  color: #d60000;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+/* Satuan utama */
+.satuan-utama-box {
+  border: 1.5px solid #bfe8c5;
+  border-left: 5px solid #198754;
+  background: #f3fff6;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.satuan-utama-title {
+  font-weight: 800;
+  color: #08753a;
+  margin-bottom: 12px;
+}
+
+/* Tombol tambah satuan */
+#btnTambah {
+  border: 2px dashed #0d6efd !important;
+  background: #f8fbff !important;
+  color: #0d6efd !important;
+  font-weight: 800;
+  padding: 16px !important;
+  border-radius: 16px !important;
+}
+
+/* Tombol simpan */
+.form button[type="submit"] {
+  background: linear-gradient(135deg, #0d6efd, #0052cc) !important;
+  color: white !important;
+  font-weight: 800;
+  border-radius: 14px !important;
+  padding: 16px !important;
+  position: sticky;
+  bottom: 10px;
+  z-index: 30;
+  box-shadow: 0 8px 22px rgba(13, 110, 253, .35);
+}
