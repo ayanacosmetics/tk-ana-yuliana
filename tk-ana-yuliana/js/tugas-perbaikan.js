@@ -6,54 +6,67 @@ btnLoad.addEventListener("click", loadTugas);
 async function loadTugas() {
   list.innerHTML = `<div class="item">Memuat tugas...</div>`;
 
-  const user = JSON.parse(localStorage.getItem("tay_user") || "{}");
+  try {
+    const user = JSON.parse(localStorage.getItem("tay_user") || "{}");
 
-  const res = await fetch(
-    `${API_URL}?action=tugasPerbaikan&petugas=${encodeURIComponent(user.name || "")}`
-  );
-  const data = await res.json();
+    const res = await fetch(
+      `${API_URL}?action=tugasPerbaikan&petugas=${encodeURIComponent(user.name || "")}`
+    );
 
-  if (!data.items || data.items.length === 0) {
-     list.innerHTML = `
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      list.innerHTML = `
         <div class="item success-card">
-            <h3>🎉 Selamat!</h3>
-            <p>Anda telah menginput semua barang dengan benar.</p>
+          <h3>🎉 Selamat!</h3>
+          <p>Anda telah menginput semua barang dengan benar.</p>
         </div>
-     `;
-    return;
- }
+      `;
+      return;
+    }
 
-  list.innerHTML = data.items.map(item => `
-    <div class="item">
-      <b>${item.nama}</b>
-      <div class="small">Kode: ${item.kode || "-"}</div>
-      <div class="small">Satuan terkecil: ${item.satuan1 || "-"}</div>
+    list.innerHTML = data.items.map(item => `
+      <div class="item">
+        <b>${item.nama}</b>
+        <div class="small">Kode: ${item.kode || "-"}</div>
+        <div class="small">Satuan terkecil: ${item.satuan1 || "-"}</div>
 
-      <hr>
+        <hr>
 
-      <b>Perlu diperbaiki:</b>
+        <b>Perlu diperbaiki:</b>
 
-      ${f.label.toLowerCase().includes("kode barang") ? `
-        <div class="scan-row">
-          <input
-            id="fix-${item.row}-${f.col}"
-            inputmode="numeric"
-            placeholder="${f.placeholder}">
-          <button type="button" class="btn-scan-mini" onclick="scanPerbaikan('fix-${item.row}-${f.col}')">📷</button>
-        </div>
-        <div id="reader-fix-${item.row}-${f.col}" class="reader hidden"></div>
-      ` : `
-        <input
-          id="fix-${item.row}-${f.col}"
-          inputmode="${f.type === "number" ? "numeric" : "text"}"
-          placeholder="${f.placeholder}">
-      `}
+        ${item.fields.map(f => `
+          <div style="margin-top:10px">
+            <label>${f.label}</label>
 
-      <button class="btn primary" onclick='simpanPerbaikan(${JSON.stringify(item)})'>
-        Simpan Perbaikan
-      </button>
-    </div>
-  `).join("");
+            ${f.label.toLowerCase().includes("kode barang") ? `
+              <div class="scan-row">
+                <input
+                  id="fix-${item.row}-${f.col}"
+                  inputmode="numeric"
+                  placeholder="${f.placeholder}">
+                <button type="button" class="btn-scan-mini" onclick="scanPerbaikan('fix-${item.row}-${f.col}')">📷</button>
+              </div>
+              <div id="reader-fix-${item.row}-${f.col}" class="reader hidden"></div>
+            ` : `
+              <input
+                id="fix-${item.row}-${f.col}"
+                inputmode="${f.type === "number" ? "numeric" : "text"}"
+                placeholder="${f.placeholder}">
+            `}
+          </div>
+        `).join("")}
+
+        <button class="btn primary" onclick='simpanPerbaikan(${JSON.stringify(item)})'>
+          Simpan Perbaikan
+        </button>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = `<div class="item">Gagal memuat tugas.</div>`;
+  }
 }
 
 async function simpanPerbaikan(item) {
