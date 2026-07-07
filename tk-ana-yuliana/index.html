@@ -15,7 +15,7 @@
     </section>
 
     <div class="menu">
-      <a class="card" href="input.html">
+      <a class="card" id="menuInput" href="input.html">
         📦
         <span>Input Barang</span>
       </a>
@@ -55,12 +55,27 @@
 
   async function loadJumlahPerbaikan() {
     const user = getCurrentUser();
+    const menuInput = document.getElementById("menuInput");
+    menuInput.style.pointerEvents = "none";
+    menuInput.style.opacity = "0.5";
     const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
     const data = await res.json();
+
+    menuInput.style.pointerEvents = "auto";
+    menuInput.style.opacity = "1";
 
     if (data.count > 0) {
       document.getElementById("tugasPerbaikanMenu").innerText =
         `Tugas Perbaikan (${data.count})`;
+
+      Swal.fire({
+        icon: "warning",
+        title: "Ada tugas perbaikan",
+        text: `Anda punya ${data.count} data yang harus diperbaiki dulu.`,
+        confirmButtonText: "Lihat Tugas"
+      }).then(() => {
+        window.location.href = "tugas-perbaikan.html";
+      });
     }
   }
 
