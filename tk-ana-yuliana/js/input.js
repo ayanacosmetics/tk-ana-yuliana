@@ -721,14 +721,23 @@ $("barangForm").addEventListener("submit", async (e) => {
   for (let i = 0; i < payload.multis.length; i++) {
     const m = payload.multis[i];
 
-    if (!m.satuan && (m.harga || m.isi || m.kode)) {
-  Swal.fire(
-    "Satuan belum dipilih",
-    `Satuan ${i + 2} wajib dipilih jika kode, harga, atau isi sudah diisi.`,
-    "error"
-  );
-  return;
-}
+    if (!m.satuan && (m.harga1 || m.harga2 || m.harga3 || m.isi || m.kode)) {
+      Swal.fire(
+        "Satuan belum dipilih",
+        `Satuan ${i + 2} wajib dipilih jika kode, harga, atau isi sudah diisi.`,
+        "error"
+      );
+      return;
+    }
+
+    if (m.satuan && (!m.harga1 || !m.isi)) {
+      Swal.fire(
+        "Belum lengkap",
+        `Harga Grosir 1 dan isi Satuan ${i + 2} wajib diisi.`,
+        "error"
+      );
+      return;
+    }
 
   if (m.satuan && (!m.harga || !m.isi)) {
   Swal.fire(
