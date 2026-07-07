@@ -101,17 +101,19 @@ function tambahSatuan(data = {}) {
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
 
-    <label id="labelHarga1_${multiCount}">Harga Grosir 1</label>
-    <input
-        name="harga1_${multiCount}"
-        type="number"
-        value="${data.harga1 || data.harga || ""}"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-        placeholder="Pilih satuan dulu">
+    <div class="grosir-box grosir-1">
+      <label id="labelHarga1_${multiCount}">Harga Grosir 1</label>
+      <input
+          name="harga1_${multiCount}"
+          type="number"
+          value="${data.harga1 || data.harga || ""}"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          placeholder="Pilih satuan dulu">
+    </div>
 
-    <div id="wrapHarga2_${multiCount}" style="${data.harga2 ? "" : "display:none"}">
+    <div id="wrapHarga2_${multiCount}" class="grosir-box grosir-2" style="${data.harga2 ? "" : "display:none"}">
       <label id="labelHarga2_${multiCount}">Harga Grosir 2</label>
       <input
           name="harga2_${multiCount}"
@@ -121,10 +123,9 @@ function tambahSatuan(data = {}) {
           pattern="[0-9]*"
           autocomplete="off"
           placeholder="Opsional">
-      <button type="button" class="btn secondary" onclick="tutupHargaGrosir(${multiCount}, 2)">Tutup Harga Grosir 2</button>
     </div>
 
-    <div id="wrapHarga3_${multiCount}" style="${data.harga3 ? "" : "display:none"}">
+    <div id="wrapHarga3_${multiCount}" class="grosir-box grosir-3" style="${data.harga3 ? "" : "display:none"}">
       <label id="labelHarga3_${multiCount}">Harga Grosir 3</label>
       <input
           name="harga3_${multiCount}"
@@ -134,12 +135,17 @@ function tambahSatuan(data = {}) {
           pattern="[0-9]*"
           autocomplete="off"
           placeholder="Opsional">
-      <button type="button" class="btn secondary" onclick="tutupHargaGrosir(${multiCount}, 3)">Tutup Harga Grosir 3</button>
     </div>
 
-    <button type="button" class="btn secondary" onclick="tambahHargaGrosir(${multiCount})">
-      + Tambah Harga Grosir
-    </button>
+    <div class="grosir-actions">
+      <button type="button" class="btn secondary btn-grosir-mini" onclick="tambahHargaGrosir(${multiCount})">
+        + Tambah Harga Grosir
+      </button>
+
+      <button type="button" class="btn-cancel-mini" onclick="tutupHargaGrosirTerakhir(${multiCount})">
+        ×
+      </button>
+    </div>
     
     
   `;
@@ -173,6 +179,27 @@ function tutupHargaGrosir(no, level) {
   if (wrap) wrap.style.display = "none";
 
   simpanDraft();
+}
+
+function tutupHargaGrosirTerakhir(no) {
+  const wrap3 = document.getElementById(`wrapHarga3_${no}`);
+  const input3 = document.querySelector(`[name="harga3_${no}"]`);
+
+  if (wrap3 && wrap3.style.display !== "none") {
+    if (input3) input3.value = "";
+    wrap3.style.display = "none";
+    simpanDraft();
+    return;
+  }
+
+  const wrap2 = document.getElementById(`wrapHarga2_${no}`);
+  const input2 = document.querySelector(`[name="harga2_${no}"]`);
+
+  if (wrap2 && wrap2.style.display !== "none") {
+    if (input2) input2.value = "";
+    wrap2.style.display = "none";
+    simpanDraft();
+  }
 }
 
 function getSatuanSebelumnya(no) {
