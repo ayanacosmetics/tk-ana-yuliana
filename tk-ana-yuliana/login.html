@@ -10,20 +10,14 @@
 <body>
   <main class="container">
     <section class="hero">
-      <h1>TK. Ana Yuliana</h1>
-      <p>Login untuk mengakses sistem</p>
+      <h1>Inventory Engine</h1>
+      <p>Sistem input barang untuk toko</p>
     </section>
 
     <div class="form">
       <label>Nama Pengguna</label>
       <select id="username">
         <option value="">Pilih nama</option>
-        <option value="budhi">Budhi</option>
-        <option value="ana">Ana</option>
-        <option value="alia">Alia</option>
-        <option value="cia">Cia</option>
-        <option value="fika">Fika</option>
-        <option value="fira">Fira</option>
       </select>
 
       <label>PIN</label>
@@ -34,5 +28,15 @@
   </main>
 
   <script src="js/auth.js"></script>
+  <script>
+    const usernameSelect = document.getElementById("username");
+
+    USERS.forEach(user => {
+      const opt = document.createElement("option");
+      opt.value = user.username;
+      opt.textContent = user.name;
+      usernameSelect.appendChild(opt);
+    });
+  </script>
 </body>
 </html>

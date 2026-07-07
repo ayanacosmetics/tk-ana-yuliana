@@ -11,7 +11,7 @@
 <body>
   <main class="container">
     <section class="hero">
-      <h1>TK. Ana Yuliana</h1>
+      <h1 id="namaToko">TK. Ana Yuliana</h1>
       <p>Sistem Input Barang</p>
     </section>
 
@@ -37,50 +37,51 @@
       </a>
     </div>
    
-    <div class="item">
-  <b id="userInfo"></b>
-  <button class="btn secondary" onclick="logout()">Logout</button>
-</div>
-
-<script src="js/auth.js"></script>
-<script>
-  requireLogin();
-  const user = getCurrentUser();
-  document.getElementById("userInfo").innerText = "Login sebagai: " + user.name;
-</script>
+        <div class="item">
+      <b id="userInfo"></b>
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
   </main>
-<script src="js/config.js"></script>
-<script src="js/auth.js"></script>
-<script>
-  requireLogin();
 
-  async function loadJumlahPerbaikan() {
+  <script src="js/auth.js"></script>
+  <script src="js/toko.js"></script>
+  <script src="js/config.js"></script>
+
+  <script>
+    requireLogin();
+
     const user = getCurrentUser();
-    const menuInput = document.getElementById("menuInput");
-    menuInput.style.pointerEvents = "none";
-    menuInput.style.opacity = "0.5";
-    const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
-    const data = await res.json();
 
-    menuInput.style.pointerEvents = "auto";
-    menuInput.style.opacity = "1";
+    document.getElementById("namaToko").innerText = NAMA_TOKO;
+    document.getElementById("userInfo").innerText = "Login sebagai: " + user.name;
 
-    if (data.count > 0) {
-      document.getElementById("tugasPerbaikanMenu").innerText =
-        `Tugas Perbaikan (${data.count})`;
+    async function loadJumlahPerbaikan() {
+      const menuInput = document.getElementById("menuInput");
+      menuInput.style.pointerEvents = "none";
+      menuInput.style.opacity = "0.5";
 
-      Swal.fire({
-        icon: "warning",
-        title: "Ada tugas perbaikan",
-        text: `Anda punya ${data.count} data yang harus diperbaiki dulu.`,
-        confirmButtonText: "Lihat Tugas"
-      }).then(() => {
-        window.location.href = "tugas-perbaikan.html";
-      });
+      const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
+      const data = await res.json();
+
+      menuInput.style.pointerEvents = "auto";
+      menuInput.style.opacity = "1";
+
+      if (data.count > 0) {
+        document.getElementById("tugasPerbaikanMenu").innerText =
+          `Tugas Perbaikan (${data.count})`;
+
+        Swal.fire({
+          icon: "warning",
+          title: "Ada tugas perbaikan",
+          text: `Anda punya ${data.count} data yang harus diperbaiki dulu.`,
+          confirmButtonText: "Lihat Tugas"
+        }).then(() => {
+          window.location.href = "tugas-perbaikan.html";
+        });
+      }
     }
-  }
 
-  loadJumlahPerbaikan();
-</script>
+    loadJumlahPerbaikan();
+  </script>
 </body>
 </html>
