@@ -10,6 +10,6 @@ const TOKO = {
     id: "demo",
     nama: "TK. Hamzah",
     logo: "",
-    api: "https://script.google.com/macros/s/AKfycbyhsnQQla5MLATgCSGT-aTlq9hCzfgEqfpoY4JZQwboU6UWRm5goNH0I8wuiN8D1eeb/exec"
+    api: "https://script.google.com/macros/s/AKfycbw9Vtr5PpCVwNsbrvj5-_B6pDzBcYnrWT7h4bEgHKibd1fYnoVUpcal7Ty2EDlljm-PpQ/exec"
   }
 };
