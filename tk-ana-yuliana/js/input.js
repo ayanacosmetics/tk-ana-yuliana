@@ -75,6 +75,16 @@ function tambahSatuan(data = {}) {
       ${satuanOptions.map(s => `<option value="${s}" ${data.satuan === s ? "selected" : ""}>${s}</option>`).join("")}
     </select>
 
+    <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
+        <input
+            name="isi${multiCount}"
+            type="number"
+            value="${data.isi || ""}"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            autocomplete="off"
+            placeholder="Pilih satuan dulu">
+
     <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">
       <input
@@ -131,16 +141,6 @@ function tambahSatuan(data = {}) {
       + Tambah Harga Grosir
     </button>
     
-
-    <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
-    <input
-        name="isi${multiCount}"
-        type="number"
-        value="${data.isi || ""}"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-        placeholder="Pilih satuan dulu">
     
   `;
 
