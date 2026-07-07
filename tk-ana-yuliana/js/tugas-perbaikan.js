@@ -168,14 +168,15 @@ async function scanPerbaikan(inputId) {
     repairScanner.decodeFromVideoDevice(
       selectedDeviceId,
       "repairVideo",
-      (result) => {
+      async (result) => {
         if (!result) return;
 
         document.getElementById(inputId).value = result.text.trim();
 
         if (navigator.vibrate) navigator.vibrate(120);
+        beepRepair();
 
-        stopScanPerbaikan();
+        await stopScanPerbaikan();
         document.getElementById(inputId).blur();
 
         Swal.fire({
@@ -267,15 +268,20 @@ async function switchRepairCamera(inputId) {
   await scanPerbaikan(inputId);
 }
 
-function stopScanPerbaikan(readerId) {
-  if (repairScanner) {
-    repairScanner.reset();
-    repairScanner = null;
-  }
+function beepRepair() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
 
-  const reader = document.getElementById(readerId);
-  if (reader) {
-    reader.classList.add("hidden");
-    reader.innerHTML = "";
-  }
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.frequency.value = 900;
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.12);
+  } catch (e) {}
 }
