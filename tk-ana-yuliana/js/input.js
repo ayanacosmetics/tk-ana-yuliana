@@ -23,6 +23,15 @@ const $ = (id) => document.getElementById(id);
 document.addEventListener("DOMContentLoaded", async () => {
   $("btnTambah").addEventListener("click", () => tambahSatuan());
   $("btnScan").addEventListener("click", () => startScanner("kode"));
+  $("kode").addEventListener("change", async function () {
+    const kode = this.value.trim();
+    if (!kode) return;
+
+    if (!cekBarcodeDuplikatDiForm()) return;
+
+    await tampilkanBarangDariGSheet(kode, "kode");
+    simpanDraft();
+  });
   $("barangForm").addEventListener("input", simpanDraft);
   $("nama").addEventListener("input", function () {
     this.value = this.value.toUpperCase();
