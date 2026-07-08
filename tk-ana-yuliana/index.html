@@ -176,67 +176,17 @@
 
           Swal.fire({
             icon: "warning",
-            title: `Halo, ${user.name} 👋`,
-            html: `
-              <div style="text-align:center">
-
-                <div style="
-                  width:90px;
-                  height:90px;
-                  margin:auto;
-                  border-radius:50%;
-                  background:#fff7ed;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  font-size:46px;
-                  margin-bottom:18px;">
-                  🛠️
-                </div>
-
-                <h3 style="
-                  margin:0;
-                  font-size:24px;
-                  color:#111827;
-                  font-weight:800;">
-                  Sebentar dulu...
-                </h3>
-
-                <p style="
-                  margin-top:12px;
-                  color:#64748b;
-                  line-height:1.7;">
-                  Kamu masih memiliki
-                  <b style="color:#ef4444">${count} tugas perbaikan</b>.
-                  <br><br>
-                  <span style="font-size:17px">
-                    Jangan kabur... 😆
-                  </span>
-                  <br>
-                  Selesaikan dulu kesalahanmu sebelum lanjut input barang.
-                </p>
-
-              </div>
-            `,
-            confirmButtonText: "🛠️ Perbaiki Sekarang",
+            title: "Ada tugas perbaikan",
+            text: `Anda punya ${count} data yang harus diperbaiki dulu.`,
+            confirmButtonText: "Lihat Tugas",
             allowOutsideClick: false,
-            allowEscapeKey: false,
-            backdrop: "rgba(15,23,42,.65)",
-            confirmButtonColor: "#2563eb",
-            customClass: {
-              popup: "premium-popup"
-            }
+            allowEscapeKey: false
           }).then(() => {
             window.location.href = "tugas-perbaikan.html";
           });
 
           return;
         }
-      } catch (e) {
-        menuInput.style.pointerEvents = "auto";
-        menuInput.style.opacity = "1";
-      }
-    }
 
     loadJumlahPerbaikan();
 
