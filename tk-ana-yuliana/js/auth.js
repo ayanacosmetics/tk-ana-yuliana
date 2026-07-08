@@ -25,8 +25,19 @@ async function login() {
       Swal.fire("Gagal", data.message || "Username atau PIN salah.", "error");
       return;
     }
+    const raw = data.user || {};
 
-    localStorage.setItem("tay_user", JSON.stringify(data.user));
+    const user = {
+      username: raw.username || username,
+      name: raw.name || raw.nama || username,
+      role: raw.role || "staff",
+      toko: raw.toko || raw.tokoId || "",
+      tokoNama: raw.tokoNama || raw.namaToko || "Inventory Engine",
+      apiUrl: raw.apiUrl || raw.api || "",
+      logo: raw.logo || ""
+    };
+
+    localStorage.setItem("tay_user", JSON.stringify(user));
     window.location.href = "index.html";
 
   } catch (err) {

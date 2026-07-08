@@ -187,8 +187,11 @@
 
           return;
         }
-
-    loadJumlahPerbaikan();
+      } catch (e) {
+        menuInput.style.pointerEvents = "auto";
+        menuInput.style.opacity = "1";
+      }
+    }
 
     async function loadDashboardSummary() {
       try {
@@ -204,7 +207,9 @@
       }
     }
 
+    loadJumlahPerbaikan();
     loadDashboardSummary();
+  </script>
   </script>
 </body>
 </html>
