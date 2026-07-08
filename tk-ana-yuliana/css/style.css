@@ -343,3 +343,12 @@
   z-index: 30;
   box-shadow: 0 8px 22px rgba(13, 110, 253, .35);
 }
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+#searchAkun {
+  margin-bottom: 12px;
+}

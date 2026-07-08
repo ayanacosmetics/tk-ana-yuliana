@@ -15,3 +15,5 @@ location.href="index.html";
 }
 
 document.getElementById("menuAkun").addEventListener("click", loadAkun);
+document.getElementById("menuToko").addEventListener("click", loadToko);
+document.getElementById("menuRole").addEventListener("click", loadRole);

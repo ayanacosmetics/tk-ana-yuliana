@@ -1,18 +1,44 @@
+let akunCache = [];
+let tokoCache = [];
+let modeEditAkun = false;
+
 async function loadAkun() {
   const content = document.getElementById("content");
-  content.innerHTML = `<div class="item">Memuat akun...</div>`;
+  content.innerHTML = `<div class="item">Memuat data karyawan...</div>`;
 
-  const res = await fetch(`${MASTER_API_URL}?action=listAkun`);
-  const data = await res.json();
+  const [akunRes, tokoRes] = await Promise.all([
+    fetch(`${MASTER_API_URL}?action=listAkun`),
+    fetch(`${MASTER_API_URL}?action=listToko`)
+  ]);
 
-  if (!data.success) {
-    content.innerHTML = `<div class="item">Gagal memuat akun.</div>`;
-    return;
-  }
+  const akunData = await akunRes.json();
+  const tokoData = await tokoRes.json();
+
+  akunCache = akunData.items || [];
+  tokoCache = tokoData.items || [];
+
+  renderAkunPage();
+}
+
+function renderAkunPage() {
+  const content = document.getElementById("content");
 
   content.innerHTML = `
     <div class="form">
       <h3>👥 Kelola Karyawan</h3>
+
+      <input
+        id="searchAkun"
+        placeholder="Cari nama / username..."
+        oninput="renderAkunList()">
+
+      <button class="btn primary" onclick="showFormAkun()">
+        + Tambah Akun
+      </button>
+    </div>
+
+    <div id="formAkun" class="form" style="display:none">
+      <h3 id="judulFormAkun">Tambah Akun</h3>
 
       <label>Username</label>
       <input id="akunUsername" placeholder="contoh: ana">
@@ -26,12 +52,16 @@ async function loadAkun() {
       <label>Role</label>
       <select id="akunRole">
         <option value="admin">Admin</option>
-        <option value="staff">Staff</option>
         <option value="supervisor">Supervisor</option>
+        <option value="staff">Staff</option>
       </select>
 
-      <label>Toko ID</label>
-      <input id="akunToko" placeholder="contoh: ana / hamzah">
+      <label>Toko</label>
+      <select id="akunToko">
+        ${tokoCache.map(t => `
+          <option value="${t.id}">${t.nama}</option>
+        `).join("")}
+      </select>
 
       <label>Status</label>
       <select id="akunStatus">
@@ -40,42 +70,106 @@ async function loadAkun() {
       </select>
 
       <button class="btn primary" onclick="saveAkun()">Simpan Akun</button>
+      <button class="btn secondary" onclick="hideFormAkun()">Batal</button>
     </div>
 
-    <div class="list">
-      ${data.items.map(a => `
-        <div class="item">
-          <b>${a.nama}</b>
-          <div class="small">Username: ${a.username}</div>
-          <div class="small">Role: ${a.role}</div>
-          <div class="small">Toko: ${a.toko}</div>
-          <div class="small">Status: ${a.status}</div>
-
-          <button class="btn secondary" onclick='editAkun(${JSON.stringify(a)})'>Edit</button>
-          <button class="btn secondary" onclick="deleteAkun('${a.username}')">Nonaktifkan</button>
-        </div>
-      `).join("")}
-    </div>
+    <div id="akunList" class="list"></div>
   `;
+
+  renderAkunList();
+}
+
+function renderAkunList() {
+  const q = (document.getElementById("searchAkun")?.value || "").toLowerCase();
+  const list = document.getElementById("akunList");
+
+  const filtered = akunCache.filter(a =>
+    (a.nama || "").toLowerCase().includes(q) ||
+    (a.username || "").toLowerCase().includes(q)
+  );
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="item">Tidak ada akun ditemukan.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(a => {
+    const tokoNama = tokoCache.find(t => t.id === a.toko)?.nama || a.toko;
+    const isBudhi = a.username === "budhi";
+
+    return `
+      <div class="item">
+        <b>${a.nama}</b>
+        <div class="small">Username: ${a.username}</div>
+        <div class="small">PIN: ••••</div>
+        <div class="small">Role: ${a.role}</div>
+        <div class="small">Toko: ${tokoNama}</div>
+        <div class="small">Status: ${a.status}</div>
+
+        <button class="btn secondary" onclick='editAkun(${JSON.stringify(a)})'>
+          Edit
+        </button>
+
+        <button
+          class="btn secondary"
+          ${isBudhi ? "disabled" : ""}
+          onclick="deleteAkun('${a.username}')">
+          Nonaktifkan
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+function showFormAkun() {
+  modeEditAkun = false;
+  document.getElementById("judulFormAkun").innerText = "Tambah Akun";
+  document.getElementById("formAkun").style.display = "";
+
+  document.getElementById("akunUsername").disabled = false;
+  document.getElementById("akunUsername").value = "";
+  document.getElementById("akunNama").value = "";
+  document.getElementById("akunPin").value = "";
+  document.getElementById("akunRole").value = "staff";
+  document.getElementById("akunStatus").value = "aktif";
+}
+
+function hideFormAkun() {
+  document.getElementById("formAkun").style.display = "none";
 }
 
 function editAkun(a) {
+  modeEditAkun = true;
+
+  document.getElementById("judulFormAkun").innerText = "Edit Akun";
+  document.getElementById("formAkun").style.display = "";
+
   document.getElementById("akunUsername").value = a.username;
+  document.getElementById("akunUsername").disabled = true;
   document.getElementById("akunNama").value = a.nama;
   document.getElementById("akunPin").value = a.pin;
   document.getElementById("akunRole").value = a.role || "staff";
   document.getElementById("akunToko").value = a.toko;
   document.getElementById("akunStatus").value = a.status || "aktif";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 async function saveAkun() {
+  const username = document.getElementById("akunUsername").value.trim().toLowerCase();
+
+  if (!modeEditAkun && akunCache.some(a => a.username === username)) {
+    Swal.fire("Username dipakai", "Username ini sudah terdaftar.", "error");
+    return;
+  }
+
   const payload = {
     action: "saveAkun",
-    username: document.getElementById("akunUsername").value.trim().toLowerCase(),
+    username,
     nama: document.getElementById("akunNama").value.trim(),
     pin: document.getElementById("akunPin").value.trim(),
     role: document.getElementById("akunRole").value,
-    toko: document.getElementById("akunToko").value.trim(),
+    toko: document.getElementById("akunToko").value,
     status: document.getElementById("akunStatus").value
   };
 
@@ -94,6 +188,7 @@ async function saveAkun() {
 
   if (data.success) {
     Swal.fire("Berhasil", "Akun berhasil disimpan.", "success");
+    hideFormAkun();
     loadAkun();
   } else {
     Swal.fire("Gagal", data.message || "Tidak bisa menyimpan akun.", "error");
@@ -101,6 +196,11 @@ async function saveAkun() {
 }
 
 async function deleteAkun(username) {
+  if (username === "budhi") {
+    Swal.fire("Tidak bisa", "Akun Budhi tidak boleh dinonaktifkan.", "warning");
+    return;
+  }
+
   const result = await Swal.fire({
     title: "Nonaktifkan akun?",
     text: username,
