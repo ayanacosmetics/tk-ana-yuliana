@@ -94,7 +94,9 @@ function tambahSatuan(data = {}) {
             pattern="[0-9]*"
             autocomplete="off"
             placeholder="Pilih satuan dulu">
-          <span class="isiSuffix">/${$("satuan1")?.value || "PCS"}</span>
+          <span class="isiSuffix" id="isiSuffix${multiCount}">
+            ${$("satuan1")?.value || "PCS"}/${data.satuan || `Satuan ${multiCount}`}
+          </span>
         </div>
 
     <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
@@ -246,6 +248,7 @@ function updateLabelSatuan(no) {
   const inputHarga2 = document.querySelector(`[name="harga2_${no}"]`);
   const inputHarga3 = document.querySelector(`[name="harga3_${no}"]`);
   const inputIsi = document.querySelector(`[name="isi${no}"]`);
+  const isiSuffix = document.getElementById(`isiSuffix${no}`);
 
   if (!satuan) {
     if (labelKode) labelKode.textContent = "Kode Barang";
@@ -273,6 +276,9 @@ function updateLabelSatuan(no) {
   if (inputHarga2) inputHarga2.placeholder = `Harga Grosir 2 per ${satuan}`;
   if (inputHarga3) inputHarga3.placeholder = `Harga Grosir 3 per ${satuan}`;
   if (inputIsi) inputIsi.placeholder = `Jumlah pcs dalam ${satuan}`;
+  if (isiSuffix) {
+    isiSuffix.textContent = `${$("satuan1")?.value || "PCS"}/${satuan}`;
+  }
   updateTambahSatuanButton();
   updateModalLabel();
 }
@@ -315,6 +321,7 @@ function updateLabelSatuan1() {
   updateJudulSemuaSatuan();
   updateTambahSatuanButton();
   updateModalLabel();
+  updateSemuaIsiSuffix();
 }
 
 function updateTambahSatuanButton() {
@@ -683,6 +690,19 @@ function cekDraft() {
       localStorage.removeItem(DRAFT_KEY);
     }
   });
+}
+
+function updateSemuaIsiSuffix() {
+  const satuanTerkecil = $("satuan1")?.value || "PCS";
+
+  for (let i = 2; i <= MAX_SATUAN; i++) {
+    const satuanSaatIni = document.querySelector(`[name="satuan${i}"]`)?.value || `Satuan ${i}`;
+    const suffix = document.getElementById(`isiSuffix${i}`);
+
+    if (suffix) {
+      suffix.textContent = `${satuanTerkecil}/${satuanSaatIni}`;
+    }
+  }
 }
 
 function muatDraft(data) {
