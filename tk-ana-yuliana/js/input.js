@@ -550,39 +550,32 @@ async function handleBarcodeAfterScan(kode, targetInputId) {
 
 async function tampilkanBarangDariGSheet(kode, targetInputId) {
   try {
+    console.log("API:", API_URL);
+    console.log("Kode:", kode);
+
     const res = await fetch(`${API_URL}?action=getBarang&kode=${encodeURIComponent(kode)}`);
-    const data = await res.json();
+
+    console.log("Status:", res.status);
+
+    const text = await res.text();
+    console.log("Response:", text);
+
+    const data = JSON.parse(text);
 
     if (data.exists) {
-      Swal.fire({
-        icon: "warning",
-        title: "Barang sudah terdaftar",
-        html: `
-          <b>${data.nama || "Nama barang tidak tersedia"}</b><br>
-          <small>Kode: ${kode}</small><br><br>
-          Mau edit barang ini?
-        `,
-        showCancelButton: true,
-        confirmButtonText: "Edit Barang",
-        cancelButtonText: "Batal",
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          isiFormDariBarang(data);
-        } else {
-          const input = $(targetInputId);
-          if (input) input.value = "";
-          simpanDraft();
-        }
-      });
-
-      return;
+      // isi lama
+    } else {
+      toast("Barcode baru", "Silakan lanjut input.", "success");
     }
 
-    toast("Barcode baru", "Silakan lanjut input.", "success");
-
   } catch (e) {
-    Swal.fire("Gagal cek barcode", "Silakan lanjut input manual.", "warning");
+    console.error(e);
+
+    Swal.fire(
+      "Gagal cek barcode",
+      e.message,
+      "error"
+    );
   }
 }
 
