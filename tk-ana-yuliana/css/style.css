@@ -2180,3 +2180,16 @@ button[type="submit"],
 .bottom-nav {
   display: none !important;
 }
+
+.premium-popup{
+    border-radius:26px !important;
+    padding:18px 18px 28px;
+}
+
+.premium-popup .swal2-confirm{
+    border-radius:14px !important;
+    padding:14px 28px !important;
+    font-weight:700 !important;
+    font-size:15px !important;
+    box-shadow:0 12px 24px rgba(37,99,235,.25);
+}
