@@ -9,16 +9,19 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-  <main class="container">
-    <header class="topbar">
-      <a href="index.html">←</a>
+<body class="input-v3-page">
+  <main class="input-v3-shell">
+    <header class="input-v3-header">
+      <button type="button" class="input-v3-menu">☰</button>
       <h2>Input Barang</h2>
+      <button type="button" class="input-v3-save-mini" onclick="document.getElementById('barangForm').requestSubmit()">💾</button>
     </header>
 
   <div class="satuan-utama-box">
   <div class="satuan-utama-title">🏷️ SATUAN UTAMA (TERKECIL)</div>
-    <form id="barangForm" class="form">
+    <form id="barangForm" class="form input-v3-form">
+      <section class="input-v3-card">
+        <h3>Informasi Barang</h3>
       <label>Kode Barang / Barcode Satuan Terkecil</label>
       <div class="scan-row">
         <input
@@ -76,6 +79,7 @@
           autocomplete="off"
           placeholder="Harga grosir">
   </div>
+  </section>
       <div id="multiWrap"></div>
 
       <button type="button" id="btnTambah" class="btn secondary">+ Tambah Satuan setelah PCS</button>

@@ -3,53 +3,130 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Inventory Engine</title>
+  <title>Dashboard - Inventory Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-  <main class="container">
-    <section class="hero">
-      <h1 id="namaToko">TK. Ana Yuliana</h1>
-      <p>Sistem Input Barang</p>
+<body class="dash-page">
+
+  <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <aside id="sideDrawer" class="side-drawer">
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+
+    <div class="drawer-brand">
+      <div class="drawer-logo">⬢</div>
+      <div>
+        <h2>INVENTORY</h2>
+        <p>ENGINE</p>
+      </div>
+    </div>
+
+    <a class="drawer-link active" href="index.html">🏠 <span>Dashboard</span></a>
+
+    <div class="drawer-section">MENU UTAMA</div>
+    <a class="drawer-link" href="input.html">📦 <span>Input Barang</span></a>
+    <a class="drawer-link" href="tugas-perbaikan.html">🛠️ <span>Tugas Perbaikan</span></a>
+    <a class="drawer-link" id="drawerModal" href="lengkapi-modal.html">💰 <span>Lengkapi Modal</span></a>
+    <a class="drawer-link" id="drawerRilis" href="siap-rilis.html">🚀 <span>Siap Rilis</span></a>
+
+    <div class="drawer-section" id="drawerAdminTitle">PANEL ADMIN</div>
+    <a class="drawer-link" id="drawerAdmin" href="admin.html">⚙️ <span>Panel Admin</span></a>
+
+    <button class="drawer-logout" onclick="logout()">↪ Logout</button>
+  </aside>
+
+  <main class="dash-shell">
+
+    <header class="dash-header">
+      <button class="dash-menu-btn" onclick="openDrawer()">☰</button>
+      <h1>Dashboard</h1>
+      <button class="dash-bell">🔔</button>
+    </header>
+
+    <section class="dash-welcome">
+      <div>
+        <h2 id="welcomeName">Halo 👋</h2>
+        <p id="namaToko">Inventory Engine</p>
+      </div>
+      <span id="roleBadge">Staff</span>
     </section>
 
-    <div class="menu">
-      <a class="card" id="menuInput" href="input.html">
-        📦
-        <span>Input Barang</span>
+    <h3 class="dash-title">Menu Utama</h3>
+
+    <section class="dash-grid">
+      <a class="dash-menu-card" id="menuInput" href="input.html">
+        <div class="icon-box purple">📦</div>
+        <div>
+          <b>Input Barang</b>
+          <small>Tambah barang baru</small>
+        </div>
       </a>
 
-      <a class="card" href="tugas-perbaikan.html">
-        🛠️
-        <span id="tugasPerbaikanMenu">Tugas Perbaikan</span>
+      <a class="dash-menu-card" href="tugas-perbaikan.html">
+        <div class="icon-box orange">🛠️</div>
+        <div>
+          <b id="tugasPerbaikanMenu">Tugas Perbaikan</b>
+          <small>Lengkapi data barang</small>
+        </div>
       </a>
 
-      <a class="card" href="lengkapi-modal.html">
-        💰
-        <span>Lengkapi Modal</span>
+      <a class="dash-menu-card" id="menuModal" href="lengkapi-modal.html">
+        <div class="icon-box green">💰</div>
+        <div>
+          <b>Lengkapi Modal</b>
+          <small>Tambah modal barang</small>
+        </div>
       </a>
 
-      <a class="card" href="siap-rilis.html">
-        🚀
-        <span>Siap Rilis</span>
+      <a class="dash-menu-card" id="menuRilis" href="siap-rilis.html">
+        <div class="icon-box blue">🚀</div>
+        <div>
+          <b>Siap Rilis</b>
+          <small>Barang siap diimpor</small>
+        </div>
       </a>
 
-      <a class="card" id="menuAdmin" href="admin.html">
-        ⚙️
-        <span>Panel Admin</span>
+      <a class="dash-menu-card wide" id="menuAdmin" href="admin.html">
+        <div class="icon-box gray">⚙️</div>
+        <div>
+          <b>Panel Admin</b>
+          <small>Kelola sistem</small>
+        </div>
       </a>
-    </div>
-   
-        <div class="item">
-      <b id="userInfo"></b>
-      <button class="btn secondary" onclick="logout()">Logout</button>
-    </div>
+    </section>
+
+    <section class="dash-summary">
+      <h3>Ringkasan</h3>
+      <div class="summary-cols">
+        <div>
+          <small>Toko</small>
+          <b id="summaryToko">-</b>
+        </div>
+        <div>
+          <small>Akun</small>
+          <b id="summaryUser">-</b>
+        </div>
+        <div>
+          <small>Perbaikan</small>
+          <b id="summaryPerbaikan">0</b>
+        </div>
+      </div>
+    </section>
+
+    <button class="dash-logout" onclick="logout()">↪ Logout</button>
+
+    <nav class="bottom-nav">
+      <a class="active" href="index.html">⌂<span>Home</span></a>
+      <a href="tugas-perbaikan.html">◷<span>Perbaikan</span></a>
+      <a href="#">🔔<span>Notifikasi</span></a>
+      <a href="#">♡<span>Profil</span></a>
+    </nav>
+
   </main>
 
   <script src="js/auth.js"></script>
-  <script src="js/toko.js"></script>
   <script src="js/config.js"></script>
 
   <script>
@@ -57,38 +134,59 @@
 
     const user = getCurrentUser();
 
+    document.getElementById("welcomeName").innerText = "Halo, " + user.name + " 👋";
     document.getElementById("namaToko").innerText = NAMA_TOKO;
-    document.getElementById("userInfo").innerText = "Login sebagai: " + user.name;
+    document.getElementById("roleBadge").innerText = user.role || "staff";
+    document.getElementById("summaryToko").innerText = NAMA_TOKO;
+    document.getElementById("summaryUser").innerText = user.name;
+
+    function openDrawer() {
+      document.getElementById("sideDrawer").classList.add("open");
+      document.getElementById("drawerOverlay").classList.add("show");
+    }
+
+    function closeDrawer() {
+      document.getElementById("sideDrawer").classList.remove("open");
+      document.getElementById("drawerOverlay").classList.remove("show");
+    }
+
+    const isAdmin = user.role === "admin";
+
+    if (!isAdmin) {
+      document.getElementById("menuAdmin").style.display = "none";
+      document.getElementById("drawerAdmin").style.display = "none";
+      document.getElementById("drawerAdminTitle").style.display = "none";
+    }
+
+    if (user.role === "staff") {
+      document.getElementById("menuModal").style.display = "none";
+      document.getElementById("menuRilis").style.display = "none";
+      document.getElementById("drawerModal").style.display = "none";
+      document.getElementById("drawerRilis").style.display = "none";
+    }
 
     async function loadJumlahPerbaikan() {
       const menuInput = document.getElementById("menuInput");
       menuInput.style.pointerEvents = "none";
-      menuInput.style.opacity = "0.5";
+      menuInput.style.opacity = "0.55";
 
-      const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
+        const data = await res.json();
+        const count = data.count || 0;
 
-      menuInput.style.pointerEvents = "auto";
-      menuInput.style.opacity = "1";
+        menuInput.style.pointerEvents = "auto";
+        menuInput.style.opacity = "1";
+        document.getElementById("summaryPerbaikan").innerText = count;
 
-      if (data.count > 0) {
-        document.getElementById("tugasPerbaikanMenu").innerText =
-          `Tugas Perbaikan (${data.count})`;
-
-        Swal.fire({
-          icon: "warning",
-          title: "Ada tugas perbaikan",
-          text: `Anda punya ${data.count} data yang harus diperbaiki dulu.`,
-          confirmButtonText: "Lihat Tugas"
-        }).then(() => {
-          window.location.href = "tugas-perbaikan.html";
-        });
+        if (count > 0) {
+          document.getElementById("tugasPerbaikanMenu").innerText =
+            `Tugas Perbaikan (${count})`;
+        }
+      } catch (e) {
+        menuInput.style.pointerEvents = "auto";
+        menuInput.style.opacity = "1";
       }
-    }
-
-    const menuAdmin = document.getElementById("menuAdmin");
-    if (menuAdmin && user.role !== "admin") {
-      menuAdmin.style.display = "none";
     }
 
     loadJumlahPerbaikan();

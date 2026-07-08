@@ -3,43 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Login - TK. Ana Yuliana</title>
+  <title>Login - Inventory Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-  <main class="container">
-    <section class="hero">
-      <h1>Inventory Engine</h1>
-      <p>Sistem input barang untuk toko</p>
+
+<body class="login-v3-page">
+  <main class="login-v3-shell">
+
+    <button class="login-menu-btn" type="button">☰</button>
+
+    <section class="login-v3-brand">
+      <div class="login-logo-mark">⬢</div>
+      <h1>INVENTORY</h1>
+      <h2>ENGINE</h2>
+      <p>Sistem Inventory Multi Toko</p>
     </section>
 
-    <div class="form">
-      <label>Username</label>
-      <input id="username" autocomplete="off" placeholder="Masukkan username">
+    <section class="login-v3-form">
+      <div class="login-input-wrap">
+        <span>👤</span>
+        <input id="username" autocomplete="off" placeholder="Username">
+      </div>
 
-      <label>PIN</label>
-      <input id="pin" type="password" inputmode="numeric" placeholder="Masukkan PIN">
+      <div class="login-input-wrap">
+        <span>🔒</span>
+        <input id="pin" type="password" inputmode="numeric" placeholder="PIN">
+        <button type="button" onclick="togglePin()">👁</button>
+      </div>
 
-      <button class="btn primary" onclick="login()">Masuk</button>
+      <label class="remember-row">
+        <input type="checkbox">
+        <span>Ingat saya</span>
+      </label>
 
-      <button class="btn secondary" onclick="window.location.href='daftar.html'">
+      <button class="login-main-btn" onclick="login()">
+        Masuk <b>→</b>
+      </button>
+
+      <button class="login-register-btn" onclick="window.location.href='daftar.html'">
         Daftar Akun
       </button>
-    </div>
+    </section>
+
+    <p class="login-copy">© 2026 Inventory Engine</p>
+
   </main>
 
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
-  <script>
-    const usernameSelect = document.getElementById("username");
 
-    USERS.forEach(user => {
-      const opt = document.createElement("option");
-      opt.value = user.username;
-      opt.textContent = user.name;
-      usernameSelect.appendChild(opt);
-    });
+  <script>
+    function togglePin() {
+      const pin = document.getElementById("pin");
+      pin.type = pin.type === "password" ? "text" : "password";
+    }
   </script>
 </body>
 </html>
