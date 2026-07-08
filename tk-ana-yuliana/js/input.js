@@ -579,7 +579,7 @@ async function tampilkanBarangDariGSheet(kode, targetInputId) {
       return;
     }
 
-    toast("Barcode baru", "Silakan lanjut input.", "success");
+    console.log("Barcode baru:", kode);
 
   } catch (e) {
     Swal.fire("Gagal cek barcode", "Silakan lanjut input manual.", "warning");
