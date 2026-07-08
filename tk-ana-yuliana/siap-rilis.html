@@ -36,6 +36,10 @@
   <script src="js/sidebar.js"></script>
   <script>
     requireLogin();
+    if (!can("rilis")) {
+      Swal.fire("Akses ditolak", "Akun Anda tidak memiliki akses ke Siap Rilis.", "error")
+        .then(() => window.location.href = "index.html");
+    }
   </script>
   <script src="js/siap-rilis.js"></script>
   <script>

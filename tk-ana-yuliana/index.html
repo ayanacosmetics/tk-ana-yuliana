@@ -156,11 +156,20 @@
       document.getElementById("drawerAdminTitle").style.display = "none";
     }
 
-    if (user.role === "staff") {
+    if (!can("modal")) {
       document.getElementById("menuModal").style.display = "none";
-      document.getElementById("menuRilis").style.display = "none";
       document.getElementById("drawerModal").style.display = "none";
+    }
+
+    if (!can("rilis")) {
+      document.getElementById("menuRilis").style.display = "none";
       document.getElementById("drawerRilis").style.display = "none";
+    }
+
+    if (!can("admin")) {
+      document.getElementById("menuAdmin").style.display = "none";
+      document.getElementById("drawerAdmin").style.display = "none";
+      document.getElementById("drawerAdminTitle").style.display = "none";
     }
 
     async function loadJumlahPerbaikan() {

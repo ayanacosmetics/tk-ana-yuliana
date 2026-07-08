@@ -35,7 +35,8 @@ async function login() {
       toko: raw.toko || raw.tokoId || "",
       tokoNama: raw.tokoNama || raw.namaToko || "Inventory Engine",
       apiUrl: raw.apiUrl || raw.api || "",
-      logo: raw.logo || ""
+      logo: raw.logo || "",
+      permission: raw.permission || {}
     };
 
     localStorage.setItem("tay_user", JSON.stringify(user));
@@ -56,6 +57,11 @@ function requireLogin() {
   if (!getCurrentUser()) {
     window.location.href = "login.html";
   }
+}
+
+function can(permission) {
+  const user = getCurrentUser();
+  return !!user?.permission?.[permission];
 }
 
 function logout() {
