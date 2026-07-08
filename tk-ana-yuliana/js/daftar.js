@@ -56,3 +56,17 @@ async function daftarAkun() {
     Swal.fire("Gagal", data.message || "Tidak bisa daftar akun.", "error");
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const username = document.getElementById("username");
+
+  if (!username) return;
+
+  username.setAttribute("autocapitalize", "none");
+  username.setAttribute("spellcheck", "false");
+  username.setAttribute("autocomplete", "off");
+
+  username.addEventListener("input", function () {
+    this.value = this.value.toLowerCase();
+  });
+});
