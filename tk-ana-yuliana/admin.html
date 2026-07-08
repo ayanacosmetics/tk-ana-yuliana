@@ -1,49 +1,53 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Panel Admin - Inventory Engine</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Admin</title>
+
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="admin-v3-page">
-  <main class="admin-v3-shell">
+<body>
 
-    <header class="admin-v3-header">
-      <button type="button" onclick="window.location.href='index.html'">←</button>
-      <h2>Panel Admin</h2>
-      <span></span>
-    </header>
+<main class="container">
 
-    <section class="admin-v3-hero">
-      <div>
-        <h1>⚙️ Admin Center</h1>
-        <p>Kelola toko, akun, dan hak akses</p>
-      </div>
-    </section>
+<section class="hero">
+<h1>⚙️ Panel Admin</h1>
+<p>Kelola toko dan karyawan</p>
+</section>
 
-    <section class="admin-v3-tabs">
-      <button id="menuAkun" type="button">👥 Karyawan</button>
-      <button id="menuToko" type="button">🏪 Toko</button>
-      <button id="menuRole" type="button">🛡️ Akses</button>
-    </section>
+<div class="menu">
 
-    <section id="content" class="admin-v3-content">
-      <div class="admin-empty">
-        <h3>Selamat datang 👋</h3>
-        <p>Pilih menu di atas untuk mulai mengelola sistem.</p>
-      </div>
-    </section>
+<a class="card" id="menuAkun">
+👥
+<span>Kelola Karyawan</span>
+</a>
 
-  </main>
+<a class="card" id="menuToko">
+🏪
+<span>Kelola Toko</span>
+</a>
 
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/admin-akun.js"></script>
-  <script src="js/admin-toko.js"></script>
-  <script src="js/admin-role.js"></script>
-  <script src="js/admin.js"></script>
+<a class="card" id="menuRole">
+🛡️
+<span>Hak Akses</span>
+</a>
+
+</div>
+
+<div id="content"></div>
+
+</main>
+
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin-akun.js"></script>
+<script src="js/admin-toko.js"></script>
+<script src="js/admin-role.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/sidebar.js"></script>
+
 </body>
 </html>
