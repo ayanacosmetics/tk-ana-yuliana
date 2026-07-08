@@ -2845,3 +2845,21 @@ button[type="submit"],
   font-size: 16px;
   text-align: right;
 }
+
+.input-suffix-wrap {
+  position: relative;
+}
+
+.input-suffix-wrap input {
+  padding-right: 58px !important;
+}
+
+.input-suffix-wrap .isiSuffix {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}

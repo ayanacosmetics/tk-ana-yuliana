@@ -85,7 +85,8 @@ function tambahSatuan(data = {}) {
     </select>
 
     <label id="labelIsi${multiCount}">Isi Satuan ${multiCount}</label>
-        <input
+        <div class="input-suffix-wrap">
+          <input
             name="isi${multiCount}"
             type="number"
             value="${data.isi || ""}"
@@ -93,6 +94,8 @@ function tambahSatuan(data = {}) {
             pattern="[0-9]*"
             autocomplete="off"
             placeholder="Pilih satuan dulu">
+          <span class="isiSuffix">/${$("satuan1")?.value || "PCS"}</span>
+        </div>
 
     <label id="labelKode${multiCount}">Kode Barang Satuan ${multiCount} (opsional)</label>
     <div class="scan-row">

@@ -1,5 +1,6 @@
 async function login() {
   const username = document.getElementById("username").value.trim().toLowerCase();
+  document.getElementById("username").value = username;
   const pin = document.getElementById("pin").value.trim();
 
   if (!username || !pin) {
@@ -61,3 +62,16 @@ function logout() {
   localStorage.removeItem("tay_user");
   window.location.href = "login.html";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const usernameInput = document.getElementById("username");
+
+  if (usernameInput) {
+    usernameInput.setAttribute("autocapitalize", "none");
+    usernameInput.setAttribute("spellcheck", "false");
+
+    usernameInput.addEventListener("input", function () {
+      this.value = this.value.toLowerCase();
+    });
+  }
+});

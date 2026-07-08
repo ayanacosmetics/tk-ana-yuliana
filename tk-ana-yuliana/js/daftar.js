@@ -19,6 +19,8 @@ async function loadTokoDaftar() {
 }
 
 async function daftarAkun() {
+  document.getElementById("username").value =
+    document.getElementById("username").value.trim().toLowerCase();
   const payload = {
     action: "saveAkun",
     username: document.getElementById("username").value.trim().toLowerCase(),

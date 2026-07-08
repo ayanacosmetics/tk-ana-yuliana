@@ -39,7 +39,12 @@ async function loadModalKosong() {
       <div class="small">Isi ${item.satuan3}: ${item.isi3 || "-"}</div>
     ` : ""}
 
-    <input type="number" id="modal-${item.row}" placeholder="Isi modal asli">
+    <input
+      type="number"
+      id="modal-${item.row}"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      placeholder="Isi modal asli">
 
     <button class="btn primary" onclick="simpanModal(${item.row})">
       Simpan Modal
