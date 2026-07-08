@@ -148,9 +148,7 @@
       document.getElementById("drawerOverlay").classList.remove("show");
     }
 
-    const isAdmin = user.role === "admin";
-
-    if (!isAdmin) {
+    if (!can("admin")) {
       document.getElementById("menuAdmin").style.display = "none";
       document.getElementById("drawerAdmin").style.display = "none";
       document.getElementById("drawerAdminTitle").style.display = "none";
