@@ -2863,3 +2863,16 @@ button[type="submit"],
   font-size: 13px;
   font-weight: 800;
 }
+
+.dash-logout {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dash-logout svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.6;
+}
