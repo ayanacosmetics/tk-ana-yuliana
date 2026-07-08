@@ -9,19 +9,48 @@ const USERS = [
   { username: "hamzah", name: "Admin Hamzah", pin: "0000", toko: "demo" }
 ];
 
-function login() {
+async function login() {
   const username = document.getElementById("username").value;
   const pin = document.getElementById("pin").value;
 
-  const user = USERS.find(u => u.username === username && u.pin === pin);
-
-  if (!user) {
-    Swal.fire("Gagal", "Nama atau PIN salah.", "error");
+  if (!username || !pin) {
+    Swal.fire("Belum lengkap", "Nama pengguna dan PIN wajib diisi.", "error");
     return;
   }
 
-  localStorage.setItem("tay_user", JSON.stringify(user));
-  window.location.href = "index.html";
+  Swal.fire({
+    title: "Memeriksa akun...",
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    for (const tokoId of Object.keys(TOKO)) {
+      const api = TOKO[tokoId].api;
+
+      if (!api || api.includes("PASTE_URL")) continue;
+
+      const res = await fetch(
+        `${api}?action=login&username=${encodeURIComponent(username)}&pin=${encodeURIComponent(pin)}`
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        Swal.close();
+        localStorage.setItem("tay_user", JSON.stringify(data.user));
+        window.location.href = "index.html";
+        return;
+      }
+    }
+
+    Swal.close();
+    Swal.fire("Gagal", "Nama atau PIN salah.", "error");
+
+  } catch (err) {
+    Swal.close();
+    Swal.fire("Error", "Gagal menghubungi server login.", "error");
+  }
 }
 
 function getCurrentUser() {
