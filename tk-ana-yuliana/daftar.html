@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Daftar Akun</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Daftar Akun</h1>
+      <p>Buat akun karyawan baru</p>
+    </section>
+
+    <div class="form">
+      <label>Username</label>
+      <input id="username" placeholder="contoh: ana2" autocomplete="off">
+
+      <label>Nama Lengkap</label>
+      <input id="nama" placeholder="Nama karyawan">
+
+      <label>PIN</label>
+      <input id="pin" type="password" inputmode="numeric" placeholder="Buat PIN">
+
+      <label>Toko</label>
+      <select id="toko"></select>
+
+      <button class="btn primary" onclick="daftarAkun()">Daftar</button>
+      <button class="btn secondary" onclick="window.location.href='login.html'">Kembali</button>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/daftar.js"></script>
+</body>
+</html>
