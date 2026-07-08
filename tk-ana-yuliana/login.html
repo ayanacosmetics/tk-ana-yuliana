@@ -15,10 +15,8 @@
     </section>
 
     <div class="form">
-      <label>Nama Pengguna</label>
-      <select id="username">
-        <option value="">Pilih nama</option>
-      </select>
+      <label>Username</label>
+      <input id="username" autocomplete="off" placeholder="Masukkan username">
 
       <label>PIN</label>
       <input id="pin" type="password" inputmode="numeric" placeholder="Masukkan PIN">
@@ -27,7 +25,7 @@
     </div>
   </main>
 
-  <script src="js/toko.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script>
     const usernameSelect = document.getElementById("username");
