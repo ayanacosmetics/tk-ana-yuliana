@@ -13,3 +13,5 @@ location.href="index.html";
 });
 
 }
+
+document.getElementById("menuAkun").addEventListener("click", loadAkun);
