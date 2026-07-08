@@ -35,6 +35,11 @@
         🚀
         <span>Siap Rilis</span>
       </a>
+
+      <a class="card" id="menuAdmin" href="admin.html">
+        ⚙️
+        <span>Panel Admin</span>
+      </a>
     </div>
    
         <div class="item">
@@ -79,6 +84,11 @@
           window.location.href = "tugas-perbaikan.html";
         });
       }
+    }
+
+    const menuAdmin = document.getElementById("menuAdmin");
+    if (menuAdmin && user.role !== "admin") {
+      menuAdmin.style.display = "none";
     }
 
     loadJumlahPerbaikan();
