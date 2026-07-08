@@ -1,7 +1,8 @@
 const list = document.getElementById("list");
-const btnLoad = document.getElementById("btnLoad");
 
-btnLoad.addEventListener("click", loadTugas);
+document.addEventListener("DOMContentLoaded", () => {
+  loadTugas();
+});
 
 async function loadTugas() {
   list.innerHTML = `<div class="item">Memuat tugas...</div>`;
@@ -45,7 +46,7 @@ async function loadTugas() {
                   id="fix-${item.row}-${f.col}"
                   inputmode="numeric"
                   placeholder="${f.placeholder}">
-                <button type="button" class="btn-scan-mini" onclick="scanPerbaikan('fix-${item.row}-${f.col}')">📷</button>
+                <button type="button" class="btn-scan-mini" onclick="scanPerbaikan('fix-${item.row}-${f.col}')"><i data-lucide="scan-barcode"></i></button>
               </div>
               <div id="reader-fix-${item.row}-${f.col}" class="reader hidden"></div>
             ` : `
@@ -62,6 +63,7 @@ async function loadTugas() {
         </button>
       </div>
     `).join("");
+    if (window.lucide) lucide.createIcons();
 
   } catch (err) {
     console.error(err);

@@ -3,25 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Lengkapi Modal</title>
+  <title>Lengkapi Modal - Inventory Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body class="list-v3-page">
   <main class="list-v3-shell">
     <header class="list-v3-header">
-      <button type="button" onclick="openDrawer()">☰</button>
+      <button type="button" onclick="openDrawer()">
+        <i data-lucide="menu"></i>
+      </button>
       <h2>Lengkapi Modal</h2>
       <span></span>
     </header>
 
     <section class="list-v3-hero green">
-      <h1>💰 Lengkapi Modal</h1>
+      <h1><i data-lucide="badge-dollar-sign"></i> Lengkapi Modal</h1>
       <p>Isi modal barang yang masih kosong.</p>
     </section>
 
-    <button id="btnLoad" class="btn primary">Muat Barang Modal 0</button>
-    <div id="list" class="list"></div>
+    <div id="list" class="list">
+      <div class="item">Memuat barang modal kosong...</div>
+    </div>
   </main>
 
   <script src="js/auth.js"></script>
@@ -31,5 +36,8 @@
     requireLogin();
   </script>
   <script src="js/lengkapi-modal.js"></script>
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
 </body>
 </html>

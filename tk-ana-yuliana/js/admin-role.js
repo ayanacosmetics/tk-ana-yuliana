@@ -1,33 +1,75 @@
 async function loadRole() {
   const content = document.getElementById("content");
-  content.innerHTML = `<div class="item">Memuat role...</div>`;
+  content.innerHTML = `<div class="item">Memuat hak akses...</div>`;
 
   const res = await fetch(`${MASTER_API_URL}?action=listRole`);
   const data = await res.json();
 
   if (!data.success) {
-    content.innerHTML = `<div class="item">Gagal memuat role.</div>`;
+    content.innerHTML = `<div class="item">Gagal memuat hak akses.</div>`;
     return;
   }
 
   content.innerHTML = `
-    <div class="form">
-      <h3>🛡️ Hak Akses</h3>
+    <div class="form admin-module-card">
+      <h3><i data-lucide="key-round"></i> Hak Akses</h3>
+      <p class="admin-desc">
+        Role diatur dari Sheet Role pada Master Admin.
+      </p>
+    </div>
 
-      <div class="list">
-        ${data.items.map(r => `
-          <div class="item">
-            <b>${r.nama}</b>
-            <div class="small">Dashboard: ${r.dashboard ? "✅" : "❌"}</div>
-            <div class="small">Input Barang: ${r.input ? "✅" : "❌"}</div>
-            <div class="small">Tugas Perbaikan: ${r.perbaikan ? "✅" : "❌"}</div>
-            <div class="small">Lengkapi Modal: ${r.modal ? "✅" : "❌"}</div>
-            <div class="small">Siap Rilis: ${r.rilis ? "✅" : "❌"}</div>
-            <div class="small">Panel Admin: ${r.admin ? "✅" : "❌"}</div>
-            <div class="small">Status: ${r.status}</div>
+    <div class="list admin-list">
+      ${data.items.map(r => {
+        const status = (r.status || "").toLowerCase();
+        const nama = (r.nama || "").toLowerCase();
+
+        return `
+          <div class="item admin-role-card">
+            <div class="admin-user-top">
+              <div class="admin-avatar role-avatar">
+                <i data-lucide="shield-check"></i>
+              </div>
+
+              <div>
+                <b>${r.nama}</b>
+                <div class="small">Role akses sistem</div>
+              </div>
+            </div>
+
+            <div class="admin-badges">
+              <span class="badge-role ${nama}">
+                <i data-lucide="shield"></i>
+                ${r.nama}
+              </span>
+
+              <span class="badge-status ${status}">
+                ${r.status || "aktif"}
+              </span>
+            </div>
+
+            <div class="permission-grid">
+              ${permissionItem("layout-dashboard", "Dashboard", r.dashboard)}
+              ${permissionItem("package", "Input Barang", r.input)}
+              ${permissionItem("wrench", "Perbaikan", r.perbaikan)}
+              ${permissionItem("badge-dollar-sign", "Modal", r.modal)}
+              ${permissionItem("rocket", "Siap Rilis", r.rilis)}
+              ${permissionItem("settings", "Admin", r.admin)}
+            </div>
           </div>
-        `).join("")}
-      </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function permissionItem(icon, label, allowed) {
+  return `
+    <div class="permission-item ${allowed ? "allowed" : "denied"}">
+      <i data-lucide="${icon}"></i>
+      <span>${label}</span>
+      <b>${allowed ? "✓" : "×"}</b>
     </div>
   `;
 }

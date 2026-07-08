@@ -24,21 +24,25 @@ function renderAkunPage() {
   const content = document.getElementById("content");
 
   content.innerHTML = `
-    <div class="form">
-      <h3>👥 Kelola Karyawan</h3>
+    <div class="form admin-module-card">
+      <h3><i data-lucide="users"></i> Kelola Karyawan</h3>
 
-      <input
-        id="searchAkun"
-        placeholder="Cari nama / username..."
-        oninput="renderAkunList()">
+      <div class="admin-search-wrap">
+        <i data-lucide="search"></i>
+        <input
+          id="searchAkun"
+          placeholder="Cari nama atau username..."
+          oninput="renderAkunList()">
+      </div>
 
-      <button class="btn primary" onclick="showFormAkun()">
-        + Tambah Akun
+      <button class="btn primary admin-action-btn" onclick="showFormAkun()">
+        <i data-lucide="user-plus"></i>
+        Tambah Akun
       </button>
     </div>
 
-    <div id="formAkun" class="form" style="display:none">
-      <h3 id="judulFormAkun">Tambah Akun</h3>
+    <div id="formAkun" class="form admin-form-card" style="display:none">
+      <h3 id="judulFormAkun"><i data-lucide="user-plus"></i> Tambah Akun</h3>
 
       <label>Username</label>
       <input id="akunUsername" placeholder="contoh: ana">
@@ -69,14 +73,22 @@ function renderAkunPage() {
         <option value="nonaktif">Nonaktif</option>
       </select>
 
-      <button class="btn primary" onclick="saveAkun()">Simpan Akun</button>
-      <button class="btn secondary" onclick="hideFormAkun()">Batal</button>
+      <button class="btn primary admin-action-btn" onclick="saveAkun()">
+        <i data-lucide="save"></i>
+        Simpan Akun
+      </button>
+
+      <button class="btn secondary admin-action-btn" onclick="hideFormAkun()">
+        <i data-lucide="x"></i>
+        Batal
+      </button>
     </div>
 
-    <div id="akunList" class="list"></div>
+    <div id="akunList" class="list admin-list"></div>
   `;
 
   renderAkunList();
+  if (window.lucide) lucide.createIcons();
 }
 
 function renderAkunList() {
@@ -89,36 +101,75 @@ function renderAkunList() {
   );
 
   if (!filtered.length) {
-    list.innerHTML = `<div class="item">Tidak ada akun ditemukan.</div>`;
+    list.innerHTML = `
+      <div class="item admin-user-card empty-state">
+        <i data-lucide="search-x"></i>
+        <b>Tidak ada akun ditemukan.</b>
+      </div>
+    `;
+    if (window.lucide) lucide.createIcons();
     return;
   }
 
   list.innerHTML = filtered.map(a => {
     const tokoNama = tokoCache.find(t => t.id === a.toko)?.nama || a.toko;
     const isBudhi = a.username === "budhi";
+    const status = (a.status || "").toLowerCase();
+    const role = (a.role || "staff").toLowerCase();
 
     return `
-      <div class="item">
-        <b>${a.nama}</b>
-        <div class="small">Username: ${a.username}</div>
-        <div class="small">PIN: ••••</div>
-        <div class="small">Role: ${a.role}</div>
-        <div class="small">Toko: ${tokoNama}</div>
-        <div class="small">Status: ${a.status}</div>
+      <div class="item admin-user-card">
+        <div class="admin-user-top">
+          <div class="admin-avatar">
+            <i data-lucide="user"></i>
+          </div>
 
-        <button class="btn secondary" onclick='editAkun(${JSON.stringify(a)})'>
-          Edit
-        </button>
+          <div>
+            <b>${a.nama}</b>
+            <div class="small">@${a.username}</div>
+          </div>
+        </div>
 
-        <button
-          class="btn secondary"
-          ${isBudhi ? "disabled" : ""}
-          onclick="deleteAkun('${a.username}')">
-          Nonaktifkan
-        </button>
+        <div class="admin-badges">
+          <span class="badge-role ${role}">
+            <i data-lucide="shield"></i>
+            ${a.role || "staff"}
+          </span>
+
+          <span class="badge-status ${status}">
+            ${status === "aktif" ? "Aktif" : "Nonaktif"}
+          </span>
+        </div>
+
+        <div class="admin-info-line">
+          <i data-lucide="store"></i>
+          <span>${tokoNama}</span>
+        </div>
+
+        <div class="admin-info-line">
+          <i data-lucide="key-round"></i>
+          <span>PIN: ••••</span>
+        </div>
+
+        <div class="admin-card-actions">
+          <button class="btn secondary" onclick='editAkun(${JSON.stringify(a)})'>
+            <i data-lucide="pencil"></i>
+            Edit
+          </button>
+
+          <button
+            class="btn secondary danger-soft"
+            ${isBudhi ? "disabled" : ""}
+            onclick="deleteAkun('${a.username}')">
+            <i data-lucide="ban"></i>
+            Nonaktifkan
+          </button>
+        </div>
       </div>
     `;
   }).join("");
+
+  if (window.lucide) lucide.createIcons();
 }
 
 function showFormAkun() {

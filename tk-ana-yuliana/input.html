@@ -3,110 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Input Barang - TK. Ana Yuliana</title>
+  <title>Input Barang - Inventory Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="input-v3-page">
   <main class="input-v3-shell">
+
     <header class="input-v3-header">
-      <button type="button" class="input-v3-menu" onclick="openDrawer()">☰</button>
+      <button type="button" class="input-v3-menu" onclick="openDrawer()">
+        <i data-lucide="menu"></i>
+      </button>
       <h2>Input Barang</h2>
-      <button type="button" class="input-v3-save-mini" onclick="document.getElementById('barangForm').requestSubmit()">💾</button>
+      <button type="button" class="input-v3-save-mini" onclick="document.getElementById('barangForm').requestSubmit()">
+        <i data-lucide="save"></i>
+      </button>
     </header>
 
-  <div class="satuan-utama-box">
-  <div class="satuan-utama-title">🏷️ SATUAN UTAMA (TERKECIL)</div>
     <form id="barangForm" class="form input-v3-form">
-      <section class="input-v3-card">
-        <h3>Informasi Barang</h3>
-      <label>Kode Barang / Barcode Satuan Terkecil</label>
-      <div class="scan-row">
-        <input
-           id="kode"
-           name="kode"
-           required
-           inputmode="numeric"
-           pattern="[0-9]*"
-           autocomplete="off"
-           placeholder="Scan atau ketik kode">
-        <button type="button" id="btnScan" class="btn-scan-mini">📷</button>
-      </div>
 
-      <div id="reader-kode" class="reader hidden"></div>
+      <section class="satuan-utama-box">
+        <div class="satuan-utama-title">SATUAN UTAMA (TERKECIL)</div>
 
-      <label>Nama Barang</label>
-      <input
-        id="nama"
-        name="nama"
-        required
-        style="text-transform: uppercase;"
-        autocomplete="off"
-        spellcheck="false"
-        placeholder="MERK + NAMA + UKURAN">
+        <div class="input-v3-card">
+          <h3>Informasi Barang</h3>
 
+          <label>Kode Barang / Barcode Satuan Terkecil</label>
+          <div class="scan-row">
+            <input id="kode" name="kode" required inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Scan atau ketik kode">
+            <button type="button" id="btnScan" class="btn-scan-mini">
+              <i data-lucide="scan-barcode"></i>
+            </button>
+          </div>
 
-      <label>Satuan Terkecil</label>
-      <select id="satuan1" name="satuan1" required>
-        <option value="PCS">PCS</option>
-        <option value="Bungkus">Bungkus</option>
-        <option value="Botol">Botol</option>
-        <option value="Sachet">Sachet</option>
-        <option value="Pack">Pack</option>
-      </select>
+          <div id="reader-kode" class="reader hidden"></div>
 
-      <label id="labelHargaEcer1">Harga Ecer PCS</label>
-      <input
-          id="hargaEcer"
-          name="hargaEcer"
-          type="number"
-          required
-          inputmode="numeric"
-          pattern="[0-9]*"
-          autocomplete="off"
-          placeholder="Harga ecer">
+          <label>Nama Barang</label>
+          <input id="nama" name="nama" required style="text-transform: uppercase;" autocomplete="off" spellcheck="false" placeholder="MERK + NAMA + UKURAN">
 
-      <label id="labelHargaGrosir1">Harga Grosir PCS</label>
-      <input
-          id="hargaGrosir1"
-          name="hargaGrosir1"
-          type="number"
-          required
-          inputmode="numeric"
-          pattern="[0-9]*"
-          autocomplete="off"
-          placeholder="Harga grosir">
-  </div>
-  </section>
+          <label>Satuan Terkecil</label>
+          <select id="satuan1" name="satuan1" required>
+            <option value="PCS">PCS</option>
+            <option value="Bungkus">Bungkus</option>
+            <option value="Botol">Botol</option>
+            <option value="Sachet">Sachet</option>
+            <option value="Pack">Pack</option>
+          </select>
+
+          <label id="labelHargaEcer1">Harga Ecer PCS</label>
+          <input id="hargaEcer" name="hargaEcer" type="number" required inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Harga ecer">
+
+          <label id="labelHargaGrosir1">Harga Grosir PCS</label>
+          <input id="hargaGrosir1" name="hargaGrosir1" type="number" required inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Harga grosir">
+        </div>
+      </section>
+
       <div id="multiWrap"></div>
 
-      <button type="button" id="btnTambah" class="btn secondary">+ Tambah Satuan setelah PCS</button>
-    <div class="modal-box">
-    <label id="labelModal">Modal per PCS</label>
-    <input
-        id="modal"
-        name="modal"
-        type="number"
-        required
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-        placeholder="Masukkan modal per PCS">
-    </div>
+      <button type="button" id="btnTambah" class="btn secondary">
+        + Tambah Satuan setelah PCS
+      </button>
+
+      <div class="modal-box">
+        <label id="labelModal">Modal per PCS</label>
+        <input id="modal" name="modal" type="number" required inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Masukkan modal per PCS">
+      </div>
+
       <button type="submit" class="btn primary">Simpan</button>
     </form>
+
   </main>
 
   <script src="js/auth.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/toko.js"></script>
   <script src="js/sidebar.js"></script>
   <script>
     requireLogin();
   </script>
   <script src="js/input.js"></script>
-  <!-- restore input stable -->
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
 </body>
 </html>

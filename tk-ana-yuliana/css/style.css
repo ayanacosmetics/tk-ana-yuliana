@@ -2180,3 +2180,668 @@ button[type="submit"],
 .bottom-nav {
   display: none !important;
 }
+
+.icon-box svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.4;
+}
+
+.drawer-link svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.3;
+  flex-shrink: 0;
+}
+
+.dash-menu-btn svg,
+.dash-bell svg,
+.drawer-close svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.6;
+}
+
+.drawer-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lucide {
+  vertical-align: middle;
+}
+
+/* ===== INPUT BARANG PREMIUM POLISH ===== */
+
+.input-v3-page {
+  background:
+    radial-gradient(circle at top right, rgba(37,99,235,.08), transparent 260px),
+    #f6f8fc !important;
+}
+
+.input-v3-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(246,248,252,.88);
+  backdrop-filter: blur(14px);
+  padding: 8px 0 12px;
+}
+
+.input-v3-header h2 {
+  font-size: 22px !important;
+  letter-spacing: -.3px;
+}
+
+.input-v3-menu,
+.input-v3-save-mini {
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+}
+
+.input-v3-menu svg,
+.input-v3-save-mini svg {
+  width: 27px;
+  height: 27px;
+  stroke-width: 2.7;
+}
+
+.input-v3-form {
+  display: grid;
+  gap: 16px;
+}
+
+.input-v3-card {
+  border-radius: 26px !important;
+  padding: 22px !important;
+}
+
+.input-v3-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px !important;
+}
+
+.input-v3-card h3::before {
+  content: "";
+  width: 36px;
+  height: 36px;
+  border-radius: 13px;
+  background: #eef4ff;
+  display: inline-block;
+  background-image: linear-gradient(135deg,#dbeafe,#fff);
+}
+
+.input-v3-page label {
+  color: #111827 !important;
+  font-size: 13px !important;
+  margin-bottom: 7px !important;
+}
+
+.input-v3-page input,
+.input-v3-page select {
+  height: 56px !important;
+  border-radius: 17px !important;
+  border: 1px solid #d9e2ef !important;
+  background: #fff !important;
+  font-size: 15px !important;
+  padding: 0 15px !important;
+}
+
+.input-v3-page input::placeholder {
+  color: #94a3b8;
+}
+
+.input-v3-page .scan-row {
+  grid-template-columns: 1fr 58px !important;
+  gap: 10px !important;
+}
+
+.input-v3-page .btn-scan-mini {
+  width: 58px !important;
+  height: 56px !important;
+  border-radius: 17px !important;
+  background: #0f172a !important;
+  display: grid;
+  place-items: center;
+}
+
+.input-v3-page .btn-scan-mini svg {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2.6;
+  color: white;
+}
+
+.input-v3-page .satuan-utama-box {
+  border-radius: 28px !important;
+  padding: 22px !important;
+  border-left: 6px solid #16a34a !important;
+}
+
+.input-v3-page .satuan-utama-title {
+  font-size: 19px !important;
+  letter-spacing: .4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-v3-page .satuan-utama-title::before {
+  content: "";
+  width: 34px;
+  height: 34px;
+  border-radius: 13px;
+  background: linear-gradient(135deg,#dcfce7,#fff);
+}
+
+.input-v3-page .multi {
+  border-radius: 28px !important;
+  border-left-width: 6px !important;
+}
+
+.input-v3-page .multi h3 {
+  font-size: 18px !important;
+  line-height: 1.35;
+}
+
+.input-v3-page .grosir-box {
+  border-radius: 20px !important;
+  padding: 15px !important;
+}
+
+.input-v3-page .grosir-actions {
+  grid-template-columns: 1fr 56px !important;
+}
+
+.input-v3-page .btn-grosir-mini,
+.input-v3-page .btn-cancel-mini {
+  height: 56px !important;
+  border-radius: 18px !important;
+}
+
+.input-v3-page #btnTambah {
+  height: 66px !important;
+  border-radius: 22px !important;
+  font-size: 15px !important;
+}
+
+.input-v3-page button[type="submit"] {
+  position: sticky !important;
+  bottom: 14px !important;
+  width: 100% !important;
+  transform: none !important;
+  left: auto !important;
+  max-width: none !important;
+  height: 62px !important;
+  border-radius: 20px !important;
+  margin-top: 14px !important;
+}
+
+/* ===== FIX LUCIDE ICON VISIBILITY ===== */
+
+.icon-box.purple svg {
+  color: #4f46e5 !important;
+  stroke: #4f46e5 !important;
+}
+
+.icon-box.orange svg {
+  color: #f97316 !important;
+  stroke: #f97316 !important;
+}
+
+.icon-box.green svg {
+  color: #16a34a !important;
+  stroke: #16a34a !important;
+}
+
+.icon-box.blue svg {
+  color: #2563eb !important;
+  stroke: #2563eb !important;
+}
+
+.icon-box.gray svg {
+  color: #475569 !important;
+  stroke: #475569 !important;
+}
+
+.input-v3-page .input-v3-card h3::before,
+.input-v3-page .satuan-utama-title::before {
+  display: none !important;
+}
+
+.input-v3-page .btn-scan-mini svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.input-v3-menu svg,
+.input-v3-save-mini svg {
+  color: #0f172a !important;
+  stroke: #0f172a !important;
+}
+
+.input-v3-save-mini svg {
+  color: #2563eb !important;
+  stroke: #2563eb !important;
+}
+
+/* FIX tombol tambah/hapus harga grosir sejajar */
+.input-v3-page .grosir-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.input-v3-page .btn-grosir-mini {
+  flex: 1 !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.input-v3-page .btn-cancel-mini {
+  width: 46px !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ===== TUGAS PERBAIKAN POLISH ===== */
+
+.list-v3-header button svg {
+  width: 27px;
+  height: 27px;
+  stroke-width: 2.7;
+}
+
+.list-v3-hero h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-v3-hero h1 svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.7;
+}
+
+.list-v3-page .item {
+  position: relative;
+  overflow: hidden;
+}
+
+.list-v3-page .item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 5px;
+  border-radius: 99px;
+  background: #f97316;
+}
+
+.list-v3-page .item b {
+  display: block;
+  margin-left: 6px;
+}
+
+.list-v3-page .item input {
+  margin-top: 8px;
+}
+
+.list-v3-page .item .btn.primary,
+.list-v3-page .item button.primary {
+  background: linear-gradient(135deg, #f97316, #ea580c) !important;
+  color: white !important;
+}
+
+.list-v3-page .item .btn.secondary,
+.list-v3-page .item button.secondary {
+  background: #fff7ed !important;
+  color: #9a3412 !important;
+  border: 1px solid #fed7aa !important;
+}
+
+/* ===== SIAP RILIS POLISH ===== */
+
+.release-all-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: white !important;
+  margin-bottom: 14px;
+}
+
+.release-all-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.6;
+}
+
+.list-v3-hero.blue + #list .item::before {
+  background: #2563eb;
+}
+
+/* ===== ADMIN FINAL POLISH ===== */
+
+.admin-v3-page {
+  background: #f6f8fc;
+}
+
+.admin-v3-header button svg,
+.admin-v3-hero svg,
+.admin-v3-tabs svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.6;
+}
+
+.admin-v3-hero h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-v3-tabs button {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.admin-v3-tabs button svg {
+  color: #2563eb;
+  stroke: #2563eb;
+}
+
+.admin-v3-content .form h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-v3-content .item {
+  border-left: 5px solid #2563eb;
+}
+
+.admin-v3-content .item button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.admin-v3-content .btn.primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: white !important;
+}
+
+.admin-v3-content .btn.secondary {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* ===== ADMIN AKUN CARD POLISH ===== */
+
+.admin-search-wrap {
+  height: 54px;
+  border: 1px solid #dbe3ef;
+  border-radius: 18px;
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  margin-bottom: 14px;
+}
+
+.admin-search-wrap svg {
+  width: 21px;
+  height: 21px;
+  color: #64748b;
+  stroke: #64748b;
+}
+
+.admin-search-wrap input {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+.admin-action-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-user-card {
+  border-left: 0 !important;
+  border-radius: 24px !important;
+  padding: 18px !important;
+}
+
+.admin-user-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: #eef4ff;
+  display: grid;
+  place-items: center;
+  color: #2563eb;
+}
+
+.admin-avatar svg {
+  width: 24px;
+  height: 24px;
+}
+
+.admin-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.badge-role,
+.badge-status {
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.badge-role svg {
+  width: 14px;
+  height: 14px;
+}
+
+.badge-role.admin {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.badge-role.supervisor {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.badge-role.staff {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.badge-status.aktif {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.badge-status.nonaktif {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.admin-info-line {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.admin-info-line svg {
+  width: 17px;
+  height: 17px;
+}
+
+.admin-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.admin-card-actions .btn {
+  margin: 0 !important;
+  min-height: 46px !important;
+}
+
+.danger-soft {
+  color: #dc2626 !important;
+  background: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+}
+
+.empty-state {
+  text-align: center;
+  color: #64748b;
+}
+
+.empty-state svg {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 10px;
+}
+
+/* ===== ADMIN TOKO POLISH ===== */
+
+.store-avatar {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+.badge-api {
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.badge-api.filled {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.badge-api.empty {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.admin-card-actions.one {
+  grid-template-columns: 1fr !important;
+}
+
+/* ===== ADMIN ROLE POLISH ===== */
+
+.admin-desc {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: -4px 0 0;
+}
+
+.role-avatar {
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
+}
+
+.permission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.permission-item {
+  min-height: 44px;
+  border-radius: 14px;
+  padding: 0 11px;
+  display: grid;
+  grid-template-columns: 22px 1fr 20px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.permission-item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.permission-item.allowed {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.permission-item.denied {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.permission-item b {
+  font-size: 16px;
+  text-align: right;
+}

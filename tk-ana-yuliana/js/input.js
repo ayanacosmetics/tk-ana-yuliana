@@ -105,7 +105,7 @@ function tambahSatuan(data = {}) {
           autocomplete="off"
           placeholder="Pilih satuan dulu">
       
-      <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')">📷</button>
+      <button type="button" class="btn-scan-mini" onclick="startScanner('kode${multiCount}')"><i data-lucide="scan-barcode"></i></button>
     </div>
 
     <div id="reader-kode${multiCount}" class="reader hidden"></div>
@@ -161,6 +161,7 @@ function tambahSatuan(data = {}) {
 
   $("multiWrap").appendChild(div);
   updateLabelSatuan(multiCount);
+  if (window.lucide) lucide.createIcons();
 }
 
 function tambahHargaGrosir(no) {

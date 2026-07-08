@@ -1,9 +1,10 @@
 const list = document.getElementById("list");
-const btnLoad = document.getElementById("btnLoad");
 
 let siapRilisItems = [];
 
-btnLoad.addEventListener("click", loadSiapRilis);
+document.addEventListener("DOMContentLoaded", () => {
+  loadSiapRilis();
+});
 
 async function loadSiapRilis() {
   list.innerHTML = `<div class="item">Memuat data...</div>`;
@@ -20,8 +21,9 @@ async function loadSiapRilis() {
     }
 
     list.innerHTML = `
-      <button class="btn primary" onclick="importSemuaSelesai()">
-        ✅ Import Semua Selesai
+      <button class="btn primary release-all-btn" onclick="importSemuaSelesai()">
+        <i data-lucide="upload-cloud"></i>
+        Import Semua Selesai
       </button>
 
       ${siapRilisItems.map(item => `
@@ -33,6 +35,7 @@ async function loadSiapRilis() {
         </div>
       `).join("")}
     `;
+    if (window.lucide) lucide.createIcons();
 
   } catch (e) {
     list.innerHTML = `<div class="item">Gagal memuat data.</div>`;

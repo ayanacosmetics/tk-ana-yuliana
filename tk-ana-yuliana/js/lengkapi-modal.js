@@ -1,7 +1,8 @@
 const list = document.getElementById("list");
-const btnLoad = document.getElementById("btnLoad");
 
-btnLoad.addEventListener("click", loadModalKosong);
+document.addEventListener("DOMContentLoaded", () => {
+  loadModalKosong();
+});
 
 async function loadModalKosong() {
   list.innerHTML = `<div class="item">Memuat...</div>`;
@@ -45,6 +46,7 @@ async function loadModalKosong() {
     </button>
   </div>
 `).join("");
+if (window.lucide) lucide.createIcons();
 }
 
 async function simpanModal(row) {
