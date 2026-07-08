@@ -2176,3 +2176,7 @@ button[type="submit"],
   color: white;
   font-size: 18px;
 }
+
+.bottom-nav {
+  display: none !important;
+}

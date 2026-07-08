@@ -101,12 +101,12 @@
       <h3>Ringkasan</h3>
       <div class="summary-cols">
         <div>
-          <small>Toko</small>
-          <b id="summaryToko">-</b>
+          <small>Total Barang</small>
+          <b id="summaryTotalBarang">0</b>
         </div>
         <div>
-          <small>Akun</small>
-          <b id="summaryUser">-</b>
+          <small>Barang Saya</small>
+          <b id="summaryBarangSaya">0</b>
         </div>
         <div>
           <small>Perbaikan</small>
@@ -116,13 +116,6 @@
     </section>
 
     <button class="dash-logout" onclick="logout()">↪ Logout</button>
-
-    <nav class="bottom-nav">
-      <a class="active" href="index.html">⌂<span>Home</span></a>
-      <a href="tugas-perbaikan.html">◷<span>Perbaikan</span></a>
-      <a href="#">🔔<span>Notifikasi</span></a>
-      <a href="#">♡<span>Profil</span></a>
-    </nav>
 
   </main>
 
@@ -190,6 +183,22 @@
     }
 
     loadJumlahPerbaikan();
+
+    async function loadDashboardSummary() {
+      try {
+        const res = await fetch(`${API_URL}?action=dashboardSummary&petugas=${encodeURIComponent(user.name)}`);
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById("summaryTotalBarang").innerText = data.totalBarang || 0;
+          document.getElementById("summaryBarangSaya").innerText = data.barangSaya || 0;
+        }
+      } catch (e) {
+        console.warn("Gagal memuat ringkasan", e);
+      }
+    }
+
+    loadDashboardSummary();
   </script>
 </body>
 </html>
