@@ -52,7 +52,6 @@ async function loadRole() {
               ${permissionItem("package", "Input Barang", r.input)}
               ${permissionItem("wrench", "Perbaikan", r.perbaikan)}
               ${permissionItem("badge-dollar-sign", "Modal", r.modal)}
-              ${permissionItem("rocket", "Siap Rilis", r.rilis)}
               ${permissionItem("download", "Export Kaspin", r.export)}
               ${permissionItem("settings", "Admin", r.admin)}
             </div>
