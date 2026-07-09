@@ -3042,3 +3042,44 @@ button[type="submit"],
     transform: rotate(360deg);
   }
 }
+
+.export-progress-box {
+  text-align: left;
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.export-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.export-step span {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #e5e7eb;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.export-step p {
+  margin: 0;
+}
+
+.export-step.done {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.export-step.done span {
+  background: #2563eb;
+  color: #ffffff;
+}

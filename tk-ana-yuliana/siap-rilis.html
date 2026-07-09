@@ -109,7 +109,7 @@
       }
     });
 
-    function downloadExportKaspin(event) {
+    async function downloadExportKaspin(event) {
       if (event) event.preventDefault();
 
       const user = getCurrentUser();
@@ -137,31 +137,105 @@
         return;
       }
 
-      Swal.fire({
-        title: "Menyiapkan export",
-        html: `
-          <div class="export-loading">
-            <div class="export-spinner"></div>
-            <p>Membuat file import POS...</p>
-            <small>Mohon tunggu sampai download dimulai.</small>
+      const steps = [
+        "Menghubungkan ke server",
+        "Mengambil data toko",
+        "Membaca data barang",
+        "Membuat file import",
+        "Mengemas ZIP",
+        "Menyiapkan download"
+      ];
+
+      function renderSteps(activeIndex) {
+        return `
+          <div class="export-progress-box">
+            ${steps.map((s, i) => `
+              <div class="export-step ${i <= activeIndex ? "done" : ""}">
+                <span>${i <= activeIndex ? "✓" : ""}</span>
+                <p>${s}</p>
+              </div>
+            `).join("")}
           </div>
-        `,
+        `;
+      }
+
+      Swal.fire({
+        title: "Export ke POS",
+        html: renderSteps(0),
         showConfirmButton: false,
         allowOutsideClick: false,
-        allowEscapeKey: false
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
       });
 
-      const params = new URLSearchParams({
-        toko: tokoId,
-        barang: barang ? "1" : "0",
-        multi: multi ? "1" : "0",
-        grosir: grosir ? "1" : "0"
-      });
+      try {
+        for (let i = 1; i < 3; i++) {
+          await new Promise(resolve => setTimeout(resolve, 250));
+          Swal.update({ html: renderSteps(i) });
+        }
 
-      setTimeout(() => {
-        window.location.href = `/api/export-kaspin?${params.toString()}`;
-        setTimeout(() => Swal.close(), 1200);
-      }, 700);
+        const params = new URLSearchParams({
+          toko: tokoId,
+          barang: barang ? "1" : "0",
+          multi: multi ? "1" : "0",
+          grosir: grosir ? "1" : "0"
+        });
+
+        Swal.update({ html: renderSteps(3) });
+
+        const response = await fetch(`/api/export-kaspin?${params.toString()}`);
+
+        if (!response.ok) {
+          let message = "Gagal membuat file export.";
+          try {
+            const err = await response.json();
+            message = err.message || message;
+          } catch (e) {}
+          throw new Error(message);
+        }
+
+        Swal.update({ html: renderSteps(4) });
+
+        const blob = await response.blob();
+
+        Swal.update({ html: renderSteps(5) });
+
+        let filename = "EXPORT_POS.zip";
+        const disposition = response.headers.get("Content-Disposition");
+
+        if (disposition && disposition.includes("filename=")) {
+          filename = disposition
+            .split("filename=")[1]
+            .replace(/"/g, "")
+            .trim();
+        }
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        Swal.fire({
+          icon: "success",
+          title: "Export berhasil",
+          text: "File ZIP mulai diunduh.",
+          timer: 1600,
+          showConfirmButton: false
+        });
+
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Export gagal",
+          text: err.message || "Terjadi kesalahan saat export."
+        });
+      }
     }
 
     refreshOptionState();
