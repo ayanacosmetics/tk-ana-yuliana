@@ -145,14 +145,13 @@ function makeMultiRows(rows) {
   const result = [];
 
   rows.forEach(r => {
-
     const kode1 = clean(r[3]);
-    const hargaEcer = num(r[4]);
     const satuan1 = clean(r[2]);
+    const hargaEcer = num(r[4]);
 
     if (!kode1 || !satuan1) return;
 
-    // Satuan 1
+    // SATUAN 1
     result.push([
       kode1,
       satuan1,
@@ -161,36 +160,37 @@ function makeMultiRows(rows) {
       satuan1
     ]);
 
-    // Satuan 2
+    // SATUAN 2
     const satuan2 = clean(r[8]);
     const isi2 = num(r[9]);
     const kode2 = clean(r[10]);
+    const hargaGrosir1Satuan2 = num(r[11]);
 
-    if (satuan2 && isi2 > 0) {
+    if (satuan2 && isi2 > 0 && hargaGrosir1Satuan2 > 0) {
       result.push([
         kode2 || kode1,
         satuan2,
-        hargaEcer * isi2,
+        hargaGrosir1Satuan2,
         isi2,
         satuan1
       ]);
     }
 
-    // Satuan 3
+    // SATUAN 3
     const satuan3 = clean(r[14]);
     const isi3 = num(r[15]);
     const kode3 = clean(r[16]);
+    const hargaGrosir1Satuan3 = num(r[17]);
 
-    if (satuan3 && isi3 > 0) {
+    if (satuan3 && isi3 > 0 && hargaGrosir1Satuan3 > 0) {
       result.push([
         kode3 || kode1,
         satuan3,
-        hargaEcer * isi3,
+        hargaGrosir1Satuan3,
         isi3,
         satuan1
       ]);
     }
-
   });
 
   return result;
