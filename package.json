@@ -1,0 +1,25 @@
+{
+  "name": "tk-ana-yuliana",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayanacosmetics/tk-ana-yuliana.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ayanacosmetics/tk-ana-yuliana/issues"
+  },
+  "homepage": "https://github.com/ayanacosmetics/tk-ana-yuliana#readme",
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "xlsx": "^0.18.5"
+  }
+}
