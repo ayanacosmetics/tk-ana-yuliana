@@ -204,30 +204,34 @@ function makeGrosirRows(rows) {
     out.push([kode, tipe, minimal, harga]);
   }
 
+  function hargaPerPcs(hargaTotal, isi) {
+    if (!hargaTotal || !isi) return 0;
+    return Math.round(hargaTotal / isi);
+  }
+
   rows.forEach(r => {
     const kode1 = clean(r[3]);
     if (!clean(r[0]) || !kode1) return;
 
-    const hg1s1 = num(r[5]);
-    const hg2s1 = num(r[6]) || hg1s1;
-    const hg3s1 = num(r[7]);
+    // SATUAN 1 / PCS
+    add(kode1, "Grosir 1", 1, num(r[5]));
+    add(kode1, "Grosir 2", 1, num(r[6]));
+    add(kode1, "Grosir 3", 1, num(r[7]));
 
-    add(kode1, "Grosir 1", 1, hg1s1);
-    add(kode1, "Grosir 2", 1, hg2s1);
-    add(kode1, "Grosir 3", 1, hg3s1);
-
+    // SATUAN 2
     const isi2 = num(r[9]);
     if (isi2 > 0) {
-      add(kode1, "Grosir 1", isi2, num(r[11]));
-      add(kode1, "Grosir 2", isi2, num(r[12]));
-      add(kode1, "Grosir 3", isi2, num(r[13]));
+      add(kode1, "Grosir 1", isi2, hargaPerPcs(num(r[11]), isi2));
+      add(kode1, "Grosir 2", isi2, hargaPerPcs(num(r[12]), isi2));
+      add(kode1, "Grosir 3", isi2, hargaPerPcs(num(r[13]), isi2));
     }
 
+    // SATUAN 3
     const isi3 = num(r[15]);
     if (isi3 > 0) {
-      add(kode1, "Grosir 1", isi3, num(r[17]));
-      add(kode1, "Grosir 2", isi3, num(r[18]));
-      add(kode1, "Grosir 3", isi3, num(r[19]));
+      add(kode1, "Grosir 1", isi3, hargaPerPcs(num(r[17]), isi3));
+      add(kode1, "Grosir 2", isi3, hargaPerPcs(num(r[18]), isi3));
+      add(kode1, "Grosir 3", isi3, hargaPerPcs(num(r[19]), isi3));
     }
   });
 
