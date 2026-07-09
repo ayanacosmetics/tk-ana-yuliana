@@ -78,6 +78,31 @@ function fillBarangTemplate(rows) {
   });
 }
 
+function fillMultiTemplate(rows) {
+
+  const templatePath = path.join(
+    __dirname,
+    "templates",
+    "TEMPLATE_MULTI_SATUAN.xls"
+  );
+
+  const workbook = XLSX.readFile(templatePath);
+
+  const ws = workbook.Sheets[
+    workbook.SheetNames[0]
+  ];
+
+  XLSX.utils.sheet_add_aoa(ws, rows, {
+    origin: "A2"
+  });
+
+  return XLSX.write(workbook, {
+    type: "buffer",
+    bookType: "xls"
+  });
+
+}
+
 module.exports = async function handler(req, res) {
   try {
     if (!GAS_URL) {
@@ -97,13 +122,13 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const barangRows = makeBarangRows(data.rows);
-    const fileBuffer = fillBarangTemplate(barangRows);
+    const multiRows = makeMultiRows(data.rows);
+    const fileBuffer = fillMultiTemplate(multiRows);
 
     res.setHeader("Content-Type", "application/vnd.ms-excel");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=TEMPLATE_BARANG_HASIL.xls"
+      "attachment; filename=TEMPLATE_MULTI_SATUAN_HASIL.xls"
     );
 
     return res.status(200).send(fileBuffer);
@@ -115,3 +140,58 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+
+function makeMultiRows(rows) {
+  const result = [];
+
+  rows.forEach(r => {
+
+    const kode1 = clean(r[3]);
+    const hargaEcer = num(r[4]);
+    const satuan1 = clean(r[2]);
+
+    if (!kode1 || !satuan1) return;
+
+    // Satuan 1
+    result.push([
+      kode1,
+      satuan1,
+      hargaEcer,
+      1,
+      satuan1
+    ]);
+
+    // Satuan 2
+    const satuan2 = clean(r[8]);
+    const isi2 = num(r[9]);
+    const kode2 = clean(r[10]);
+
+    if (satuan2 && isi2 > 0) {
+      result.push([
+        kode2 || kode1,
+        satuan2,
+        hargaEcer * isi2,
+        isi2,
+        satuan1
+      ]);
+    }
+
+    // Satuan 3
+    const satuan3 = clean(r[14]);
+    const isi3 = num(r[15]);
+    const kode3 = clean(r[16]);
+
+    if (satuan3 && isi3 > 0) {
+      result.push([
+        kode3 || kode1,
+        satuan3,
+        hargaEcer * isi3,
+        isi3,
+        satuan1
+      ]);
+    }
+
+  });
+
+  return result;
+}
