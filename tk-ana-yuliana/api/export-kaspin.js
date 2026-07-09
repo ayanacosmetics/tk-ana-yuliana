@@ -2,7 +2,7 @@ const path = require("path");
 const XLSX = require("xlsx");
 const JSZip = require("jszip");
 
-const GAS_URL = process.env.GAS_URL;
+const MASTER_GAS_URL = process.env.MASTER_GAS_URL;
 
 function clean(v) {
   return String(v || "").trim();
@@ -106,20 +106,42 @@ function fillMultiTemplate(rows) {
 
 module.exports = async function handler(req, res) {
   try {
-    if (!GAS_URL) {
+    if (!MASTER_GAS_URL) {
       return res.status(500).json({
         success: false,
-        message: "GAS_URL belum diatur di Vercel."
+        message: "MASTER_GAS_URL belum diatur di Vercel."
       });
     }
 
-    const response = await fetch(`${GAS_URL}?action=kaspinExportData`);
+    const toko = String(req.query.toko || "").trim().toLowerCase();
+
+    if (!toko) {
+      return res.status(400).json({
+        success: false,
+        message: "Parameter toko tidak ditemukan."
+      });
+    }
+
+    const tokoRes = await fetch(
+      `${MASTER_GAS_URL}?action=getTokoApi&toko=${encodeURIComponent(toko)}`
+    );
+
+    const tokoData = await tokoRes.json();
+
+    if (!tokoData.success || !tokoData.apiUrl) {
+      return res.status(400).json({
+        success: false,
+        message: tokoData.message || "API toko tidak ditemukan."
+      });
+    }
+
+    const response = await fetch(`${tokoData.apiUrl}?action=kaspinExportData`);
     const data = await response.json();
 
     if (!data.success) {
       return res.status(400).json({
         success: false,
-        message: "Gagal mengambil data dari Apps Script."
+        message: "Gagal mengambil data dari Apps Script toko."
       });
     }
 
@@ -141,10 +163,14 @@ module.exports = async function handler(req, res) {
       type: "nodebuffer"
     });
 
+    const safeNama = String(tokoData.nama || toko)
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "_");
+
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=EXPORT_KASPIN_TK_ANA_YULIANA.zip"
+      `attachment; filename=EXPORT_KASPIN_${safeNama}.zip`
     );
 
     return res.status(200).send(zipBuffer);
