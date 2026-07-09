@@ -192,6 +192,10 @@ module.exports = async function handler(req, res) {
       type: "nodebuffer"
     });
 
+    const safeNama = String(tokoData.nama || toko)
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "_");
+    
     let fileName = "";
 
     if (exportBarang && exportMulti && exportGrosir) {
