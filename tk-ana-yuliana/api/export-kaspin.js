@@ -127,6 +127,8 @@ module.exports = async function handler(req, res) {
     }
 
     const toko = String(req.query.toko || "").trim().toLowerCase();
+    const userName = String(req.query.user || "").trim();
+    const userRole = String(req.query.role || "").trim();
     const exportBarang = req.query.barang !== "0";
     const exportMulti = req.query.multi !== "0";
     const exportGrosir = req.query.grosir !== "0";
@@ -169,21 +171,27 @@ module.exports = async function handler(req, res) {
     }
 
     const zip = new JSZip();
+    let countBarang = 0;
+    let countMulti = 0;
+    let countGrosir = 0;
 
     if (exportBarang) {
       const barangRows = makeBarangRows(data.rows);
+      countBarang = barangRows.length;
       const barangFile = fillBarangTemplate(barangRows);
       zip.file("TEMPLATE_BARANG.xls", barangFile);
     }
 
     if (exportMulti) {
       const multiRows = makeMultiRows(data.rows);
+      countMulti = multiRows.length;
       const multiFile = fillMultiTemplate(multiRows);
       zip.file("TEMPLATE_MULTI_SATUAN.xls", multiFile);
     }
 
     if (exportGrosir) {
       const grosirRows = makeGrosirRows(data.rows);
+      countGrosir = grosirRows.length;
       const grosirFile = fillGrosirTemplate(grosirRows);
       zip.file("TEMPLATE_HARGA_GROSIR.xls", grosirFile);
     }
@@ -191,6 +199,23 @@ module.exports = async function handler(req, res) {
     const zipBuffer = await zip.generateAsync({
       type: "nodebuffer"
     });
+
+    fetch(tokoData.apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "saveExportHistory",
+        user: userName,
+        role: userRole,
+        toko: tokoData.nama || toko,
+        barang: countBarang,
+        multi: countMulti,
+        grosir: countGrosir,
+        total: countBarang + countMulti + countGrosir
+      })
+    }).catch(() => {});
 
     const safeNama = String(tokoData.nama || toko)
       .replace(/[^\w\s-]/g, "")

@@ -178,6 +178,8 @@
 
         const params = new URLSearchParams({
           toko: tokoId,
+          user: user.name || user.username || "",
+          role: user.role || "",
           barang: barang ? "1" : "0",
           multi: multi ? "1" : "0",
           grosir: grosir ? "1" : "0"
