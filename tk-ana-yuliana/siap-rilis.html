@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Siap Rilis - Inventory Engine</title>
+  <title>Export ke POS - Inventory Engine</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,33 +16,156 @@
       <button type="button" onclick="openDrawer()">
         <i data-lucide="menu"></i>
       </button>
-      <h2>Siap Rilis</h2>
+      <h2>Export ke POS</h2>
       <span></span>
     </header>
 
     <section class="list-v3-hero blue">
-      <h1><i data-lucide="rocket"></i> Siap Rilis</h1>
-      <p>Data barang yang sudah lengkap dan siap diimpor.</p>
+      <h1>Export ke POS</h1>
+      <p>Buat file import untuk sistem kasir dari Data Barang.</p>
     </section>
 
-    <div id="list" class="list">
-      <div class="item">Memuat data siap rilis...</div>
-    </div>
+    <section class="pos-export-panel">
+      <div class="pos-export-head">
+        <div>
+          <h3>Platform POS</h3>
+          <p>Pilih sistem kasir tujuan export.</p>
+        </div>
+      </div>
+
+      <div class="pos-platform-card active">
+        <div>
+          <b>Kasir Pintar</b>
+          <small>Export Barang, Multi Satuan, dan Harga Grosir</small>
+        </div>
+        <span>Aktif</span>
+      </div>
+
+      <div class="pos-export-head small-gap">
+        <div>
+          <h3>File yang dibuat</h3>
+          <p>Pilih data yang ingin dimasukkan ke ZIP.</p>
+        </div>
+      </div>
+
+      <div class="pos-option-list">
+        <label class="pos-option-card selected" for="exportBarang">
+          <input type="checkbox" id="exportBarang" checked>
+          <div>
+            <b>Barang</b>
+            <small>Produk utama, harga beli, harga jual, dan stok.</small>
+          </div>
+          <span class="pos-check">✓</span>
+        </label>
+
+        <label class="pos-option-card selected" for="exportMulti">
+          <input type="checkbox" id="exportMulti" checked>
+          <div>
+            <b>Multi Satuan</b>
+            <small>PCS, Pack, Dus, Bal, dan satuan lain.</small>
+          </div>
+          <span class="pos-check">✓</span>
+        </label>
+
+        <label class="pos-option-card selected" for="exportGrosir">
+          <input type="checkbox" id="exportGrosir" checked>
+          <div>
+            <b>Harga Grosir</b>
+            <small>Harga bertingkat berdasarkan jumlah minimal.</small>
+          </div>
+          <span class="pos-check">✓</span>
+        </label>
+      </div>
+
+      <button class="pos-export-btn" onclick="downloadExportKaspin(event)">
+        Export Sekarang
+      </button>
+    </section>
 
   </main>
 
   <script src="js/auth.js"></script>
   <script src="js/config.js"></script>
   <script src="js/sidebar.js"></script>
+
   <script>
     requireLogin();
-    if (!can("rilis")) {
-      Swal.fire("Akses ditolak", "Akun Anda tidak memiliki akses ke Siap Rilis.", "error")
+
+    if (!can("export")) {
+      Swal.fire("Akses ditolak", "Akun Anda tidak memiliki akses Export ke POS.", "error")
         .then(() => window.location.href = "index.html");
     }
-  </script>
-  <script src="js/siap-rilis.js"></script>
-  <script>
+
+    function refreshOptionState() {
+      document.querySelectorAll(".pos-option-card").forEach(card => {
+        const input = card.querySelector("input");
+        card.classList.toggle("selected", input.checked);
+      });
+    }
+
+    document.addEventListener("change", function(e) {
+      if (e.target.matches(".pos-option-card input")) {
+        refreshOptionState();
+      }
+    });
+
+    function downloadExportKaspin(event) {
+      if (event) event.preventDefault();
+
+      const user = getCurrentUser();
+      const tokoId = user.toko || user.toko_id || user.id_toko;
+
+      if (!tokoId) {
+        Swal.fire({
+          icon: "error",
+          title: "Toko tidak ditemukan",
+          text: "Silakan logout lalu login ulang."
+        });
+        return;
+      }
+
+      const barang = document.getElementById("exportBarang").checked;
+      const multi = document.getElementById("exportMulti").checked;
+      const grosir = document.getElementById("exportGrosir").checked;
+
+      if (!barang && !multi && !grosir) {
+        Swal.fire({
+          icon: "warning",
+          title: "Belum ada pilihan",
+          text: "Pilih minimal satu file untuk diexport."
+        });
+        return;
+      }
+
+      Swal.fire({
+        title: "Menyiapkan export",
+        html: `
+          <div class="export-loading">
+            <div class="export-spinner"></div>
+            <p>Membuat file import POS...</p>
+            <small>Mohon tunggu sampai download dimulai.</small>
+          </div>
+        `,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      });
+
+      const params = new URLSearchParams({
+        toko: tokoId,
+        barang: barang ? "1" : "0",
+        multi: multi ? "1" : "0",
+        grosir: grosir ? "1" : "0"
+      });
+
+      setTimeout(() => {
+        window.location.href = `/api/export-kaspin?${params.toString()}`;
+        setTimeout(() => Swal.close(), 1200);
+      }, 700);
+    }
+
+    refreshOptionState();
+
     if (window.lucide) lucide.createIcons();
   </script>
 </body>

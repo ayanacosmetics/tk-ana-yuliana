@@ -76,7 +76,7 @@ function fillBarangTemplate(rows) {
   const workbook = XLSX.readFile(templatePath, { cellDates: false });
   const sheetName = workbook.SheetNames[0];
   const ws = workbook.Sheets[sheetName];
-  
+
   clearRange(ws, 2, 5000, 0, 16);
 
   // Isi mulai baris 3 karena template barang biasanya punya header di baris 1-2
@@ -127,6 +127,16 @@ module.exports = async function handler(req, res) {
     }
 
     const toko = String(req.query.toko || "").trim().toLowerCase();
+    const exportBarang = req.query.barang !== "0";
+    const exportMulti = req.query.multi !== "0";
+    const exportGrosir = req.query.grosir !== "0";
+
+    if (!exportBarang && !exportMulti && !exportGrosir) {
+      return res.status(400).json({
+        success: false,
+        message: "Pilih minimal satu file untuk diexport."
+      });
+    }
 
     if (!toko) {
       return res.status(400).json({
@@ -158,32 +168,48 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const barangRows = makeBarangRows(data.rows);
-    const multiRows = makeMultiRows(data.rows);
-    const grosirRows = makeGrosirRows(data.rows);
-
-    const barangFile = fillBarangTemplate(barangRows);
-    const multiFile = fillMultiTemplate(multiRows);
-    const grosirFile = fillGrosirTemplate(grosirRows);
-
     const zip = new JSZip();
 
-    zip.file("TEMPLATE_BARANG.xls", barangFile);
-    zip.file("TEMPLATE_MULTI_SATUAN.xls", multiFile);
-    zip.file("TEMPLATE_HARGA_GROSIR.xls", grosirFile);
+    if (exportBarang) {
+      const barangRows = makeBarangRows(data.rows);
+      const barangFile = fillBarangTemplate(barangRows);
+      zip.file("TEMPLATE_BARANG.xls", barangFile);
+    }
+
+    if (exportMulti) {
+      const multiRows = makeMultiRows(data.rows);
+      const multiFile = fillMultiTemplate(multiRows);
+      zip.file("TEMPLATE_MULTI_SATUAN.xls", multiFile);
+    }
+
+    if (exportGrosir) {
+      const grosirRows = makeGrosirRows(data.rows);
+      const grosirFile = fillGrosirTemplate(grosirRows);
+      zip.file("TEMPLATE_HARGA_GROSIR.xls", grosirFile);
+    }
 
     const zipBuffer = await zip.generateAsync({
       type: "nodebuffer"
     });
 
-    const safeNama = String(tokoData.nama || toko)
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "_");
+    let fileName = "";
+
+    if (exportBarang && exportMulti && exportGrosir) {
+      fileName = `EXPORT_POS_${safeNama}`;
+    } else {
+      const parts = [];
+
+      if (exportBarang) parts.push("BARANG");
+      if (exportMulti) parts.push("MULTI_SATUAN");
+      if (exportGrosir) parts.push("HARGA_GROSIR");
+
+      fileName = `${parts.join("_")}_${safeNama}`;
+    }
 
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=EXPORT_KASPIN_${safeNama}.zip`
+      `attachment; filename=${fileName}.zip`
     );
 
     return res.status(200).send(zipBuffer);
