@@ -1,5 +1,6 @@
 const path = require("path");
 const XLSX = require("xlsx");
+const JSZip = require("jszip");
 
 const GAS_URL = process.env.GAS_URL;
 
@@ -122,16 +123,31 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    const barangRows = makeBarangRows(data.rows);
+    const multiRows = makeMultiRows(data.rows);
     const grosirRows = makeGrosirRows(data.rows);
-    const fileBuffer = fillGrosirTemplate(grosirRows);
 
-    res.setHeader("Content-Type", "application/vnd.ms-excel");
+    const barangFile = fillBarangTemplate(barangRows);
+    const multiFile = fillMultiTemplate(multiRows);
+    const grosirFile = fillGrosirTemplate(grosirRows);
+
+    const zip = new JSZip();
+
+    zip.file("TEMPLATE_BARANG.xls", barangFile);
+    zip.file("TEMPLATE_MULTI_SATUAN.xls", multiFile);
+    zip.file("TEMPLATE_HARGA_GROSIR.xls", grosirFile);
+
+    const zipBuffer = await zip.generateAsync({
+      type: "nodebuffer"
+    });
+
+    res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=TEMPLATE_HARGA_GROSIR_HASIL.xls"
+      "attachment; filename=EXPORT_KASPIN_TK_ANA_YULIANA.zip"
     );
 
-    return res.status(200).send(fileBuffer);
+    return res.status(200).send(zipBuffer);
 
   } catch (err) {
     return res.status(500).json({
