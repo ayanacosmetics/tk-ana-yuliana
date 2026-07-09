@@ -122,13 +122,13 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const multiRows = makeMultiRows(data.rows);
-    const fileBuffer = fillMultiTemplate(multiRows);
+    const grosirRows = makeGrosirRows(data.rows);
+    const fileBuffer = fillGrosirTemplate(grosirRows);
 
     res.setHeader("Content-Type", "application/vnd.ms-excel");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=TEMPLATE_MULTI_SATUAN_HASIL.xls"
+      "attachment; filename=TEMPLATE_HARGA_GROSIR_HASIL.xls"
     );
 
     return res.status(200).send(fileBuffer);
@@ -194,4 +194,58 @@ function makeMultiRows(rows) {
   });
 
   return result;
+}
+
+function makeGrosirRows(rows) {
+  const out = [];
+
+  function add(kode, tipe, minimal, harga) {
+    if (!kode || !harga || harga <= 0) return;
+    out.push([kode, tipe, minimal, harga]);
+  }
+
+  rows.forEach(r => {
+    const kode1 = clean(r[3]);
+    if (!clean(r[0]) || !kode1) return;
+
+    add(kode1, "Grosir 1", 1, num(r[5]));
+    add(kode1, "Grosir 2", 1, num(r[6]));
+    add(kode1, "Grosir 3", 1, num(r[7]));
+
+    const isi2 = num(r[9]);
+    if (isi2 > 0) {
+      add(kode1, "Grosir 1", isi2, num(r[11]));
+      add(kode1, "Grosir 2", isi2, num(r[12]));
+      add(kode1, "Grosir 3", isi2, num(r[13]));
+    }
+
+    const isi3 = num(r[15]);
+    if (isi3 > 0) {
+      add(kode1, "Grosir 1", isi3, num(r[17]));
+      add(kode1, "Grosir 2", isi3, num(r[18]));
+      add(kode1, "Grosir 3", isi3, num(r[19]));
+    }
+  });
+
+  return out;
+}
+
+function fillGrosirTemplate(rows) {
+  const templatePath = path.join(
+    __dirname,
+    "templates",
+    "TEMPLATE_HARGA_GROSIR.xls"
+  );
+
+  const workbook = XLSX.readFile(templatePath);
+  const ws = workbook.Sheets[workbook.SheetNames[0]];
+
+  XLSX.utils.sheet_add_aoa(ws, rows, {
+    origin: "A2"
+  });
+
+  return XLSX.write(workbook, {
+    type: "buffer",
+    bookType: "xls"
+  });
 }
