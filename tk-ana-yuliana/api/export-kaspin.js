@@ -5,9 +5,9 @@ module.exports = async (req, res) => {
   try {
 
     const filePath = path.join(
-      process.cwd(),
-      "templates",
-      "TEMPLATE_BARANG.xls"
+     process.cwd(),
+     "templates",
+     "TEMPLATE_BARANG.xls"
     );
 
     const buffer = fs.readFileSync(filePath);
