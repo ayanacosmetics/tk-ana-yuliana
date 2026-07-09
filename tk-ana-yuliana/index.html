@@ -31,6 +31,9 @@
     <a class="drawer-link" href="tugas-perbaikan.html"><i data-lucide="wrench"></i><span>Tugas Perbaikan</span></a>
     <a class="drawer-link" id="drawerModal" href="lengkapi-modal.html"><i data-lucide="badge-dollar-sign"></i><span>Lengkapi Modal</span></a>
     <a class="drawer-link" id="drawerRilis" href="siap-rilis.html"><i data-lucide="rocket"></i><span>Siap Rilis</span></a>
+    <a class="drawer-link" id="drawerExportKaspin" href="#" onclick="downloadExportKaspin(event)">
+      <i data-lucide="download"></i><span>Export Kaspin</span>
+    </a>
 
     <div class="drawer-section" id="drawerAdminTitle">PANEL ADMIN</div>
     <a class="drawer-link" id="drawerAdmin" href="admin.html"><i data-lucide="shield-check"></i><span>Panel Admin</span></a>
@@ -91,6 +94,13 @@
           <small>Barang siap diimpor</small>
         </div>
       </a>
+
+      <a class="dash-menu-card" id="menuExportKaspin" href="#" onclick="downloadExportKaspin(event)">
+        <div class="icon-box red"><i data-lucide="download"></i></div>
+        <div>
+          <b>Export Kaspin</b>
+          <small>Unduh file Kaspin</small>
+        </div>
 
       <a class="dash-menu-card wide" id="menuAdmin" href="admin.html">
         <div class="icon-box gray"><i data-lucide="shield-check"></i></div>
@@ -156,12 +166,42 @@
     if (!can("rilis")) {
       document.getElementById("menuRilis").style.display = "none";
       document.getElementById("drawerRilis").style.display = "none";
+      document.getElementById("menuExportKaspin").style.display = "none";
+      document.getElementById("drawerExportKaspin").style.display = "none";
     }
 
     if (!can("admin")) {
       document.getElementById("menuAdmin").style.display = "none";
       document.getElementById("drawerAdmin").style.display = "none";
       document.getElementById("drawerAdminTitle").style.display = "none";
+    }
+
+        function downloadExportKaspin(event) {
+      if (event) event.preventDefault();
+
+      const tokoId = user.toko || user.toko_id || user.id_toko;
+
+      if (!tokoId) {
+        Swal.fire({
+          icon: "error",
+          title: "Toko tidak ditemukan",
+          text: "Silakan logout lalu login ulang."
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: "question",
+        title: "Export Kaspin?",
+        text: "File ZIP Kasir Pintar akan dibuat untuk toko ini.",
+        showCancelButton: true,
+        confirmButtonText: "Export",
+        cancelButtonText: "Batal"
+      }).then((result) => {
+        if (!result.isConfirmed) return;
+
+        window.location.href = `/api/export-kaspin?toko=${encodeURIComponent(tokoId)}`;
+      });
     }
 
     async function loadJumlahPerbaikan() {
