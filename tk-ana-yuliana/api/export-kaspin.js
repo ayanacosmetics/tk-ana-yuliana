@@ -184,7 +184,7 @@ function makeMultiRows(rows) {
 
     if (satuan2 && isi2 > 0 && hargaGrosir1Satuan2 > 0) {
       result.push([
-        kode2 || kode1,
+        kode1,
         satuan2,
         hargaGrosir1Satuan2,
         isi2,
@@ -200,7 +200,7 @@ function makeMultiRows(rows) {
 
     if (satuan3 && isi3 > 0 && hargaGrosir1Satuan3 > 0) {
       result.push([
-        kode3 || kode1,
+        kode1,
         satuan3,
         hargaGrosir1Satuan3,
         isi3,
