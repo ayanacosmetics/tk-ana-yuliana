@@ -148,12 +148,6 @@
       document.getElementById("drawerOverlay").classList.remove("show");
     }
 
-    if (!can("admin")) {
-      document.getElementById("menuAdmin").style.display = "none";
-      document.getElementById("drawerAdmin").style.display = "none";
-      document.getElementById("drawerAdminTitle").style.display = "none";
-    }
-
     if (!can("modal")) {
       document.getElementById("menuModal").style.display = "none";
       document.getElementById("drawerModal").style.display = "none";
