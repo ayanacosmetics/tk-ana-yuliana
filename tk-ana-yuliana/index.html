@@ -101,6 +101,7 @@
           <b>Export Kaspin</b>
           <small>Unduh file Kaspin</small>
         </div>
+      </a>
 
       <a class="dash-menu-card wide" id="menuAdmin" href="admin.html">
         <div class="icon-box gray"><i data-lucide="shield-check"></i></div>
@@ -166,6 +167,9 @@
     if (!can("rilis")) {
       document.getElementById("menuRilis").style.display = "none";
       document.getElementById("drawerRilis").style.display = "none";
+    }
+    
+    if (!can("export")) {
       document.getElementById("menuExportKaspin").style.display = "none";
       document.getElementById("drawerExportKaspin").style.display = "none";
     }
