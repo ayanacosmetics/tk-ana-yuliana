@@ -20,6 +20,15 @@ function num(v) {
   ) || 0;
 }
 
+function clearRange(ws, startRow, endRow, startCol, endCol) {
+  for (let r = startRow; r <= endRow; r++) {
+    for (let c = startCol; c <= endCol; c++) {
+      const cell = XLSX.utils.encode_cell({ r, c });
+      delete ws[cell];
+    }
+  }
+}
+
 function makeBarangRows(rows) {
   return rows
     .filter(r => clean(r[0]) && clean(r[3]))
@@ -67,6 +76,8 @@ function fillBarangTemplate(rows) {
   const workbook = XLSX.readFile(templatePath, { cellDates: false });
   const sheetName = workbook.SheetNames[0];
   const ws = workbook.Sheets[sheetName];
+  
+  clearRange(ws, 2, 5000, 0, 16);
 
   // Isi mulai baris 3 karena template barang biasanya punya header di baris 1-2
   XLSX.utils.sheet_add_aoa(ws, rows, {
@@ -92,6 +103,8 @@ function fillMultiTemplate(rows) {
   const ws = workbook.Sheets[
     workbook.SheetNames[0]
   ];
+
+  clearRange(ws, 1, 5000, 0, 4);
 
   XLSX.utils.sheet_add_aoa(ws, rows, {
     origin: "A2"
@@ -289,6 +302,8 @@ function fillGrosirTemplate(rows) {
 
   const workbook = XLSX.readFile(templatePath);
   const ws = workbook.Sheets[workbook.SheetNames[0]];
+
+  clearRange(ws, 1, 10000, 0, 3);
 
   XLSX.utils.sheet_add_aoa(ws, rows, {
     origin: "A2"
