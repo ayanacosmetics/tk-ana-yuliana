@@ -149,19 +149,19 @@
     }
 
     if (!can("modal")) {
-      document.getElementById("menuModal").style.display = "none";
-      document.getElementById("drawerModal").style.display = "none";
+      document.getElementById("menuModal")?.style.setProperty("display", "none");
+      document.getElementById("drawerModal")?.style.setProperty("display", "none");
     }
-    
+
     if (!can("export")) {
-      document.getElementById("menuExportKaspin").style.display = "none";
-      document.getElementById("drawerExportKaspin").style.display = "none";
+      document.getElementById("menuExportKaspin")?.style.setProperty("display", "none");
+      document.getElementById("drawerExportKaspin")?.style.setProperty("display", "none");
     }
 
     if (!can("admin")) {
-      document.getElementById("menuAdmin").style.display = "none";
-      document.getElementById("drawerAdmin").style.display = "none";
-      document.getElementById("drawerAdminTitle").style.display = "none";
+      document.getElementById("menuAdmin")?.style.setProperty("display", "none");
+      document.getElementById("drawerAdmin")?.style.setProperty("display", "none");
+      document.getElementById("drawerAdminTitle")?.style.setProperty("display", "none");
     }
 
         function downloadExportKaspin(event) {
