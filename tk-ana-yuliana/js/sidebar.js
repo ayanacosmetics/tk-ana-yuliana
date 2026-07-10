@@ -1,8 +1,4 @@
 function renderSidebar() {
-  const user = getCurrentUser?.() || {};
-  const isAdmin = user.role === "admin";
-  const isStaff = user.role === "staff";
-
   const sidebarHTML = `
     <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
 
@@ -12,7 +8,9 @@ function renderSidebar() {
       </button>
 
       <div class="drawer-brand">
-        <div class="drawer-logo"><i data-lucide="box"></i></div>
+        <div class="drawer-logo">
+          <i data-lucide="box"></i>
+        </div>
         <div>
           <h2>INVENTORY</h2>
           <p>ENGINE</p>
@@ -20,46 +18,83 @@ function renderSidebar() {
       </div>
 
       <a class="drawer-link" href="index.html">
-        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
       </a>
 
       <div class="drawer-section">MENU UTAMA</div>
 
-      <a class="drawer-link" href="input.html">
-        <i data-lucide="package"></i><span>Input Barang</span>
+      <a class="drawer-link" id="drawerInput" href="input.html">
+        <i data-lucide="package"></i>
+        <span>Input Barang</span>
       </a>
 
-      <a class="drawer-link" href="tugas-perbaikan.html">
-        <i data-lucide="wrench"></i><span>Tugas Perbaikan</span>
+      <a class="drawer-link" id="drawerPerbaikan" href="tugas-perbaikan.html">
+        <i data-lucide="wrench"></i>
+        <span>Tugas Perbaikan</span>
       </a>
 
-      ${!isStaff ? `
-      <a class="drawer-link" href="lengkapi-modal.html">
-        <i data-lucide="badge-dollar-sign"></i><span>Lengkapi Modal</span>
-      </a>` : ""}
+      <a class="drawer-link" id="drawerModal" href="lengkapi-modal.html">
+        <i data-lucide="badge-dollar-sign"></i>
+        <span>Lengkapi Modal</span>
+      </a>
 
-      ${!isStaff ? `
-      <a class="drawer-link" href="siap-rilis.html">
-        <i data-lucide="rocket"></i><span>Siap Rilis</span>
-      </a>` : ""}
+      <a class="drawer-link" id="drawerExportKaspin" href="siap-rilis.html">
+        <i data-lucide="rocket"></i>
+        <span>Export ke POS</span>
+      </a>
 
-      ${isAdmin ? `
-        <div class="drawer-section">PANEL ADMIN</div>
-        <a class="drawer-link" href="admin.html">
-          <i data-lucide="shield-check"></i><span>Panel Admin</span>
-        </a>
-      ` : ""}
+      <div class="drawer-section" id="drawerAdminTitle">
+        PANEL ADMIN
+      </div>
+
+      <a class="drawer-link" id="drawerAdmin" href="admin.html">
+        <i data-lucide="shield-check"></i>
+        <span>Panel Admin</span>
+      </a>
 
       <button class="drawer-logout" onclick="logout()">
-        <i data-lucide="log-out"></i> Logout
+        <i data-lucide="log-out"></i>
+        Logout
       </button>
     </aside>
   `;
 
   document.body.insertAdjacentHTML("afterbegin", sidebarHTML);
 
+  applySidebarPermissions();
+
   if (window.lucide) {
     lucide.createIcons();
+  }
+}
+
+function hideSidebarItem(id) {
+  document
+    .getElementById(id)
+    ?.style.setProperty("display", "none");
+}
+
+function applySidebarPermissions() {
+  if (!can("input")) {
+    hideSidebarItem("drawerInput");
+  }
+
+  if (!can("perbaikan")) {
+    hideSidebarItem("drawerPerbaikan");
+  }
+
+  if (!can("modal")) {
+    hideSidebarItem("drawerModal");
+  }
+
+  if (!can("export")) {
+    hideSidebarItem("drawerExportKaspin");
+  }
+
+  if (!can("admin")) {
+    hideSidebarItem("drawerAdmin");
+    hideSidebarItem("drawerAdminTitle");
   }
 }
 
