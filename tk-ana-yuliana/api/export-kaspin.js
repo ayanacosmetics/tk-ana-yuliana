@@ -261,18 +261,7 @@ function makeMultiRows(rows) {
 
     if (!kode1 || !satuan1) return;
 
-    const barcode2 = clean(r[10]);
-    const barcode3 = clean(r[16]);
-
-    const perluAutomation =
-      barcode2 !== "" ||
-      barcode3 !== "";
-
-    // Barang yang memiliki barcode satuan besar
-    // tidak dimasukkan ke file Multi Satuan Excel.
-    if (perluAutomation) return;
-
-    // SATUAN 1
+    // Satuan utama selalu dimasukkan agar menjadi induk multisatuan.
     result.push([
       kode1,
       satuan1,
@@ -284,13 +273,20 @@ function makeMultiRows(rows) {
     // SATUAN 2
     const satuan2 = clean(r[8]);
     const isi2 = num(r[9]);
-    const hargaGrosir1Satuan2 = num(r[11]);
+    const barcode2 = clean(r[10]);
+    const harga2 = num(r[11]);
 
-    if (satuan2 && isi2 > 0 && hargaGrosir1Satuan2 > 0) {
+    // Hanya masuk Excel jika tidak memiliki barcode sendiri.
+    if (
+      satuan2 &&
+      isi2 > 0 &&
+      harga2 > 0 &&
+      !barcode2
+    ) {
       result.push([
         kode1,
         satuan2,
-        hargaGrosir1Satuan2,
+        harga2,
         isi2,
         satuan1
       ]);
@@ -299,13 +295,20 @@ function makeMultiRows(rows) {
     // SATUAN 3
     const satuan3 = clean(r[14]);
     const isi3 = num(r[15]);
-    const hargaGrosir1Satuan3 = num(r[17]);
+    const barcode3 = clean(r[16]);
+    const harga3 = num(r[17]);
 
-    if (satuan3 && isi3 > 0 && hargaGrosir1Satuan3 > 0) {
+    // Hanya masuk Excel jika tidak memiliki barcode sendiri.
+    if (
+      satuan3 &&
+      isi3 > 0 &&
+      harga3 > 0 &&
+      !barcode3
+    ) {
       result.push([
         kode1,
         satuan3,
-        hargaGrosir1Satuan3,
+        harga3,
         isi3,
         satuan1
       ]);
