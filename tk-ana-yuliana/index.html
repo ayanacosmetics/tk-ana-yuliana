@@ -50,13 +50,19 @@
     </header>
 
     <section class="dash-welcome">
-      <div>
+      <img
+        id="dashboardStoreLogo"
+        class="dashboard-store-logo"
+        alt="Logo toko"
+      >
+
+      <div class="dash-welcome-text">
         <h2 id="welcomeName">Halo 👋</h2>
         <p id="namaToko">Inventory Engine</p>
       </div>
+
       <span id="roleBadge">Staff</span>
     </section>
-
     <h3 class="dash-title">Menu Utama</h3>
 
     <section class="dash-grid">
@@ -135,8 +141,18 @@
     const user = getCurrentUser();
 
     document.getElementById("welcomeName").innerText = "Halo, " + user.name + " 👋";
-    document.getElementById("namaToko").innerText = NAMA_TOKO;
+    document.getElementById("namaToko").innerText =
+      user.tokoNama || NAMA_TOKO || "Inventory Engine";
     document.getElementById("roleBadge").innerText = user.role || "staff";
+    const dashboardLogo =
+      document.getElementById("dashboardStoreLogo");
+
+    if (user.logo) {
+      dashboardLogo.src = user.logo;
+      dashboardLogo.style.display = "block";
+    } else {
+      dashboardLogo.style.display = "none";
+    }
 
     function openDrawer() {
       document.getElementById("sideDrawer").classList.add("open");

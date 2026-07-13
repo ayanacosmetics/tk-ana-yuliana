@@ -9,10 +9,11 @@ function renderSidebar() {
 
       <div class="drawer-brand">
         <div class="drawer-logo">
-          <i data-lucide="box"></i>
+          <img id="sidebarStoreLogo" src="" alt="Logo toko">
         </div>
+
         <div>
-          <h2>INVENTORY</h2>
+          <h2 id="sidebarStoreName">INVENTORY</h2>
           <p>ENGINE</p>
         </div>
       </div>
@@ -61,6 +62,22 @@ function renderSidebar() {
   `;
 
   document.body.insertAdjacentHTML("afterbegin", sidebarHTML);
+
+  const logoEl = document.getElementById("sidebarStoreLogo");
+  const namaEl = document.getElementById("sidebarStoreName");
+
+  if (logoEl) {
+    if (user.logo) {
+      logoEl.src = user.logo;
+      logoEl.style.display = "block";
+    } else {
+      logoEl.style.display = "none";
+    }
+  }
+
+  if (namaEl) {
+    namaEl.textContent = user.tokoNama || "INVENTORY";
+  }
 
   applySidebarPermissions();
 
