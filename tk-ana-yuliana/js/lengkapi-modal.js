@@ -27,7 +27,7 @@ async function loadModalKosong() {
       <hr>
       <div class="small">Satuan 2: ${item.satuan2}</div>
       <div class="small">Kode Barang ${item.satuan2}: ${item.kode2 || "-"}</div>
-      <div class="small">Harga Grosir per ${item.satuan2}: ${item.harga2 || "-"}</div>
+      <div class="small">Harga Grosir per ${item.satuan2}: ${item.harga2_1 || item.harga2 || "-"}</div>
       <div class="small">Isi ${item.satuan2}: ${item.isi2 || "-"}</div>
     ` : ""}
 
