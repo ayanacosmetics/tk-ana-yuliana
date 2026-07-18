@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Daftar Toko & Owner - Inventory Engine</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Daftar Toko Baru</h1>
+      <p>Mulai kelola sistem inventory multi-tenant untuk toko Anda</p>
+    </section>
+
+    <div class="form">
+      <h3><span style="font-size:1.2rem; color:var(--primary-color);">❶</span> Data Toko</h3>
+      
+      <label>ID Toko (Kecil tanpa spasi)</label>
+      <input id="tokoId" placeholder="contoh: anacosmetics" autocomplete="off" autocapitalize="none" spellcheck="false">
+
+      <label>Nama Toko</label>
+      <input id="tokoNama" placeholder="Nama Toko Anda" autocomplete="off">
+
+      <label>Logo Toko (Opsional / URL Gambar)</label>
+      <input id="tokoLogo" placeholder="https://example.com/logo.png" autocomplete="off">
+
+      <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+
+      <h3><span style="font-size:1.2rem; color:var(--primary-color);">❷</span> Data Owner / Admin Utama</h3>
+
+      <label>Username Owner</label>
+      <input id="username" placeholder="contoh: ana_owner" autocomplete="off" autocapitalize="none" spellcheck="false">
+
+      <label>Nama Lengkap Owner</label>
+      <input id="nama" placeholder="Nama Lengkap Anda" autocomplete="off">
+
+      <label>PIN Owner</label>
+      <input id="pin" type="password" inputmode="numeric" placeholder="Buat PIN Angka">
+
+      <button class="btn primary" onclick="daftarTokoDanOwner()">Daftar Toko & Akun</button>
+      <button class="btn secondary" onclick="window.location.href='login.html'">Batal & Kembali</button>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/daftar-toko.js"></script>
+</body>
+</html>
