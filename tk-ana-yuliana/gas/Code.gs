@@ -125,10 +125,18 @@ function loginMaster_(username, pin) {
     const status = String(r[5] || "").trim().toLowerCase();
 
     if (u === username && p === pin && status === "aktif") {
-      const toko = tokoMap[tokoId];
+      let tokoNama = "Super Admin Panel";
+      let apiUrl = "";
+      let logo = "";
 
-      if (!toko || toko.status !== "aktif") {
-        return { success: false, message: "Toko tidak aktif / tidak ditemukan." };
+      if (tokoId) {
+        const toko = tokoMap[tokoId];
+        if (!toko || toko.status !== "aktif") {
+          return { success: false, message: "Toko tidak aktif / tidak ditemukan." };
+        }
+        tokoNama = toko.nama;
+        apiUrl = toko.api;
+        logo = toko.logo;
       }
 
       const permission = roleMap[role.toLowerCase()] || {};
@@ -140,9 +148,9 @@ function loginMaster_(username, pin) {
           name: nama,
           role,
           toko: tokoId,
-          tokoNama: toko.nama,
-          apiUrl: toko.api, // ID Spreadsheet toko dikembalikan ke frontend
-          logo: toko.logo,
+          tokoNama,
+          apiUrl, // ID Spreadsheet toko dikembalikan ke frontend
+          logo,
           permission
         }
       };
