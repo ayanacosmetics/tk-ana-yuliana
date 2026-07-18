@@ -25,14 +25,19 @@
       <p>Isi modal barang yang masih kosong.</p>
     </section>
 
-    <div class="scan-row" style="padding: 10px 15px;">
-      <input type="text" id="searchInput" placeholder="🔍 Cari nama atau scan kode..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
-      <button type="button" id="btnScanSearch" class="btn-scan-mini" onclick="startScannerSearch()" style="height: 44px; width: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer;">
-        <i data-lucide="scan-barcode"></i>
-      </button>
+    <div style="padding: 0 15px 15px 15px;">
+      <div style="display: flex; align-items: center; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #eee;">
+        <div style="padding: 0 12px; color: #888; display: flex; align-items: center;">
+          <i data-lucide="search" style="width: 20px; height: 20px;"></i>
+        </div>
+        <input type="text" id="searchInput" placeholder="Cari nama atau scan kode..." style="flex: 1; border: none; padding: 14px 0; outline: none; font-size: 15px; background: transparent;">
+        <button type="button" onclick="startScannerSearch()" style="padding: 0 16px; height: 100%; border: none; background: transparent; color: #10b981; cursor: pointer; display: flex; align-items: center; border-left: 1px solid #eee;">
+          <i data-lucide="scan-line" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
     </div>
     
-    <div id="reader-search" class="reader hidden" style="margin: 0 15px;"></div>
+    <div id="reader-search" class="reader hidden" style="margin: 0 15px 15px 15px;"></div>
 
     <div id="list" class="list">
       <div class="item">Memuat barang modal kosong...</div>

@@ -148,15 +148,25 @@ async function startScannerSearch() {
 
   reader.classList.remove("hidden");
   reader.innerHTML = `
-    <div class="scanner-box">
-      <video id="scannerVideo" playsinline style="width:100%; border-radius:8px;"></video>
+    <div class="scanner-box" style="position: relative; overflow: hidden; border-radius: 12px; background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      <video id="scannerVideo" playsinline style="width:100%; display: block; border-radius: 12px;"></video>
+      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; border: 2px solid rgba(16, 185, 129, 0.5); border-radius: 12px;"></div>
     </div>
-    <div class="zoom-row" style="display:flex; gap:8px; margin-top:8px; justify-content:center;">
-      <button type="button" class="btn secondary" onclick="toggleTorchSearch()" style="padding: 6px 12px; font-size:14px;">🔦 Flash</button>
-      <button type="button" class="btn secondary" onclick="switchCameraSearch()" style="padding: 6px 12px; font-size:14px;">🔄 Balik</button>
-      <button type="button" class="btn secondary" onclick="stopScannerSearch()" style="padding: 6px 12px; font-size:14px;">Tutup</button>
+    <div class="zoom-row" style="display:flex; gap:10px; margin-top:12px; justify-content:center;">
+      <button type="button" onclick="toggleTorchSearch()" style="flex: 1; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; cursor: pointer; color: #333;">
+        <i data-lucide="zap" style="width: 18px; height: 18px;"></i> Flash
+      </button>
+      <button type="button" onclick="switchCameraSearch()" style="flex: 1; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; cursor: pointer; color: #333;">
+        <i data-lucide="switch-camera" style="width: 18px; height: 18px;"></i> Balik
+      </button>
+      <button type="button" onclick="stopScannerSearch()" style="flex: 1; padding: 10px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; cursor: pointer; color: #ef4444;">
+        <i data-lucide="x" style="width: 18px; height: 18px;"></i> Tutup
+      </button>
     </div>
   `;
+
+  // Trigger icon creation for newly added HTML
+  setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 50);
 
   try {
     codeReader = new ZXing.BrowserMultiFormatReader();
