@@ -18,7 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadModalKosong() {
-  list.innerHTML = `<div class="item">Memuat...</div>`;
+  list.innerHTML = `
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+  `;
 
   try {
     const res = await fetch(`${API_URL}?action=modalKosong`);
