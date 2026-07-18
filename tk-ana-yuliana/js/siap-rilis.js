@@ -10,7 +10,7 @@ async function loadSiapRilis() {
   list.innerHTML = `<div class="item">Memuat data...</div>`;
 
   try {
-    const res = await fetch(`${API_URL}?action=siapRilis`);
+    const res = await fetch(`${API_URL}&action=siapRilis`);
     const data = await res.json();
 
     siapRilisItems = data.items || [];

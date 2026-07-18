@@ -50,7 +50,7 @@ async function loadBarcodeCache() {
   if (API_URL.includes("PASTE_URL")) return;
 
   try {
-    const res = await fetch(`${API_URL}?action=getBarcodeList`);
+    const res = await fetch(`${API_URL}&action=getBarcodeList`);
     const data = await res.json();
 
     if (data.success && Array.isArray(data.items)) {
@@ -561,7 +561,7 @@ async function handleBarcodeAfterScan(kode, targetInputId) {
 
 async function tampilkanBarangDariGSheet(kode, targetInputId) {
   try {
-    const res = await fetch(`${API_URL}?action=getBarang&kode=${encodeURIComponent(kode)}`);
+    const res = await fetch(`${API_URL}&action=getBarang&kode=${encodeURIComponent(kode)}`);
     const data = await res.json();
 
     if (data.exists) {

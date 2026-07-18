@@ -214,7 +214,7 @@
       menuInput.style.opacity = "0.55";
 
       try {
-        const res = await fetch(`${API_URL}?action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
+        const res = await fetch(`${API_URL}&action=jumlahPerbaikan&petugas=${encodeURIComponent(user.name)}`);
         const data = await res.json();
         const count = data.count || 0;
 
@@ -247,7 +247,7 @@
 
     async function loadDashboardSummary() {
       try {
-        const res = await fetch(`${API_URL}?action=dashboardSummary&petugas=${encodeURIComponent(user.name)}`);
+        const res = await fetch(`${API_URL}&action=dashboardSummary&petugas=${encodeURIComponent(user.name)}`);
         const data = await res.json();
 
         if (data.success) {

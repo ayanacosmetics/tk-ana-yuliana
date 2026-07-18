@@ -24,7 +24,7 @@ async function loadTugas() {
     const user = JSON.parse(localStorage.getItem("tay_user") || "{}");
 
     const res = await fetch(
-      `${API_URL}?action=tugasPerbaikan&petugas=${encodeURIComponent(user.name || "")}`
+      `${API_URL}&action=tugasPerbaikan&petugas=${encodeURIComponent(user.name || "")}`
     );
 
     const data = await res.json();

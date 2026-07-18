@@ -34,7 +34,7 @@ async function loadModalKosong() {
   `;
 
   try {
-    const res = await fetch(`${API_URL}?action=modalKosong`);
+    const res = await fetch(`${API_URL}&action=modalKosong`);
     const data = await res.json();
 
     if (!data.items || data.items.length === 0) {

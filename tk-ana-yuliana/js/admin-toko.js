@@ -42,8 +42,7 @@ async function loadToko() {
       <label>Nama Toko</label>
       <input id="tokoNama" placeholder="Nama toko">
 
-      <label>API URL</label>
-      <input id="tokoApi" placeholder="URL Apps Script toko">
+      <input type="hidden" id="tokoApi">
 
       <label>Logo</label>
       <input id="tokoLogo" placeholder="Opsional">
@@ -85,13 +84,13 @@ async function loadToko() {
             </span>
 
             <span class="badge-api ${t.api ? "filled" : "empty"}">
-              ${t.api ? "API Terisi" : "API Kosong"}
+              ${t.api ? "Spreadsheet ID Tersimpan" : "ID Kosong"}
             </span>
           </div>
 
           <div class="admin-info-line">
             <i data-lucide="link"></i>
-            <span>${t.api ? "URL Apps Script tersimpan" : "Belum ada API URL"}</span>
+            <span>${t.api ? "File database tersedia" : "Belum ada file database"}</span>
           </div>
 
           <div class="admin-info-line">
@@ -151,8 +150,8 @@ async function saveToko() {
     status: document.getElementById("tokoStatus").value
   };
 
-  if (!payload.id || !payload.nama || !payload.api) {
-    Swal.fire("Belum lengkap", "ID toko, nama toko, dan API URL wajib diisi.", "error");
+  if (!payload.id || !payload.nama) {
+    Swal.fire("Belum lengkap", "ID toko dan nama toko wajib diisi.", "error");
     return;
   }
 
