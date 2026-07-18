@@ -107,30 +107,31 @@ async function simpanModal(row) {
     return;
   }
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-      action: "updateModal",
-      row,
-      modal
-    })
-  });
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "updateModal",
+        row,
+        modal
+      })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.success) {
-    Swal.fire("Berhasil", "Modal berhasil diperbarui.", "success");
-    loadModalKosong();
-  } else {
-    Swal.fire("Gagal", data.message || "Tidak bisa update modal.", "error");
+    if (data.success) {
+      Swal.fire("Berhasil", "Modal berhasil diperbarui.", "success");
+      loadModalKosong();
+    } else {
+      Swal.fire("Gagal", data.message || "Tidak bisa update modal.", "error");
+    }
+  } catch (error) {
+    Swal.fire("Gagal", "Gagal menghubungi server.", "error");
+    console.error(error);
   }
-} catch (error) {
-  Swal.fire("Gagal", "Gagal menghubungi server.", "error");
-  console.error(error);
-}
 }
 
 // --- SCANNER LOGIC ---
