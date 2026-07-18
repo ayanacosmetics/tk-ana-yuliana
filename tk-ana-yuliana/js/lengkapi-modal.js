@@ -127,4 +127,128 @@ async function simpanModal(row) {
   } else {
     Swal.fire("Gagal", data.message || "Tidak bisa update modal.", "error");
   }
+} catch (error) {
+  Swal.fire("Gagal", "Gagal menghubungi server.", "error");
+  console.error(error);
+}
+}
+
+// --- SCANNER LOGIC ---
+let codeReader = null;
+let torchOn = false;
+let selectedCameraIndex = 0;
+let availableCameras = [];
+
+async function startScannerSearch() {
+  await stopScannerSearch();
+  torchOn = false;
+
+  const reader = document.getElementById("reader-search");
+  if (!reader) return;
+
+  reader.classList.remove("hidden");
+  reader.innerHTML = `
+    <div class="scanner-box">
+      <video id="scannerVideo" playsinline style="width:100%; border-radius:8px;"></video>
+    </div>
+    <div class="zoom-row" style="display:flex; gap:8px; margin-top:8px; justify-content:center;">
+      <button type="button" class="btn secondary" onclick="toggleTorchSearch()" style="padding: 6px 12px; font-size:14px;">🔦 Flash</button>
+      <button type="button" class="btn secondary" onclick="switchCameraSearch()" style="padding: 6px 12px; font-size:14px;">🔄 Balik</button>
+      <button type="button" class="btn secondary" onclick="stopScannerSearch()" style="padding: 6px 12px; font-size:14px;">Tutup</button>
+    </div>
+  `;
+
+  try {
+    codeReader = new ZXing.BrowserMultiFormatReader();
+    availableCameras = await codeReader.listVideoInputDevices();
+
+    if (!availableCameras.length) {
+      Swal.fire("Kamera tidak ditemukan", "Tidak ada kamera yang bisa digunakan.", "error");
+      return;
+    }
+
+    if (selectedCameraIndex >= availableCameras.length) {
+      selectedCameraIndex = 0;
+    }
+
+    const selectedDeviceId = availableCameras[selectedCameraIndex]?.deviceId;
+
+    codeReader.decodeFromVideoDevice(
+      selectedDeviceId,
+      "scannerVideo",
+      async (result) => {
+        if (!result) return;
+
+        const kode = result.text.trim();
+        const searchInput = document.getElementById("searchInput");
+        
+        if (searchInput) {
+          searchInput.value = kode;
+          // Trigger input event to filter list
+          searchInput.dispatchEvent(new Event("input"));
+        }
+
+        if (navigator.vibrate) navigator.vibrate(120);
+        beepSearch();
+
+        await stopScannerSearch();
+      }
+    );
+  } catch (error) {
+    Swal.fire("Kamera gagal", "Izinkan akses kamera di browser HP.", "error");
+    await stopScannerSearch();
+  }
+}
+
+async function stopScannerSearch() {
+  if (codeReader) {
+    codeReader.reset();
+    codeReader = null;
+  }
+  const reader = document.getElementById("reader-search");
+  if (reader) {
+    reader.classList.add("hidden");
+    reader.innerHTML = "";
+  }
+  torchOn = false;
+}
+
+async function toggleTorchSearch() {
+  const video = document.getElementById("scannerVideo");
+  if (!video || !video.srcObject) return;
+
+  const track = video.srcObject.getVideoTracks()[0];
+  if (!track) return;
+  const capabilities = track.getCapabilities();
+  if (!capabilities.torch) {
+    Swal.fire("Flash tidak support", "HP ini tidak mendukung flash kamera dari web.", "info");
+    return;
+  }
+  torchOn = !torchOn;
+  await track.applyConstraints({ advanced: [{ torch: torchOn }] });
+}
+
+async function switchCameraSearch() {
+  if (!availableCameras.length) return;
+  selectedCameraIndex++;
+  if (selectedCameraIndex >= availableCameras.length) {
+    selectedCameraIndex = 0;
+  }
+  await stopScannerSearch();
+  await startScannerSearch();
+}
+
+function beepSearch() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.frequency.value = 900;
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.12);
+  } catch (e) {}
 }
