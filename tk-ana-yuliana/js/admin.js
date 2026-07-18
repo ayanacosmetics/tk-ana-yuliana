@@ -2,7 +2,7 @@ requireLogin();
 
 const user = getCurrentUser();
 
-if (user.role !== "admin") {
+if (user.role !== "owner" && user.role !== "superadmin") {
 
 Swal.fire(
 "Akses Ditolak",
@@ -14,7 +14,7 @@ location.href="index.html";
 
 }
 
-const isSuperAdmin = !user.toko || user.toko.trim() === "";
+const isSuperAdmin = user.role === "superadmin";
 
 document.getElementById("menuAkun").addEventListener("click", loadAkun);
 document.getElementById("menuToko").addEventListener("click", loadToko);

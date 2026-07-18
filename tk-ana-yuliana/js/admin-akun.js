@@ -76,7 +76,7 @@ function renderAkunPage() {
 
       <label>Role</label>
       <select id="akunRole">
-        <option value="admin">Admin</option>
+        <option value="owner">Owner</option>
         <option value="supervisor">Supervisor</option>
         <option value="staff">Staff</option>
       </select>

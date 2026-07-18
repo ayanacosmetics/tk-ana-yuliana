@@ -66,7 +66,7 @@ async function daftarTokoDanOwner() {
         username: username,
         nama: nama,
         pin: pin,
-        role: "admin",
+        role: "owner",
         toko: tokoId,
         status: "aktif"
       })
