@@ -27,8 +27,16 @@ async function loadAkun() {
   const akunData = await akunRes.json();
   const tokoData = await tokoRes.json();
 
-  akunCache = akunData.items || [];
-  tokoCache = tokoData.items || [];
+  let allAkun = akunData.items || [];
+  let allToko = tokoData.items || [];
+
+  if (!isSuperAdmin) {
+    allAkun = allAkun.filter(a => a.toko === user.toko);
+    allToko = allToko.filter(t => t.id === user.toko);
+  }
+
+  akunCache = allAkun;
+  tokoCache = allToko;
 
   renderAkunPage();
 }
@@ -74,7 +82,7 @@ function renderAkunPage() {
       </select>
 
       <label>Toko</label>
-      <select id="akunToko">
+      <select id="akunToko" ${!isSuperAdmin ? 'disabled' : ''}>
         ${tokoCache.map(t => `
           <option value="${t.id}">${t.nama}</option>
         `).join("")}

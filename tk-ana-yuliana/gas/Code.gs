@@ -52,6 +52,7 @@ function doPost(e) {
   if (action === "saveToko") return json(saveToko_(data));
   if (action === "saveAkun") return json(saveAkun_(data));
   if (action === "deleteAkun") return json(deleteAkun_(data.username));
+  if (action === "deleteToko") return json(deleteToko_(data.id));
 
   // -- STORE ENDPOINTS --
   // Can be in URL parameter or JSON body
@@ -200,6 +201,20 @@ function saveToko_(data) {
   }
   
   return { success: true };
+}
+
+function deleteToko_(id) {
+  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_TOKO);
+  const values = sh.getDataRange().getValues();
+  id = String(id || "").trim();
+
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][0]).trim() === id) {
+      sh.deleteRow(i + 1);
+      return { success: true };
+    }
+  }
+  return { success: false, message: "Toko tidak ditemukan." };
 }
 
 function listToko_() {

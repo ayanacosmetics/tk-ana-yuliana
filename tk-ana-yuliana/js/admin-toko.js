@@ -23,14 +23,20 @@ async function loadToko() {
     return;
   }
 
+  let items = data.items || [];
+  if (!isSuperAdmin) {
+    items = items.filter(t => t.id === user.toko);
+  }
+
   content.innerHTML = `
     <div class="form admin-module-card">
       <h3><i data-lucide="store"></i> Kelola Toko</h3>
 
+      ${isSuperAdmin ? `
       <button class="btn primary admin-action-btn" onclick="showFormToko()">
         <i data-lucide="plus"></i>
         Tambah Toko
-      </button>
+      </button>` : ""}
     </div>
 
     <div id="formToko" class="form admin-form-card" style="display:none">
@@ -65,7 +71,7 @@ async function loadToko() {
     </div>
 
     <div class="list admin-list">
-      ${data.items.map(t => `
+      ${items.map(t => `
         <div class="item admin-store-card">
           <div class="admin-user-top">
             <div class="admin-avatar store-avatar">
@@ -98,11 +104,16 @@ async function loadToko() {
             <span>${t.logo ? "Logo tersedia" : "Logo belum diisi"}</span>
           </div>
 
-          <div class="admin-card-actions one">
+          <div class="admin-card-actions ${isSuperAdmin ? '' : 'one'}">
             <button class="btn secondary" onclick='editToko(${JSON.stringify(t)})'>
               <i data-lucide="pencil"></i>
               Edit Toko
             </button>
+            ${isSuperAdmin ? `
+            <button class="btn secondary danger-soft" onclick="deleteToko('${t.id}')">
+              <i data-lucide="trash"></i>
+              Hapus
+            </button>` : ""}
           </div>
         </div>
       `).join("")}
@@ -169,5 +180,36 @@ async function saveToko() {
     loadToko();
   } else {
     Swal.fire("Gagal", data.message || "Tidak bisa menyimpan toko.", "error");
+  }
+}
+
+async function deleteToko(id) {
+  const result = await Swal.fire({
+    title: "Hapus Toko?",
+    text: "Toko " + id + " akan dihapus secara permanen dari sistem. Lanjutkan?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Hapus",
+    cancelButtonText: "Batal"
+  });
+
+  if (!result.isConfirmed) return;
+
+  const res = await fetch(MASTER_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({
+      action: "deleteToko",
+      id: id
+    })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    Swal.fire("Berhasil", "Toko berhasil dihapus.", "success");
+    loadToko();
+  } else {
+    Swal.fire("Gagal", data.message || "Gagal menghapus toko.", "error");
   }
 }
