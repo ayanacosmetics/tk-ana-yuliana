@@ -3174,7 +3174,7 @@ body {
 }
 
 /* Hero Section */
-.list-v3-hero {
+.hero, .list-v3-hero, .admin-v3-hero {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: white;
   border-radius: 20px;
@@ -3185,7 +3185,7 @@ body {
   margin: 16px 15px;
 }
 
-.list-v3-hero::after {
+.hero::after, .list-v3-hero::after, .admin-v3-hero::after {
   content: '';
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
@@ -3197,7 +3197,7 @@ body {
   background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
 }
 
-.list-v3-hero h1 {
+.hero h1, .list-v3-hero h1, .admin-v3-hero h1 {
   margin: 0;
   font-size: 24px;
   display: flex;
@@ -3205,14 +3205,14 @@ body {
   gap: 10px;
 }
 
-.list-v3-hero p {
+.hero p, .list-v3-hero p, .admin-v3-hero p {
   margin: 8px 0 0 0;
   opacity: 0.9;
   font-size: 15px;
 }
 
 /* Cards */
-.item, .input-v3-card, .dash-card {
+.item, .input-v3-card, .dash-card, .dash-menu-card {
   background: var(--card-bg) !important;
   border: 1px solid rgba(0,0,0,0.03) !important;
   border-radius: 18px !important;

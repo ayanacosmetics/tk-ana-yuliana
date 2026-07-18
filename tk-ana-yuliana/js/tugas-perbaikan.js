@@ -5,7 +5,20 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadTugas() {
-  list.innerHTML = `<div class="item">Memuat tugas...</div>`;
+  list.innerHTML = `
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+  `;
 
   try {
     const user = JSON.parse(localStorage.getItem("tay_user") || "{}");

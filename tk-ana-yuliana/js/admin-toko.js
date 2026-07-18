@@ -1,6 +1,19 @@
 async function loadToko() {
   const content = document.getElementById("content");
-  content.innerHTML = `<div class="item">Memuat toko...</div>`;
+  content.innerHTML = `
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+    <div class="item">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+  `;
 
   const res = await fetch(`${MASTER_API_URL}?action=listToko`);
   const data = await res.json();
