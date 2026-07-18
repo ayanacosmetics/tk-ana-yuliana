@@ -21,22 +21,38 @@ async function loadModalKosong() {
     <div class="small">Kode: ${item.kode}</div>
     <div class="small">Satuan 1: ${item.satuan1 || "-"}</div>
     <div class="small">Harga Ecer per ${item.satuan1 || "Satuan 1"}: ${item.hargaEcer || "-"}</div>
-    <div class="small">Harga Grosir per ${item.satuan1 || "Satuan 1"}: ${item.hargaGrosir1 || "-"}</div>
+    <div class="small">Harga Grosir 1 per ${item.satuan1 || "Satuan 1"}: ${item.hargaGrosir1 || "-"}</div>
+    ${item.hargaGrosir2_1 && item.hargaGrosir2_1 !== "-" && item.hargaGrosir2_1 !== "x" && item.hargaGrosir2_1 !== "X" ? `<div class="small">Harga Grosir 2 per ${item.satuan1 || "Satuan 1"}: ${item.hargaGrosir2_1}</div>` : ""}
+    ${item.hargaGrosir3_1 && item.hargaGrosir3_1 !== "-" && item.hargaGrosir3_1 !== "x" && item.hargaGrosir3_1 !== "X" ? `<div class="small">Harga Grosir 3 per ${item.satuan1 || "Satuan 1"}: ${item.hargaGrosir3_1}</div>` : ""}
 
-    ${item.satuan2 ? `
+    ${item.satuan2 && item.satuan2 !== "-" && item.satuan2 !== "x" && item.satuan2 !== "X" ? `
       <hr>
       <div class="small">Satuan 2: ${item.satuan2}</div>
       <div class="small">Kode Barang ${item.satuan2}: ${item.kode2 || "-"}</div>
-      <div class="small">Harga Grosir per ${item.satuan2}: ${item.harga2_1 || item.harga2 || "-"}</div>
+      <div class="small">Harga Grosir 1 per ${item.satuan2}: ${item.harga2_1 || "-"}</div>
+      ${item.harga2_2 && item.harga2_2 !== "-" && item.harga2_2 !== "x" && item.harga2_2 !== "X" ? `<div class="small">Harga Grosir 2 per ${item.satuan2}: ${item.harga2_2}</div>` : ""}
+      ${item.harga2_3 && item.harga2_3 !== "-" && item.harga2_3 !== "x" && item.harga2_3 !== "X" ? `<div class="small">Harga Grosir 3 per ${item.satuan2}: ${item.harga2_3}</div>` : ""}
       <div class="small">Isi ${item.satuan2}: ${item.isi2 || "-"}</div>
     ` : ""}
 
-    ${item.satuan3 ? `
+    ${item.satuan3 && item.satuan3 !== "-" && item.satuan3 !== "x" && item.satuan3 !== "X" ? `
       <hr>
       <div class="small">Satuan 3: ${item.satuan3}</div>
       <div class="small">Kode Barang ${item.satuan3}: ${item.kode3 || "-"}</div>
-      <div class="small">Harga Grosir per ${item.satuan3}: ${item.harga3 || "-"}</div>
+      <div class="small">Harga Grosir 1 per ${item.satuan3}: ${item.harga3_1 || "-"}</div>
+      ${item.harga3_2 && item.harga3_2 !== "-" && item.harga3_2 !== "x" && item.harga3_2 !== "X" ? `<div class="small">Harga Grosir 2 per ${item.satuan3}: ${item.harga3_2}</div>` : ""}
+      ${item.harga3_3 && item.harga3_3 !== "-" && item.harga3_3 !== "x" && item.harga3_3 !== "X" ? `<div class="small">Harga Grosir 3 per ${item.satuan3}: ${item.harga3_3}</div>` : ""}
       <div class="small">Isi ${item.satuan3}: ${item.isi3 || "-"}</div>
+    ` : ""}
+
+    ${item.satuan4 && item.satuan4 !== "-" && item.satuan4 !== "x" && item.satuan4 !== "X" ? `
+      <hr>
+      <div class="small">Satuan 4: ${item.satuan4}</div>
+      <div class="small">Kode Barang ${item.satuan4}: ${item.kode4 || "-"}</div>
+      <div class="small">Harga Grosir 1 per ${item.satuan4}: ${item.harga4_1 || "-"}</div>
+      ${item.harga4_2 && item.harga4_2 !== "-" && item.harga4_2 !== "x" && item.harga4_2 !== "X" ? `<div class="small">Harga Grosir 2 per ${item.satuan4}: ${item.harga4_2}</div>` : ""}
+      ${item.harga4_3 && item.harga4_3 !== "-" && item.harga4_3 !== "x" && item.harga4_3 !== "X" ? `<div class="small">Harga Grosir 3 per ${item.satuan4}: ${item.harga4_3}</div>` : ""}
+      <div class="small">Isi ${item.satuan4}: ${item.isi4 || "-"}</div>
     ` : ""}
 
     <input
