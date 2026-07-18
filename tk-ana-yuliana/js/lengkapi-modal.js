@@ -1,21 +1,50 @@
 const list = document.getElementById("list");
+let modalData = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   loadModalKosong();
+
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase();
+      const filtered = modalData.filter(item => 
+        (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+        (item.kode && String(item.kode).toLowerCase().includes(keyword))
+      );
+      renderList(filtered);
+    });
+  }
 });
 
 async function loadModalKosong() {
   list.innerHTML = `<div class="item">Memuat...</div>`;
 
-  const res = await fetch(`${API_URL}?action=modalKosong`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`${API_URL}?action=modalKosong`);
+    const data = await res.json();
 
-  if (!data.items || data.items.length === 0) {
-    list.innerHTML = `<div class="item">Tidak ada barang modal 0.</div>`;
+    if (!data.items || data.items.length === 0) {
+      list.innerHTML = `<div class="item">Tidak ada barang modal 0.</div>`;
+      modalData = [];
+      return;
+    }
+
+    modalData = data.items;
+    renderList(modalData);
+  } catch (error) {
+    list.innerHTML = `<div class="item">Gagal memuat data.</div>`;
+    console.error(error);
+  }
+}
+
+function renderList(items) {
+  if (items.length === 0) {
+    list.innerHTML = `<div class="item">Pencarian tidak ditemukan.</div>`;
     return;
   }
 
-  list.innerHTML = data.items.map(item => `
+  list.innerHTML = items.map(item => `
   <div class="item">
     <b>${item.nama}</b>
     <div class="small">Kode: ${item.kode}</div>
@@ -67,7 +96,7 @@ async function loadModalKosong() {
     </button>
   </div>
 `).join("");
-if (window.lucide) lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 async function simpanModal(row) {
