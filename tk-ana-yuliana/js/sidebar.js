@@ -66,6 +66,8 @@ function renderSidebar() {
   const logoEl = document.getElementById("sidebarStoreLogo");
   const namaEl = document.getElementById("sidebarStoreName");
 
+  const user = getCurrentUser() || {};
+
   if (logoEl) {
     if (user.logo) {
       logoEl.src = user.logo;
