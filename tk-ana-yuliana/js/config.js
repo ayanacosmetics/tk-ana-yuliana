@@ -1,4 +1,4 @@
-const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbyEA0GjpwfcvM1YxIFDLBZLqcM0weO0zEvv5xAuBkOVJD15OLNxP6cAnsf8RozhdBhHxQ/exec";
+const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbwI7cFKNr_0qbiz4vzSlx4cl9XHKdWFPhWj8uEPEFypj7l5Qb6FLcfj0KCMFksK2s1Meg/exec";
 
 function getActiveUser() {
   return JSON.parse(localStorage.getItem("tay_user") || "{}");
