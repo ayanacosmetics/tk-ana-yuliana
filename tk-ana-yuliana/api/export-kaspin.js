@@ -160,13 +160,20 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const response = await fetch(`${tokoData.apiUrl}?action=kaspinExportData`);
+    const rawApiUrl = String(tokoData.apiUrl || "").trim();
+    const isFullUrl = rawApiUrl.startsWith("http://") || rawApiUrl.startsWith("https://");
+
+    const getDataUrl = isFullUrl
+      ? `${rawApiUrl}?action=kaspinExportData`
+      : `${MASTER_GAS_URL}?action=kaspinExportData&spreadsheetId=${encodeURIComponent(rawApiUrl)}`;
+
+    const response = await fetch(getDataUrl);
     const data = await response.json();
 
     if (!data.success) {
       return res.status(400).json({
         success: false,
-        message: "Gagal mengambil data dari Apps Script toko."
+        message: data.message || "Gagal mengambil data dari Apps Script toko."
       });
     }
 
@@ -200,13 +207,18 @@ module.exports = async function handler(req, res) {
       type: "nodebuffer"
     });
 
-    fetch(tokoData.apiUrl, {
+    const postHistoryUrl = isFullUrl
+      ? rawApiUrl
+      : `${MASTER_GAS_URL}?action=saveExportHistory&spreadsheetId=${encodeURIComponent(rawApiUrl)}`;
+
+    fetch(postHistoryUrl, {
       method: "POST",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
       body: JSON.stringify({
         action: "saveExportHistory",
+        spreadsheetId: rawApiUrl,
         user: userName,
         role: userRole,
         toko: tokoData.nama || toko,
