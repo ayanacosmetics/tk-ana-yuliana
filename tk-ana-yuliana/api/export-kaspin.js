@@ -181,7 +181,7 @@ module.exports = async function handler(req, res) {
     if (!Array.isArray(data.rows)) {
       return res.status(400).json({
         success: false,
-        message: `Format data tidak sesuai. Respon server: ${JSON.stringify(data)}`
+        message: `Format data tidak sesuai. URL yang dipanggil: ${getDataUrl} | Respon server: ${JSON.stringify(data)}`
       });
     }
 
