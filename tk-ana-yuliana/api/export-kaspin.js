@@ -30,8 +30,9 @@ function clearRange(ws, startRow, endRow, startCol, endCol) {
 }
 
 function makeBarangRows(rows) {
-  return rows
-    .filter(r => clean(r[0]) && clean(r[3]))
+  const safeRows = Array.isArray(rows) ? rows : [];
+  return safeRows
+    .filter(r => r && clean(r[0]) && clean(r[3]))
     .map(r => {
       const nama = clean(r[0]);
       const modal = num(r[1]);
@@ -177,27 +178,36 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    if (!Array.isArray(data.rows)) {
+      return res.status(400).json({
+        success: false,
+        message: "Format data tidak sesuai. Pastikan Google Apps Script Master telah di-Deploy ulang (Deploy > Manage deployments > Edit > New version)."
+      });
+    }
+
+    const rows = data.rows;
+
     const zip = new JSZip();
     let countBarang = 0;
     let countMulti = 0;
     let countGrosir = 0;
 
     if (exportBarang) {
-      const barangRows = makeBarangRows(data.rows);
+      const barangRows = makeBarangRows(rows);
       countBarang = barangRows.length;
       const barangFile = fillBarangTemplate(barangRows);
       zip.file("TEMPLATE_BARANG.xls", barangFile);
     }
 
     if (exportMulti) {
-      const multiRows = makeMultiRows(data.rows);
+      const multiRows = makeMultiRows(rows);
       countMulti = multiRows.length;
       const multiFile = fillMultiTemplate(multiRows);
       zip.file("TEMPLATE_MULTI_SATUAN.xls", multiFile);
     }
 
     if (exportGrosir) {
-      const grosirRows = makeGrosirRows(data.rows);
+      const grosirRows = makeGrosirRows(rows);
       countGrosir = grosirRows.length;
       const grosirFile = fillGrosirTemplate(grosirRows);
       zip.file("TEMPLATE_HARGA_GROSIR.xls", grosirFile);
@@ -265,8 +275,9 @@ module.exports = async function handler(req, res) {
 
 function makeMultiRows(rows) {
   const result = [];
+  const safeRows = Array.isArray(rows) ? rows : [];
 
-  rows.forEach(r => {
+  safeRows.forEach(r => {
     const kode1 = clean(r[3]);
     const satuan1 = clean(r[2]);
     const hargaEcer = num(r[4]);
@@ -332,6 +343,7 @@ function makeMultiRows(rows) {
 
 function makeGrosirRows(rows) {
   const out = [];
+  const safeRows = Array.isArray(rows) ? rows : [];
 
   function add(kode, tipe, minimal, harga) {
     if (!kode || !harga || harga <= 0) return;
@@ -343,7 +355,7 @@ function makeGrosirRows(rows) {
     return Math.round(hargaTotal / isi);
   }
 
-  rows.forEach(r => {
+  safeRows.forEach(r => {
     const kode1 = clean(r[3]);
     if (!clean(r[0]) || !kode1) return;
 
